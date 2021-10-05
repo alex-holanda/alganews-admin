@@ -7,7 +7,7 @@ const { Title, Paragraph } = Typography;
 
 function App() {
   return (
-    <Space direction={'vertical'} size={'small'}>
+    <Space direction={'vertical'} size={'small'} style={{ maxWidth: '100%' }}>
       <Row>
         <Col span={24}>
           <Title level={2}>Olá, José Souza</Title>
