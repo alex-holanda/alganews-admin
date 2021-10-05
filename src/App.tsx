@@ -1,6 +1,7 @@
 import { Col, Row, Typography } from 'antd';
 
 import CompanyMetrics from './app/features/CompanyMetrics';
+import LatestPosts from './app/features/LatestPosts';
 
 const { Title, Paragraph } = Typography;
 
@@ -14,6 +15,14 @@ function App() {
       </Col>
       <Col span={24}>
         <CompanyMetrics />
+      </Col>
+
+      <Col span={24}>
+        <Title level={3}>Últimos posts</Title>
+      </Col>
+
+      <Col span={24}>
+        <LatestPosts />
       </Col>
     </Row>
   );
