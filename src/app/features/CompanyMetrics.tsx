@@ -1,28 +1,73 @@
-import { Line } from '@ant-design/charts';
+import { useEffect, useState } from 'react';
+
+import { Area, AreaConfig } from '@ant-design/charts';
+
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
+import { MetricService } from 'alex-holanda-sdk';
+
+import transformDataIntoAntdChart from '../../core/util/transformDataIntoAntdChart';
 
 export default function CompanyMetrics() {
-  const data = [
-    { year: '1991', value: 3 },
-    { year: '1992', value: 4 },
-    { year: '1993', value: 3.5 },
-    { year: '1994', value: 5 },
-    { year: '1995', value: 4.9 },
-    { year: '1996', value: 6 },
-    { year: '1997', value: 7 },
-    { year: '1998', value: 9 },
-    { year: '1999', value: 13 },
-  ];
+  const [data, setData] = useState<
+    {
+      yearMonth: string;
+      value: number;
+      category: 'totalRevenues' | 'totalExpenses';
+    }[]
+  >([]);
 
-  const config = {
+  useEffect(() => {
+    MetricService.getMonthlyRevenuesExpenses()
+      .then(transformDataIntoAntdChart)
+      .then(setData);
+  }, []);
+
+  const config: AreaConfig = {
     data,
-    height: 400,
-    xField: 'year',
+    height: 256,
+    color: ['#09f', '#274060'],
+    areaStyle: {
+      fillOpacity: 1,
+    },
+    xField: 'yearMonth',
     yField: 'value',
+    seriesField: 'category',
+    legend: {
+      itemName: {
+        formatter(legend) {
+          return legend === 'totalRevenues' ? 'Receitas' : 'Despesas';
+        },
+      },
+    },
+    xAxis: {
+      label: {
+        formatter(item) {
+          return format(new Date(item), 'MM/yyyy');
+        },
+      },
+    },
+    yAxis: false,
+    tooltip: {
+      title(title) {
+        return format(new Date(title), 'MMMM yyyy', { locale: ptBR });
+      },
+      formatter(data) {
+        return {
+          name: data.category === 'totalRevenues' ? 'Receitas' : 'Despesas',
+          value: new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(data.value),
+        };
+      },
+    },
     point: {
       size: 5,
-      shape: 'diamond',
+      shape: 'circle',
     },
   };
 
-  return <Line {...config} />;
+  return <Area {...config} />;
 }
