@@ -1,4 +1,4 @@
-import { Col, Row, Typography } from 'antd';
+import { Col, Row, Typography, Space, Divider } from 'antd';
 
 import CompanyMetrics from './app/features/CompanyMetrics';
 import LatestPosts from './app/features/LatestPosts';
@@ -7,24 +7,28 @@ const { Title, Paragraph } = Typography;
 
 function App() {
   return (
-    <Row>
-      <Col span={24}>
-        <Title level={2}>Olá, José Souza</Title>
+    <Space direction={'vertical'} size={'small'}>
+      <Row>
+        <Col span={24}>
+          <Title level={2}>Olá, José Souza</Title>
 
-        <Paragraph>Este é o resumo da empresa nos últimos 12 meses</Paragraph>
-      </Col>
-      <Col span={24}>
-        <CompanyMetrics />
-      </Col>
+          <Paragraph>Este é o resumo da empresa nos últimos 12 meses</Paragraph>
+        </Col>
+        <Col span={24}>
+          <CompanyMetrics />
+        </Col>
+      </Row>
+      <Divider />
+      <Row>
+        <Col span={24}>
+          <Title level={3}>Últimos posts</Title>
+        </Col>
 
-      <Col span={24}>
-        <Title level={3}>Últimos posts</Title>
-      </Col>
-
-      <Col span={24}>
-        <LatestPosts />
-      </Col>
-    </Row>
+        <Col span={24}>
+          <LatestPosts />
+        </Col>
+      </Row>
+    </Space>
   );
 }
 
