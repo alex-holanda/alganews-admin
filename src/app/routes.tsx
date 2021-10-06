@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import CashFlowExpensesView from './views/CashFlowExpenses.view';
 import CashFlowRevenuesView from './views/CashFlowRevenues.view';
 import HomeView from './views/Home.view';
@@ -9,28 +9,26 @@ import UserListView from './views/UserList.view';
 
 export default function Routes() {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path={'/'} component={HomeView} exact />
-        <Route path={'/usuarios'} component={UserListView} exact />
-        <Route path={'/usuarios/criacao'} component={UserCreateView} exact />
-        <Route path={'/pagamentos'} component={PaymentListView} exact />
-        <Route
-          path={'/pagamentos/criacao'}
-          component={PaymentCreateView}
-          exact
-        />
-        <Route
-          path={'/fluxo-de-caixa/despesas'}
-          component={CashFlowExpensesView}
-          exact
-        />
-        <Route
-          path={'/fluxo-de-caixa/receitas'}
-          component={CashFlowRevenuesView}
-          exact
-        />
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Route path={'/'} component={HomeView} exact />
+      <Route path={'/usuarios'} component={UserListView} exact />
+      <Route path={'/usuarios/cadastro'} component={UserCreateView} exact />
+      <Route path={'/pagamentos'} component={PaymentListView} exact />
+      <Route
+        path={'/pagamentos/cadastro'}
+        component={PaymentCreateView}
+        exact
+      />
+      <Route
+        path={'/fluxo-de-caixa/despesas'}
+        component={CashFlowExpensesView}
+        exact
+      />
+      <Route
+        path={'/fluxo-de-caixa/receitas'}
+        component={CashFlowRevenuesView}
+        exact
+      />
+    </Switch>
   );
 }
