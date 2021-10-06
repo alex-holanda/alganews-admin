@@ -1,7 +1,12 @@
+import { Col, Row } from 'antd';
+import UserListFeature from '../layouts/Default/UserList';
+
 export default function UserListView() {
   return (
-    <>
-      <h2>TODO: UserListView</h2>
-    </>
+    <Row>
+      <Col xs={24}>
+        <UserListFeature />
+      </Col>
+    </Row>
   );
 }
