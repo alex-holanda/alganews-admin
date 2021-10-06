@@ -10,9 +10,9 @@ import { store } from './core/store';
 
 import DefaultLayout from './app/layouts/Default';
 
-import 'antd/dist/antd.css';
-import './index.css';
 import Routes from './app/routes';
+
+import './index.less';
 
 ReactDOM.render(
   <React.StrictMode>
