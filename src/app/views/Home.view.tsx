@@ -1,11 +1,11 @@
 import { Col, Row, Typography, Space, Divider } from 'antd';
 
-import CompanyMetrics from './app/features/CompanyMetrics';
-import LatestPosts from './app/features/LatestPosts';
+import CompanyMetrics from '../features/CompanyMetrics';
+import LatestPosts from '../features/LatestPosts';
 
 const { Title, Paragraph } = Typography;
 
-function App() {
+function HomeView() {
   return (
     <Space direction={'vertical'} size={'small'} style={{ maxWidth: '100%' }}>
       <Row>
@@ -32,4 +32,4 @@ function App() {
   );
 }
 
-export default App;
+export default HomeView;
