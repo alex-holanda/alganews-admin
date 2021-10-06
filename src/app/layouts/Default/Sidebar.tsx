@@ -1,4 +1,4 @@
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, useLocation, Link } from 'react-router-dom';
 
 import { Layout, Menu } from 'antd';
 
@@ -18,13 +18,14 @@ const { Sider } = Layout;
 
 export default function DefaulLayoutSidebar() {
   const history = useHistory();
-  console.log(history);
+  const location = useLocation();
+
   return (
     <Sider width={200} breakpoint='lg' collapsedWidth='0'>
       <Menu
         mode='inline'
-        defaultSelectedKeys={[history.location.pathname]}
-        // defaultOpenKeys={['sub1']}
+        defaultSelectedKeys={[location.pathname]}
+        defaultOpenKeys={[location.pathname.split('/')[1]]}
         style={{ height: '100%', borderRight: 0 }}
       >
         <Menu.Item
@@ -34,7 +35,7 @@ export default function DefaulLayoutSidebar() {
         >
           <Link to={'/'}>Home</Link>
         </Menu.Item>
-        <SubMenu key='sub1' icon={<UserOutlined />} title='Usuários'>
+        <SubMenu key='usuarios' icon={<UserOutlined />} title='Usuários'>
           <Menu.Item
             key='/usuarios'
             onClick={() => history.push('/usuarios')}
@@ -50,7 +51,7 @@ export default function DefaulLayoutSidebar() {
             <Link to={'/usuarios/cadastro'}>Cadastro</Link>
           </Menu.Item>
         </SubMenu>
-        <SubMenu key='sub2' icon={<LaptopOutlined />} title='Pagamentos'>
+        <SubMenu key='pagamentos' icon={<LaptopOutlined />} title='Pagamentos'>
           <Menu.Item
             key='/pagamentos'
             onClick={() => history.push('/pagamentos')}
@@ -66,7 +67,11 @@ export default function DefaulLayoutSidebar() {
             <Link to={'/pagamentos/cadastro'}>Cadastro</Link>
           </Menu.Item>
         </SubMenu>
-        <SubMenu key='sub3' icon={<DiffOutlined />} title='Fluxo de Caixa'>
+        <SubMenu
+          key='fluxo-de-caixa'
+          icon={<DiffOutlined />}
+          title='Fluxo de Caixa'
+        >
           <Menu.Item
             key='/fluxo-de-caixa/despesas'
             onClick={() => history.push('/fluxo-de-caixa/despesas')}
