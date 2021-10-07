@@ -1,3 +1,4 @@
+import { User } from 'alex-holanda-sdk';
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -13,5 +14,12 @@ export function useUsers() {
     dispatch(UserActions.getAllUsers());
   }, [dispatch]);
 
-  return { users, fetching, fetchUsers };
+  const toggleUserStatus = useCallback(
+    (user: User.Detailed | User.Summary) => {
+      dispatch(UserActions.toggleUserStatus(user));
+    },
+    [dispatch]
+  );
+
+  return { users, fetching, fetchUsers, toggleUserStatus };
 }

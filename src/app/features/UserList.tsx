@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 import { Table, Tag, Switch, Button, Typography, Avatar, Space } from 'antd';
 import { EyeOutlined, EditOutlined } from '@ant-design/icons';
 
-import { useUsers } from '../../../core/hooks/useUsers';
+import { useUsers } from '../../core/hooks/useUsers';
 import { User } from 'alex-holanda-sdk';
 
 export default function UserListFeature() {
-  const { users, fetchUsers } = useUsers();
+  const { users, fetchUsers, toggleUserStatus } = useUsers();
 
   useEffect(() => {
     fetchUsers();
@@ -79,8 +79,15 @@ export default function UserListFeature() {
             dataIndex: 'active',
             title: 'Ativo',
             align: 'center',
-            render(active) {
-              return <Switch defaultChecked={active} />;
+            render(active, user) {
+              return (
+                <Switch
+                  onChange={() => {
+                    toggleUserStatus(user);
+                  }}
+                  defaultChecked={active}
+                />
+              );
             },
           },
           {

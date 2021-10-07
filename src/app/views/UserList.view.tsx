@@ -1,5 +1,5 @@
 import { Col, Row } from 'antd';
-import UserListFeature from '../layouts/Default/UserList';
+import UserListFeature from '../features/UserList';
 
 export default function UserListView() {
   return (
