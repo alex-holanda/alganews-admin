@@ -41,14 +41,6 @@ export default createReducer(initialState, (builder) => {
     .addCase(getAllUsers.fulfilled, (state, action) => {
       state.list = action.payload;
     })
-    .addCase(toggleUserStatus.fulfilled, (state, action) => {
-      state.list = state.list.map((user) => {
-        if (user.id === action.payload.id) {
-          return { ...user, active: !user.active };
-        }
-        return user;
-      });
-    })
     .addMatcher(success, (state) => {
       state.fetching = false;
     })
