@@ -21,11 +21,12 @@ export default function UserListFeature() {
           {
             dataIndex: 'name',
             title: 'Nome',
+            width: 160,
             render(name, row) {
               return (
                 <Space>
                   <Avatar size={'small'} src={row.avatarUrls.small} />
-                  <Typography.Text ellipsis style={{ width: 180 }}>
+                  <Typography.Text ellipsis style={{ width: 120 }}>
                     {name}
                   </Typography.Text>
                 </Space>
@@ -36,6 +37,7 @@ export default function UserListFeature() {
             dataIndex: 'email',
             title: 'E-mail',
             ellipsis: true,
+            width: 240,
           },
           {
             dataIndex: 'role',
@@ -85,16 +87,12 @@ export default function UserListFeature() {
             dataIndex: 'id',
             title: 'Ações',
             align: 'center',
-            render(id) {
+            render() {
               return (
-                <>
+                <Space>
                   <Button size={'small'} icon={<EyeOutlined />} />
-                  <Button
-                    size={'small'}
-                    icon={<EditOutlined />}
-                    style={{ marginLeft: 10 }}
-                  />
-                </>
+                  <Button size={'small'} icon={<EditOutlined />} />
+                </Space>
               );
             },
           },
