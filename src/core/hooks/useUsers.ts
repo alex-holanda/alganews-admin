@@ -1,12 +1,17 @@
-import { User, UserService } from 'alex-holanda-sdk';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { RootState } from '../store';
+import * as UserActions from '../store/User.reducer';
 
 export function useUsers() {
-  const [users, setUsers] = useState<User.Summary[]>([]);
+  const dispatch = useDispatch();
+  const users = useSelector((state: RootState) => state.user.list);
+  const fetching = useSelector((state: RootState) => state.user.fetching);
 
   const fetchUsers = useCallback(() => {
-    UserService.getAllUsers({}).then(setUsers);
-  }, []);
+    dispatch(UserActions.getAllUsers());
+  }, [dispatch]);
 
-  return { users, fetchUsers };
+  return { users, fetching, fetchUsers };
 }
