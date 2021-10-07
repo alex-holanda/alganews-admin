@@ -25,7 +25,9 @@ export default function UserListFeature() {
               return (
                 <Space>
                   <Avatar size={'small'} src={row.avatarUrls.small} />
-                  <Typography.Text>{name}</Typography.Text>
+                  <Typography.Text ellipsis style={{ width: 180 }}>
+                    {name}
+                  </Typography.Text>
                 </Space>
               );
             },
@@ -33,6 +35,7 @@ export default function UserListFeature() {
           {
             dataIndex: 'email',
             title: 'E-mail',
+            ellipsis: true,
           },
           {
             dataIndex: 'role',
