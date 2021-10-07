@@ -1,28 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { Area, AreaConfig } from '@ant-design/charts';
 
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { MetricService } from 'alex-holanda-sdk';
-
-import transformDataIntoAntdChart from '../../core/util/transformDataIntoAntdChart';
+import { useMetric } from '../../core/hooks/useMetrics';
 
 export default function CompanyMetrics() {
-  const [data, setData] = useState<
-    {
-      yearMonth: string;
-      value: number;
-      category: 'totalRevenues' | 'totalExpenses';
-    }[]
-  >([]);
+  const { data, fetchMonthlyRevenuesExpenses } = useMetric();
 
   useEffect(() => {
-    MetricService.getMonthlyRevenuesExpenses()
-      .then(transformDataIntoAntdChart)
-      .then(setData);
-  }, []);
+    fetchMonthlyRevenuesExpenses();
+  }, [fetchMonthlyRevenuesExpenses]);
 
   const config: AreaConfig = {
     data,
