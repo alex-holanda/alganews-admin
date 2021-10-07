@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Table, Tag, Switch, Button } from 'antd';
+import { Table, Tag, Switch, Button, Typography, Avatar, Space } from 'antd';
 import { EyeOutlined, EditOutlined } from '@ant-design/icons';
 
 import { useUsers } from '../../../core/hooks/useUsers';
@@ -21,6 +21,14 @@ export default function UserListFeature() {
           {
             dataIndex: 'name',
             title: 'Nome',
+            render(name, row) {
+              return (
+                <Space>
+                  <Avatar size={'small'} src={row.avatarUrls.small} />
+                  <Typography.Text>{name}</Typography.Text>
+                </Space>
+              );
+            },
           },
           {
             dataIndex: 'email',
