@@ -100,6 +100,7 @@ export default function UserListFeature() {
           {
             dataIndex: 'email',
             title: 'E-mail',
+            responsive: ['md'],
             ellipsis: true,
             width: 240,
             ...getColumnSearchProps('email', 'e-mail'),
