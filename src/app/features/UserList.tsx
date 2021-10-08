@@ -82,19 +82,19 @@ export default function UserListFeature() {
         dataSource={users}
         columns={[
           {
+            dataIndex: 'avatarUrls',
+            title: '',
+            width: 48,
+            fixed: 'left',
+            render(avatarUrls: User.Summary['avatarUrls']) {
+              return <Avatar size={'small'} src={avatarUrls.small} />;
+            },
+          },
+          {
             dataIndex: 'name',
             title: 'Nome',
             width: 160,
-            render(name, row) {
-              return (
-                <Space>
-                  <Avatar size={'small'} src={row.avatarUrls.small} />
-                  <Typography.Text ellipsis style={{ width: 120 }}>
-                    {name}
-                  </Typography.Text>
-                </Space>
-              );
-            },
+            ellipsis: true,
             ...getColumnSearchProps('name', 'nome'),
           },
           {
@@ -108,6 +108,7 @@ export default function UserListFeature() {
             dataIndex: 'role',
             title: 'Perfil',
             align: 'center',
+            width: 100,
             render(role) {
               return (
                 <Tag
@@ -132,6 +133,7 @@ export default function UserListFeature() {
             dataIndex: 'createdAt',
             title: 'Criação',
             align: 'center',
+            width: 120,
             render(createdAt) {
               return new Date(createdAt).toLocaleDateString('pt-BR', {
                 day: '2-digit',
@@ -144,6 +146,7 @@ export default function UserListFeature() {
             dataIndex: 'active',
             title: 'Ativo',
             align: 'center',
+            width: 100,
             render(active, user) {
               return (
                 <Switch
@@ -159,6 +162,7 @@ export default function UserListFeature() {
             dataIndex: 'id',
             title: 'Ações',
             align: 'center',
+            width: 100,
             render() {
               return (
                 <Space>
