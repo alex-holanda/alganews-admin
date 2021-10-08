@@ -80,9 +80,9 @@ export default function UserListFeature() {
       <Table<User.Summary>
         loading={fetching}
         dataSource={users}
+        rowKey={'id'}
         columns={[
           {
-            key: 'id',
             title: 'Usuário',
             responsive: ['xs'],
             render(user: User.Summary) {
