@@ -1,7 +1,19 @@
 import { useEffect } from 'react';
 
-import { Table, Tag, Switch, Button, Typography, Avatar, Space } from 'antd';
-import { EyeOutlined, EditOutlined } from '@ant-design/icons';
+import {
+  Table,
+  Tag,
+  Switch,
+  Button,
+  Typography,
+  Avatar,
+  Space,
+  Card,
+  Input,
+} from 'antd';
+import { EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+
+import { ColumnProps } from 'antd/lib/table';
 
 import { useUsers } from '../../core/hooks/useUsers';
 import { User } from 'alex-holanda-sdk';
@@ -12,6 +24,56 @@ export default function UserListFeature() {
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+
+  const getColumnSearchProps = (
+    dataIndex: keyof User.Summary,
+    displayName?: string
+  ): ColumnProps<User.Summary> => ({
+    filterDropdown: ({
+      selectedKeys,
+      setSelectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <Card>
+        <Space direction={'vertical'}>
+          <Input
+            value={selectedKeys[0]}
+            placeholder={`Buscar ${displayName || dataIndex}`}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => confirm()}
+          />
+          <Space>
+            <Button
+              type={'primary'}
+              size={'small'}
+              style={{ width: 90 }}
+              onClick={() => confirm()}
+              icon={<SearchOutlined />}
+            >
+              Buscar
+            </Button>
+            <Button onClick={clearFilters} size={'small'} style={{ width: 90 }}>
+              Limpar
+            </Button>
+          </Space>
+        </Space>
+      </Card>
+    ),
+    //@ts-ignore
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes((value as string).toLocaleLowerCase())
+        : '',
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#0099ff' : undefined }} />
+    ),
+  });
 
   return (
     <>
@@ -32,12 +94,14 @@ export default function UserListFeature() {
                 </Space>
               );
             },
+            ...getColumnSearchProps('name', 'nome'),
           },
           {
             dataIndex: 'email',
             title: 'E-mail',
             ellipsis: true,
             width: 240,
+            ...getColumnSearchProps('email', 'e-mail'),
           },
           {
             dataIndex: 'role',
