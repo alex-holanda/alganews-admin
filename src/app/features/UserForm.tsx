@@ -11,6 +11,8 @@ import {
 } from 'antd';
 import ptBR from 'antd/es/date-picker/locale/pt_BR';
 
+import React from 'react';
+
 const { TabPane } = Tabs;
 
 export default function UserForm() {
@@ -102,6 +104,27 @@ export default function UserForm() {
                     <Input placeholder={'0'} />
                   </Form.Item>
                 </Col>
+
+                {Array(3)
+                  .fill(null)
+                  .map((_, index) => {
+                    return (
+                      <React.Fragment key={index}>
+                        <Col lg={6}>
+                          <Form.Item label={'Habilidade'}>
+                            <Input placeholder={'E.g.: Javascript'} />
+                          </Form.Item>
+                        </Col>
+                        <Col lg={2}>
+                          <Form.Item label={'%'}>
+                            <Input />
+                          </Form.Item>
+                        </Col>
+                      </React.Fragment>
+                    );
+                  })}
+
+                <Col lg={8}></Col>
               </Row>
             </TabPane>
 
