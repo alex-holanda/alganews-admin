@@ -5,11 +5,11 @@ import {
   Tag,
   Switch,
   Button,
-  Typography,
   Avatar,
   Space,
   Card,
   Input,
+  Descriptions,
 } from 'antd';
 import { EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 
@@ -82,10 +82,58 @@ export default function UserListFeature() {
         dataSource={users}
         columns={[
           {
+            key: 'id',
+            title: 'Usuário',
+            responsive: ['xs'],
+            render(user: User.Summary) {
+              return (
+                <Descriptions column={1} size={'small'}>
+                  <Descriptions.Item label={'Nome'}>
+                    {user.name}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'E-mail'}>
+                    {user.email}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'Criação'}>
+                    {new Date(user.createdAt).toLocaleDateString('pt-BR', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                    })}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'Perfil'}>
+                    <Tag
+                      color={
+                        user.role === 'MANAGER'
+                          ? 'red'
+                          : user.role === 'EDITOR'
+                          ? 'green'
+                          : 'blue'
+                      }
+                    >
+                      {user.role === 'EDITOR'
+                        ? 'Editor'
+                        : user.role === 'MANAGER'
+                        ? 'Gerente'
+                        : 'Assitente'}
+                    </Tag>
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'Ações'}>
+                    <Space>
+                      <Button size={'small'} icon={<EyeOutlined />} />
+                      <Button size={'small'} icon={<EditOutlined />} />
+                    </Space>
+                  </Descriptions.Item>
+                </Descriptions>
+              );
+            },
+          },
+          {
             dataIndex: 'avatarUrls',
             title: '',
             width: 48,
             fixed: 'left',
+            responsive: ['sm'],
             render(avatarUrls: User.Summary['avatarUrls']) {
               return <Avatar size={'small'} src={avatarUrls.small} />;
             },
@@ -95,12 +143,13 @@ export default function UserListFeature() {
             title: 'Nome',
             width: 160,
             ellipsis: true,
+            responsive: ['sm'],
             ...getColumnSearchProps('name', 'nome'),
           },
           {
             dataIndex: 'email',
             title: 'E-mail',
-            responsive: ['md'],
+            responsive: ['sm'],
             ellipsis: true,
             width: 240,
             ...getColumnSearchProps('email', 'e-mail'),
@@ -108,6 +157,7 @@ export default function UserListFeature() {
           {
             dataIndex: 'role',
             title: 'Perfil',
+            responsive: ['sm'],
             align: 'center',
             width: 100,
             render(role) {
@@ -134,6 +184,7 @@ export default function UserListFeature() {
             dataIndex: 'createdAt',
             title: 'Criação',
             align: 'center',
+            responsive: ['sm'],
             width: 120,
             render(createdAt) {
               return new Date(createdAt).toLocaleDateString('pt-BR', {
@@ -147,6 +198,7 @@ export default function UserListFeature() {
             dataIndex: 'active',
             title: 'Ativo',
             align: 'center',
+            responsive: ['sm'],
             width: 100,
             render(active, user) {
               return (
@@ -163,6 +215,7 @@ export default function UserListFeature() {
             dataIndex: 'id',
             title: 'Ações',
             align: 'center',
+            responsive: ['sm'],
             width: 100,
             render() {
               return (
