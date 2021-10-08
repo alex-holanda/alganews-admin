@@ -1,6 +1,17 @@
-import { Form, Row, Col, Avatar, Input, DatePicker, Divider } from 'antd';
-import { Select } from 'antd';
+import {
+  Form,
+  Row,
+  Col,
+  Avatar,
+  Input,
+  DatePicker,
+  Divider,
+  Tabs,
+  Select,
+} from 'antd';
 import ptBR from 'antd/es/date-picker/locale/pt_BR';
+
+const { TabPane } = Tabs;
 
 export default function UserForm() {
   return (
@@ -50,6 +61,21 @@ export default function UserForm() {
               placeholder={'E.g.: contato@joao.silva.com'}
             />
           </Form.Item>
+        </Col>
+
+        <Col lg={24}>
+          <Divider />
+        </Col>
+
+        <Col lg={24}>
+          <Tabs defaultActiveKey={'personal'}>
+            <TabPane key={'personal'} tab={'Dados pessoais'}>
+              Dados pessoais
+            </TabPane>
+            <TabPane key={'bankAccount'} tab={'Dados bancários'}>
+              Dados bancários
+            </TabPane>
+          </Tabs>
         </Col>
       </Row>
     </Form>
