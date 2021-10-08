@@ -1,4 +1,4 @@
-import { FileService } from 'alex-holanda-sdk';
+import React, { useCallback, useState } from 'react';
 import {
   Form,
   Row,
@@ -14,7 +14,9 @@ import {
 import { UserOutlined } from '@ant-design/icons';
 import ptBR from 'antd/es/date-picker/locale/pt_BR';
 
-import React, { useCallback, useState } from 'react';
+import ImageCrop from 'antd-img-crop';
+
+import { FileService } from 'alex-holanda-sdk';
 
 const { TabPane } = Tabs;
 
@@ -30,20 +32,22 @@ export default function UserForm() {
     <Form layout={'vertical'}>
       <Row gutter={24} align={'middle'}>
         <Col lg={4}>
-          <Upload
-            beforeUpload={async (file) => {
-              await handleAvatarUpload(file);
-              return false;
-            }}
-            onRemove={() => setAvatar('')}
-          >
-            <Avatar
-              icon={<UserOutlined />}
-              src={avatar}
-              size={128}
-              style={{ cursor: 'pointer' }}
-            />
-          </Upload>
+          <ImageCrop rotate shape={'round'} grid aspect={1 / 1}>
+            <Upload
+              beforeUpload={async (file) => {
+                await handleAvatarUpload(file);
+                return false;
+              }}
+              onRemove={() => setAvatar('')}
+            >
+              <Avatar
+                icon={<UserOutlined />}
+                src={avatar}
+                size={128}
+                style={{ cursor: 'pointer' }}
+              />
+            </Upload>
+          </ImageCrop>
         </Col>
 
         <Col lg={10}>
