@@ -19,7 +19,7 @@ import { useUsers } from '../../core/hooks/useUsers';
 import { User } from 'alex-holanda-sdk';
 
 export default function UserListFeature() {
-  const { users, fetchUsers, toggleUserStatus } = useUsers();
+  const { users, fetchUsers, toggleUserStatus, fetching } = useUsers();
 
   useEffect(() => {
     fetchUsers();
@@ -78,6 +78,7 @@ export default function UserListFeature() {
   return (
     <>
       <Table<User.Summary>
+        loading={fetching}
         dataSource={users}
         columns={[
           {
