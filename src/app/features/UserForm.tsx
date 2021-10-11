@@ -32,6 +32,19 @@ export default function UserForm() {
   return (
     <Form
       layout={'vertical'}
+      onFinishFailed={(fields) => {
+        const bankAccountErrors = fields.errorFields.reduce(
+          (prev, current) =>
+            current.name.includes('bankAccount') ? prev + 1 : prev,
+          0
+        );
+
+        if (bankAccountErrors > 0) {
+          window.alert(
+            `Existem ${bankAccountErrors} erros na aba dados bancários`
+          );
+        }
+      }}
       onFinish={(form) => {
         console.log(form);
       }}
