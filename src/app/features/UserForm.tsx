@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Form,
   Row,
@@ -17,11 +17,12 @@ import ptBR from 'antd/es/date-picker/locale/pt_BR';
 
 import ImageCrop from 'antd-img-crop';
 
-import { FileService } from 'alex-holanda-sdk';
+import { FileService, User } from 'alex-holanda-sdk';
 
 const { TabPane } = Tabs;
 
 export default function UserForm() {
+  const [form] = Form.useForm<User.Input>();
   const [avatar, setAvatar] = useState('');
   const [activeTab, setActiveTab] = useState<'personal' | 'bankAccount'>(
     'personal'
@@ -32,8 +33,13 @@ export default function UserForm() {
     setAvatar(avatarSource);
   }, []);
 
+  useEffect(() => {
+    form.setFieldsValue({ avatarUrl: avatar || undefined });
+  }, [form, avatar]);
+
   return (
     <Form
+      form={form}
       layout={'vertical'}
       onFinishFailed={(fields) => {
         let bankAccountErrors = 0;
@@ -76,7 +82,9 @@ export default function UserForm() {
                 handleAvatarUpload(file);
                 return false;
               }}
-              onRemove={() => setAvatar('')}
+              onRemove={() => {
+                setAvatar('');
+              }}
             >
               <Avatar
                 icon={<UserOutlined />}
@@ -86,6 +94,7 @@ export default function UserForm() {
               />
             </Upload>
           </ImageCrop>
+          <Form.Item name={'avatarUrl'} hidden />
         </Col>
 
         <Col lg={10}>
