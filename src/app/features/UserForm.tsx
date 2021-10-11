@@ -18,12 +18,14 @@ import ptBR from 'antd/es/date-picker/locale/pt_BR';
 import ImageCrop from 'antd-img-crop';
 
 import { FileService } from 'alex-holanda-sdk';
-import { current } from '@reduxjs/toolkit';
 
 const { TabPane } = Tabs;
 
 export default function UserForm() {
   const [avatar, setAvatar] = useState('');
+  const [activeTab, setActiveTab] = useState<'personal' | 'bankAccount'>(
+    'personal'
+  );
 
   const handleAvatarUpload = useCallback(async (file: File) => {
     const avatarSource = await FileService.upload(file);
@@ -53,16 +55,12 @@ export default function UserForm() {
           }
         });
 
-        if (bankAccountErrors > 0) {
-          window.alert(
-            `Existem ${bankAccountErrors} erros na aba dados bancários`
-          );
+        if (bankAccountErrors > personalDataErrors) {
+          setActiveTab('bankAccount');
         }
 
-        if (personalDataErrors > 0) {
-          window.alert(
-            `Existem ${personalDataErrors} erros na aba dados pessoais`
-          );
+        if (personalDataErrors > bankAccountErrors) {
+          setActiveTab('personal');
         }
       }}
       onFinish={(form) => {
@@ -157,7 +155,11 @@ export default function UserForm() {
         </Col>
 
         <Col lg={24}>
-          <Tabs defaultActiveKey={'personal'}>
+          <Tabs
+            defaultActiveKey={'personal'}
+            activeKey={activeTab}
+            onChange={(tab) => setActiveTab(tab as 'personal' | 'bankAccount')}
+          >
             <TabPane key={'personal'} tab={'Dados pessoais'} forceRender>
               <Row gutter={24}>
                 <Col lg={8}>
