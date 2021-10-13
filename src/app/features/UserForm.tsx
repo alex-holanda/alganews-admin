@@ -182,7 +182,14 @@ export default function UserForm() {
           <Form.Item
             label={'Perfil'}
             name={'role'}
-            rules={[{ required: true, message: 'O campo é obrigatório' }]}
+            rules={[
+              { required: true, message: 'O campo é obrigatório' },
+              {
+                type: 'enum',
+                enum: ['EDITOR', 'ASSISTENT', 'MANAGER'],
+                message: `Perfil prece ser editor, assistente ou gerente`,
+              },
+            ]}
           >
             <Select placeholder={'Selecione um perfil'}>
               <Select.Option value={'EDITOR'}>Editor</Select.Option>
@@ -405,7 +412,7 @@ export default function UserForm() {
                       {
                         min: 1,
                         max: 1,
-                        message: 'O campo deve ter entre 1 caractere',
+                        message: 'O campo deve ter 1 caractere',
                       },
                     ]}
                   >
@@ -419,6 +426,11 @@ export default function UserForm() {
                     name={['bankAccount', 'type']}
                     rules={[
                       { required: true, message: 'O campo é obrigatório' },
+                      {
+                        type: 'enum',
+                        enum: ['SAVING', 'CHECKING'],
+                        message: 'O campo deve ser conta correte ou poupança',
+                      },
                     ]}
                   >
                     <Select placeholder={'Selecione o tipo de conta'}>
