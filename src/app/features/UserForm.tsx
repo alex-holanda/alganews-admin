@@ -137,7 +137,10 @@ export default function UserForm() {
           <Form.Item
             label={'Nome'}
             name={'name'}
-            rules={[{ required: true, message: 'O campo é obrigatório' }]}
+            rules={[
+              { required: true, message: 'O campo é obrigatório' },
+              { max: 255, message: 'O nome deve ter no máximo 255 caracteres' },
+            ]}
           >
             <Input placeholder={'E.g.: João Silva'} />
           </Form.Item>
@@ -159,7 +162,13 @@ export default function UserForm() {
           <Form.Item
             label={'Bio'}
             name={'bio'}
-            rules={[{ required: true, message: 'O campo é obrigatório' }]}
+            rules={[
+              { required: true, message: 'O campo é obrigatório' },
+              {
+                max: 255,
+                message: 'O campo deve conter no máximo 255 caracteres',
+              },
+            ]}
           >
             <Input.TextArea rows={5} />
           </Form.Item>
@@ -186,7 +195,13 @@ export default function UserForm() {
           <Form.Item
             label={'E-mail'}
             name={'email'}
-            rules={[{ required: true, message: 'O campo é obrigatório' }]}
+            rules={[
+              { required: true, message: 'O campo é obrigatório' },
+              {
+                max: 255,
+                message: 'O e-mail deve ter no máximo 255 caracteres',
+              },
+            ]}
           >
             <Input
               type={'email'}
@@ -258,9 +273,13 @@ export default function UserForm() {
                     name={'taxpayerId'}
                     rules={[
                       { required: true, message: 'O campo é obrigatório' },
+                      {
+                        max: 14,
+                        message: 'O cpf deve ter no máximo 14 caracteres',
+                      },
                     ]}
                   >
-                    <Input placeholder={'111.222.333-44'} />
+                    <Input placeholder={'111.222.333-44'} maxLength={14} />
                   </Form.Item>
                 </Col>
                 <Col lg={8}>
@@ -289,9 +308,17 @@ export default function UserForm() {
                                 required: true,
                                 message: 'O campo é obrigatório',
                               },
+                              {
+                                max: 50,
+                                message:
+                                  'O nome deve ter no máximo 50 caracteres',
+                              },
                             ]}
                           >
-                            <Input placeholder={'E.g.: Javascript'} />
+                            <Input
+                              placeholder={'E.g.: Javascript'}
+                              maxLength={50}
+                            />
                           </Form.Item>
                         </Col>
                         <Col lg={2}>
@@ -324,9 +351,14 @@ export default function UserForm() {
                     name={['bankAccount', 'bankCode']}
                     rules={[
                       { required: true, message: 'O campo é obrigatório' },
+                      {
+                        min: 3,
+                        max: 3,
+                        message: 'O campo deve conter 3 caracteres',
+                      },
                     ]}
                   >
-                    <Input placeholder={'260'} />
+                    <Input placeholder={'260'} type={'number'} />
                   </Form.Item>
                 </Col>
 
@@ -336,6 +368,11 @@ export default function UserForm() {
                     name={['bankAccount', 'agency']}
                     rules={[
                       { required: true, message: 'O campo é obrigatório' },
+                      {
+                        min: 1,
+                        max: 10,
+                        message: 'O campo deve ter entre 1 e 10 caracteres',
+                      },
                     ]}
                   >
                     <Input placeholder={'0001'} />
@@ -348,6 +385,11 @@ export default function UserForm() {
                     name={['bankAccount', 'number']}
                     rules={[
                       { required: true, message: 'O campo é obrigatório' },
+                      {
+                        min: 1,
+                        max: 20,
+                        message: 'O campo deve ter entre 1 e 20 caracteres',
+                      },
                     ]}
                   >
                     <Input placeholder={'12345'} />
@@ -360,9 +402,14 @@ export default function UserForm() {
                     name={['bankAccount', 'digit']}
                     rules={[
                       { required: true, message: 'O campo é obrigatório' },
+                      {
+                        min: 1,
+                        max: 1,
+                        message: 'O campo deve ter entre 1 caractere',
+                      },
                     ]}
                   >
-                    <Input placeholder={'5'} />
+                    <Input placeholder={'5'} type={'number'} />
                   </Form.Item>
                 </Col>
 
