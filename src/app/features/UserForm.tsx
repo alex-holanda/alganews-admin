@@ -84,7 +84,18 @@ export default function UserForm() {
               form.setFields(
                 error.data.objects.map((error) => {
                   return {
-                    name: error.name?.split('.') as string[],
+                    name: error.name
+                      ?.split(/(\.|\[|\])/gi)
+                      .filter(
+                        (str) =>
+                          str !== '.' &&
+                          str !== '[' &&
+                          str !== ']' &&
+                          str !== ''
+                      )
+                      .map((str) =>
+                        isNaN(Number(str)) ? str : Number(str)
+                      ) as string[],
                     errors: [error.userMessage],
                   };
                 })
