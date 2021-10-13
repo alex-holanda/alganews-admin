@@ -108,7 +108,7 @@ export default function UserForm() {
       }}
     >
       <Row gutter={24} align={'middle'}>
-        <Col lg={4}>
+        <Col sm={4}>
           <ImageCrop rotate shape={'round'} grid aspect={1 / 1}>
             <Upload
               maxCount={1}
@@ -123,7 +123,7 @@ export default function UserForm() {
               <Avatar
                 icon={<UserOutlined />}
                 src={avatar}
-                size={128}
+                size={102}
                 style={{ cursor: 'pointer' }}
               />
             </Upload>
@@ -133,7 +133,7 @@ export default function UserForm() {
           </Form.Item>
         </Col>
 
-        <Col lg={10}>
+        <Col sm={10}>
           <Form.Item
             label={'Nome'}
             name={'name'}
@@ -158,7 +158,7 @@ export default function UserForm() {
             />
           </Form.Item>
         </Col>
-        <Col lg={10}>
+        <Col sm={10}>
           <Form.Item
             label={'Bio'}
             name={'bio'}
@@ -178,7 +178,7 @@ export default function UserForm() {
           <Divider />
         </Col>
 
-        <Col lg={12}>
+        <Col sm={12}>
           <Form.Item
             label={'Perfil'}
             name={'role'}
@@ -191,7 +191,7 @@ export default function UserForm() {
             </Select>
           </Form.Item>
         </Col>
-        <Col lg={12}>
+        <Col sm={12}>
           <Form.Item
             label={'E-mail'}
             name={'email'}
@@ -210,11 +210,11 @@ export default function UserForm() {
           </Form.Item>
         </Col>
 
-        <Col lg={24}>
+        <Col sm={24}>
           <Divider />
         </Col>
 
-        <Col lg={24}>
+        <Col sm={24}>
           <Tabs
             defaultActiveKey={'personal'}
             activeKey={activeTab}
@@ -222,7 +222,7 @@ export default function UserForm() {
           >
             <TabPane key={'personal'} tab={'Dados pessoais'} forceRender>
               <Row gutter={24}>
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'País'}
                     name={['location', 'country']}
@@ -233,7 +233,7 @@ export default function UserForm() {
                     <Input placeholder={'E.g.: Brasil'} />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'Estado'}
                     name={['location', 'state']}
@@ -244,7 +244,7 @@ export default function UserForm() {
                     <Input placeholder={'E.g.: Espírito Santo'} />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'Cidade'}
                     name={['location', 'city']}
@@ -256,7 +256,7 @@ export default function UserForm() {
                   </Form.Item>
                 </Col>
 
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'Telefone'}
                     name={'phone'}
@@ -267,7 +267,7 @@ export default function UserForm() {
                     <Input placeholder={'(27) 99999-0000'} />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'CPF'}
                     name={'taxpayerId'}
@@ -282,7 +282,7 @@ export default function UserForm() {
                     <Input placeholder={'111.222.333-44'} maxLength={14} />
                   </Form.Item>
                 </Col>
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'Preço por palavra'}
                     name={'pricePerWord'}
@@ -299,7 +299,7 @@ export default function UserForm() {
                   .map((_, index) => {
                     return (
                       <React.Fragment key={index}>
-                        <Col lg={6}>
+                        <Col sm={6}>
                           <Form.Item
                             label={'Habilidade'}
                             name={['skills', index, 'name']}
@@ -321,7 +321,7 @@ export default function UserForm() {
                             />
                           </Form.Item>
                         </Col>
-                        <Col lg={2}>
+                        <Col sm={2}>
                           <Form.Item
                             label={'%'}
                             name={['skills', index, 'percentage']}
@@ -329,6 +329,21 @@ export default function UserForm() {
                               {
                                 required: true,
                                 message: '',
+                              },
+                              {
+                                async validator(field, value) {
+                                  if (isNaN(Number(value))) {
+                                    throw Error('Apenas números');
+                                  }
+
+                                  if (Number(value) > 100) {
+                                    throw Error('Máximo até 100');
+                                  }
+
+                                  if (Number(value) < 0) {
+                                    throw Error('Mínimo 0');
+                                  }
+                                },
                               },
                             ]}
                           >
@@ -339,13 +354,13 @@ export default function UserForm() {
                     );
                   })}
 
-                <Col lg={8}></Col>
+                <Col sm={8}></Col>
               </Row>
             </TabPane>
 
             <TabPane key={'bankAccount'} tab={'Dados bancários'} forceRender>
               <Row gutter={24}>
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'Instituição'}
                     name={['bankAccount', 'bankCode']}
@@ -362,7 +377,7 @@ export default function UserForm() {
                   </Form.Item>
                 </Col>
 
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'Agência'}
                     name={['bankAccount', 'agency']}
@@ -379,7 +394,7 @@ export default function UserForm() {
                   </Form.Item>
                 </Col>
 
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'Conta sem dígito'}
                     name={['bankAccount', 'number']}
@@ -396,7 +411,7 @@ export default function UserForm() {
                   </Form.Item>
                 </Col>
 
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'Dígito'}
                     name={['bankAccount', 'digit']}
@@ -413,7 +428,7 @@ export default function UserForm() {
                   </Form.Item>
                 </Col>
 
-                <Col lg={8}>
+                <Col sm={8}>
                   <Form.Item
                     label={'Tipo de conta'}
                     name={['bankAccount', 'type']}
@@ -435,7 +450,7 @@ export default function UserForm() {
             </TabPane>
           </Tabs>
         </Col>
-        <Col lg={24}>
+        <Col sm={24}>
           <Row justify={'end'}>
             <Button htmlType={'submit'} type={'primary'}>
               Cadastrar usuário
