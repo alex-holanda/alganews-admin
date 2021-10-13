@@ -18,6 +18,8 @@ import ptBR from 'antd/es/date-picker/locale/pt_BR';
 
 import ImageCrop from 'antd-img-crop';
 
+import MaskedInput from 'antd-mask-input';
+
 import { FileService, User, UserService } from 'alex-holanda-sdk';
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
 
@@ -42,6 +44,7 @@ export default function UserForm() {
   return (
     <Form
       form={form}
+      autoComplete={'off'}
       layout={'vertical'}
       onFinishFailed={(fields) => {
         let bankAccountErrors = 0;
@@ -155,6 +158,7 @@ export default function UserForm() {
               placeholder={'Selecione uma data'}
               format={'DD/MM/YYYY'}
               style={{ width: '100%' }}
+              showToday={false}
             />
           </Form.Item>
         </Col>
@@ -264,7 +268,10 @@ export default function UserForm() {
                       { required: true, message: 'O campo é obrigatório' },
                     ]}
                   >
-                    <Input placeholder={'(27) 99999-0000'} />
+                    <MaskedInput
+                      mask={'(11) 11111-1111'}
+                      placeholder={'(27) 99999-0000'}
+                    />
                   </Form.Item>
                 </Col>
                 <Col sm={8}>
@@ -279,7 +286,11 @@ export default function UserForm() {
                       },
                     ]}
                   >
-                    <Input placeholder={'111.222.333-44'} maxLength={14} />
+                    <MaskedInput
+                      mask={'111.111.111-11'}
+                      placeholder={'111.222.333-44'}
+                      maxLength={14}
+                    />
                   </Form.Item>
                 </Col>
                 <Col sm={8}>
