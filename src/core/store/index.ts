@@ -24,8 +24,8 @@ export const store = configureStore({
     post: PostReducer,
     metric: MetricReducer,
   },
-  middleware: function (getDefaultMiddleware) {
-    return getDefaultMiddleware().concat(observeActions);
+  middleware: function (getDefaultMiddlewares) {
+    return getDefaultMiddlewares().concat(observeActions);
   },
 });
 
