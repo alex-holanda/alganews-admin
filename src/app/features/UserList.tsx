@@ -160,6 +160,9 @@ export default function UserListFeature() {
             responsive: ['sm'],
             align: 'center',
             width: 100,
+            sorter(a, b) {
+              return a.role.localeCompare(b.role);
+            },
             render(role) {
               return (
                 <Tag
@@ -186,6 +189,9 @@ export default function UserListFeature() {
             align: 'center',
             responsive: ['sm'],
             width: 120,
+            sorter(a, b) {
+              return new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1;
+            },
             render(createdAt) {
               return new Date(createdAt).toLocaleDateString('pt-BR', {
                 day: '2-digit',
