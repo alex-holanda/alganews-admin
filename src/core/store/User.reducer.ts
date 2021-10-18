@@ -5,7 +5,10 @@ import {
   isRejected,
   isPending,
 } from '@reduxjs/toolkit';
+
 import { User, UserService } from 'alex-holanda-sdk';
+
+import { notification } from 'antd';
 
 interface UserState {
   list: User.Summary[];
@@ -44,8 +47,11 @@ export default createReducer(initialState, (builder) => {
     .addMatcher(success, (state) => {
       state.fetching = false;
     })
-    .addMatcher(error, (state) => {
+    .addMatcher(error, (state, action) => {
       state.fetching = false;
+      notification.error({
+        message: action.error.message,
+      });
     })
     .addMatcher(loading, (state) => {
       state.fetching = true;

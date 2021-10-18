@@ -31,6 +31,10 @@ export default function Routes() {
         notification.error({ message: 'Houve um erro' });
       }
     };
+
+    return () => {
+      window.onunhandledrejection = null;
+    };
   }, []);
 
   return (

@@ -357,15 +357,15 @@ export default function UserForm() {
                               {
                                 async validator(field, value) {
                                   if (isNaN(Number(value))) {
-                                    throw Error('Apenas números');
+                                    throw new Error('Apenas números');
                                   }
 
                                   if (Number(value) > 100) {
-                                    throw Error('Máximo até 100');
+                                    throw new Error('Máximo até 100');
                                   }
 
                                   if (Number(value) < 0) {
-                                    throw Error('Mínimo 0');
+                                    throw new Error('Mínimo 0');
                                   }
                                 },
                               },
