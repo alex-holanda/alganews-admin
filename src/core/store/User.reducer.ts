@@ -8,8 +8,6 @@ import {
 
 import { User, UserService } from 'alex-holanda-sdk';
 
-import { notification } from 'antd';
-
 interface UserState {
   list: User.Summary[];
   fetching: boolean;
@@ -49,9 +47,6 @@ export default createReducer(initialState, (builder) => {
     })
     .addMatcher(error, (state, action) => {
       state.fetching = false;
-      notification.error({
-        message: action.error.message,
-      });
     })
     .addMatcher(loading, (state) => {
       state.fetching = true;
