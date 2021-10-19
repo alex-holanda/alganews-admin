@@ -5,7 +5,7 @@ import {
   Col,
   Avatar,
   Input,
-  DatePicker,
+  // DatePicker,
   Divider,
   Tabs,
   Select,
@@ -14,7 +14,7 @@ import {
   notification,
 } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import ptBR from 'antd/es/date-picker/locale/pt_BR';
+// import ptBR from 'antd/es/date-picker/locale/pt_BR';
 
 import ImageCrop from 'antd-img-crop';
 
@@ -25,7 +25,13 @@ import CustomError from 'alex-holanda-sdk/dist/CustomError';
 
 const { TabPane } = Tabs;
 
-export default function UserForm() {
+type UserFormType = User.Detailed;
+
+interface UserFormProps {
+  user?: UserFormType;
+}
+
+export default function UserForm(props: UserFormProps) {
   const [form] = Form.useForm<User.Input>();
   const [avatar, setAvatar] = useState('');
   const [activeTab, setActiveTab] = useState<'personal' | 'bankAccount'>(
@@ -44,36 +50,8 @@ export default function UserForm() {
   return (
     <Form
       form={form}
-      autoComplete={'off'}
       layout={'vertical'}
-      onFinishFailed={(fields) => {
-        let bankAccountErrors = 0;
-        let personalDataErrors = 0;
-
-        fields.errorFields.forEach(({ name }) => {
-          if (name.includes('bankAccount')) {
-            bankAccountErrors++;
-          }
-
-          if (
-            name.includes('location') ||
-            name.includes('skills') ||
-            name.includes('phone') ||
-            name.includes('taxpayerId') ||
-            name.includes('pricePerWord')
-          ) {
-            personalDataErrors++;
-          }
-        });
-
-        if (bankAccountErrors > personalDataErrors) {
-          setActiveTab('bankAccount');
-        }
-
-        if (personalDataErrors > bankAccountErrors) {
-          setActiveTab('personal');
-        }
-      }}
+      initialValues={props.user}
       onFinish={async (user: User.Input) => {
         const userDTO: User.Input = {
           ...user,
@@ -122,6 +100,35 @@ export default function UserForm() {
           }
         }
       }}
+      onFinishFailed={(fields) => {
+        let bankAccountErrors = 0;
+        let personalDataErrors = 0;
+
+        fields.errorFields.forEach(({ name }) => {
+          if (name.includes('bankAccount')) {
+            bankAccountErrors++;
+          }
+
+          if (
+            name.includes('location') ||
+            name.includes('skills') ||
+            name.includes('phone') ||
+            name.includes('taxpayerId') ||
+            name.includes('pricePerWord')
+          ) {
+            personalDataErrors++;
+          }
+        });
+
+        if (bankAccountErrors > personalDataErrors) {
+          setActiveTab('bankAccount');
+        }
+
+        if (personalDataErrors > bankAccountErrors) {
+          setActiveTab('personal');
+        }
+      }}
+      autoComplete={'off'}
     >
       <Row gutter={24} align={'middle'}>
         <Col sm={4}>
@@ -161,7 +168,7 @@ export default function UserForm() {
             <Input placeholder={'E.g.: João Silva'} />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label={'Data de nascimento'}
             name={'birthdate'}
             rules={[{ required: true, message: 'O campo é obrigatório' }]}
@@ -173,7 +180,7 @@ export default function UserForm() {
               style={{ width: '100%' }}
               showToday={false}
             />
-          </Form.Item>
+          </Form.Item> */}
         </Col>
         <Col sm={10}>
           <Form.Item
