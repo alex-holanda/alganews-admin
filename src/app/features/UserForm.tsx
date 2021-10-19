@@ -39,7 +39,7 @@ interface UserFormProps {
 
 export default function UserForm(props: UserFormProps) {
   const [form] = Form.useForm<User.Input>();
-  const [avatar, setAvatar] = useState('');
+  const [avatar, setAvatar] = useState(props.user?.avatarUrls.default || '');
   const [activeTab, setActiveTab] = useState<'personal' | 'bankAccount'>(
     'personal'
   );
@@ -148,6 +148,7 @@ export default function UserForm(props: UserFormProps) {
               onRemove={() => {
                 setAvatar('');
               }}
+              fileList={[...(avatar ? [{ name: 'avatar', uid: '' }] : [])]}
             >
               <Avatar
                 icon={<UserOutlined />}
