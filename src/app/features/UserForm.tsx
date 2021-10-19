@@ -5,7 +5,7 @@ import {
   Col,
   Avatar,
   Input,
-  // DatePicker,
+  DatePicker,
   Divider,
   Tabs,
   Select,
@@ -14,18 +14,24 @@ import {
   notification,
 } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-// import ptBR from 'antd/es/date-picker/locale/pt_BR';
+import ptBR from 'antd/es/date-picker/locale/pt_BR';
 
 import ImageCrop from 'antd-img-crop';
 
 import MaskedInput from 'antd-mask-input';
+
+import { Moment } from 'moment';
 
 import { FileService, User, UserService } from 'alex-holanda-sdk';
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
 
 const { TabPane } = Tabs;
 
-type UserFormType = User.Detailed;
+type UserFormType = {
+  createdAt: Moment;
+  updatedAt: Moment;
+  birthdate: Moment;
+} & Omit<User.Detailed, 'createdAt' | 'updatedAt' | 'birthdate'>;
 
 interface UserFormProps {
   user?: UserFormType;
@@ -168,7 +174,7 @@ export default function UserForm(props: UserFormProps) {
             <Input placeholder={'E.g.: João Silva'} />
           </Form.Item>
 
-          {/* <Form.Item
+          <Form.Item
             label={'Data de nascimento'}
             name={'birthdate'}
             rules={[{ required: true, message: 'O campo é obrigatório' }]}
@@ -180,7 +186,7 @@ export default function UserForm(props: UserFormProps) {
               style={{ width: '100%' }}
               showToday={false}
             />
-          </Form.Item> */}
+          </Form.Item>
         </Col>
         <Col sm={10}>
           <Form.Item
