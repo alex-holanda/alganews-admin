@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams, Redirect } from 'react-router-dom';
+import { useParams, Redirect, Link } from 'react-router-dom';
 
 import {
   Skeleton,
@@ -70,8 +70,10 @@ export default function UserDetailsView() {
               direction={lg ? 'horizontal' : 'vertical'}
               align={lg ? 'start' : 'center'}
             >
-              <Button type={'primary'}>Editar perfil</Button>
-              <Button type={'primary'}>Remover</Button>
+              <Link to={`/usuarios/edicao/${user.id}`}>
+                <Button type={'primary'}>Editar perfil</Button>
+              </Link>
+              <Button type={'primary'}>Desabilitar</Button>
             </Space>
           </Space>
         </Col>
