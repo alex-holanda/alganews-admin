@@ -12,13 +12,17 @@ import {
   Button,
   Progress,
   Descriptions,
+  Divider,
 } from 'antd';
 
 import { useUser } from '../../core/hooks/useUser';
+import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 
 export default function UserDetailsView() {
   const params = useParams<{ id: string }>();
   const { user, fetchUser, notFound } = useUser();
+
+  const { lg } = useBreakpoint();
 
   useEffect(() => {
     if (!isNaN(Number(params.id))) {
@@ -42,19 +46,37 @@ export default function UserDetailsView() {
     <>
       <Row gutter={24}>
         <Col xs={24} lg={4}>
-          <Avatar size={120} src={user.avatarUrls.default} />
+          <Row justify={'center'}>
+            <Avatar size={120} src={user.avatarUrls.default} />
+          </Row>
         </Col>
 
         <Col xs={24} lg={20}>
-          <Typography.Title level={2}>{user.name}</Typography.Title>
+          <Space
+            style={{ width: '100%' }}
+            direction={'vertical'}
+            align={lg ? 'start' : 'center'}
+          >
+            <Typography.Title level={2}>{user.name}</Typography.Title>
 
-          <Typography.Paragraph ellipsis>{user.bio}</Typography.Paragraph>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2 }}
+              style={{ textAlign: lg ? 'left' : 'center' }}
+            >
+              {user.bio}
+            </Typography.Paragraph>
 
-          <Space>
-            <Button type={'primary'}>Editar perfil</Button>
-            <Button type={'primary'}>Remover</Button>
+            <Space
+              direction={lg ? 'horizontal' : 'vertical'}
+              align={lg ? 'start' : 'center'}
+            >
+              <Button type={'primary'}>Editar perfil</Button>
+              <Button type={'primary'}>Remover</Button>
+            </Space>
           </Space>
         </Col>
+
+        <Divider />
 
         <Col xs={24} lg={12}>
           <Space direction={'vertical'} style={{ width: '100%' }}>
