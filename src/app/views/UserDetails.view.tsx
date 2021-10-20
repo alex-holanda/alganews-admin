@@ -10,6 +10,7 @@ import {
   Typography,
   Space,
   Button,
+  Progress,
 } from 'antd';
 
 import { useUser } from '../../core/hooks/useUser';
@@ -38,7 +39,7 @@ export default function UserDetailsView() {
 
   return (
     <>
-      <Row>
+      <Row gutter={24}>
         <Col xs={24} lg={4}>
           <Avatar size={120} src={user.avatarUrls.default} />
         </Col>
@@ -51,6 +52,17 @@ export default function UserDetailsView() {
           <Space>
             <Button type={'primary'}>Editar perfil</Button>
             <Button type={'primary'}>Remover</Button>
+          </Space>
+        </Col>
+
+        <Col xs={24} lg={12}>
+          <Space direction={'vertical'} style={{ width: '100%' }}>
+            {user.skills?.map((skill, index) => (
+              <div key={index}>
+                <Typography.Text>{skill.name}</Typography.Text>
+                <Progress percent={skill.percentage} success={{ percent: 0 }} />
+              </div>
+            ))}
           </Space>
         </Col>
       </Row>
