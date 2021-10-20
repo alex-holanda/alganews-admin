@@ -229,7 +229,9 @@ export default function UserListFeature() {
               return (
                 <Space>
                   <Tooltip title={'Visualizar usuário'} placement={'left'}>
-                    <Button size={'small'} icon={<EyeOutlined />} />
+                    <Link to={`/usuarios/${id}`}>
+                      <Button size={'small'} icon={<EyeOutlined />} />
+                    </Link>
                   </Tooltip>
 
                   <Tooltip title={'Editar usuário'} placement={'right'}>
