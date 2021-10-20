@@ -143,7 +143,15 @@ export default function UserForm(props: UserFormProps) {
       autoComplete={'off'}
     >
       <Row gutter={24} align={'middle'}>
-        <Col sm={4}>
+        <Col
+          xs={24}
+          lg={4}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <ImageCrop rotate shape={'round'} grid aspect={1 / 1}>
             <Upload
               maxCount={1}
@@ -169,7 +177,7 @@ export default function UserForm(props: UserFormProps) {
           </Form.Item>
         </Col>
 
-        <Col sm={10}>
+        <Col xs={24} lg={10}>
           <Form.Item
             label={'Nome'}
             name={'name'}
@@ -195,7 +203,7 @@ export default function UserForm(props: UserFormProps) {
             />
           </Form.Item>
         </Col>
-        <Col sm={10}>
+        <Col xs={24} lg={10}>
           <Form.Item
             label={'Bio'}
             name={'bio'}
@@ -215,7 +223,7 @@ export default function UserForm(props: UserFormProps) {
           <Divider />
         </Col>
 
-        <Col sm={12}>
+        <Col xs={24} lg={12}>
           <Form.Item
             label={'Perfil'}
             name={'role'}
@@ -228,7 +236,7 @@ export default function UserForm(props: UserFormProps) {
             </Select>
           </Form.Item>
         </Col>
-        <Col sm={12}>
+        <Col xs={24} lg={12}>
           <Form.Item
             label={'E-mail'}
             name={'email'}
@@ -247,11 +255,11 @@ export default function UserForm(props: UserFormProps) {
           </Form.Item>
         </Col>
 
-        <Col sm={24}>
+        <Col xs={24} lg={24}>
           <Divider />
         </Col>
 
-        <Col sm={24}>
+        <Col xs={24} lg={24}>
           <Tabs
             defaultActiveKey={'personal'}
             activeKey={activeTab}
@@ -259,7 +267,7 @@ export default function UserForm(props: UserFormProps) {
           >
             <TabPane key={'personal'} tab={'Dados pessoais'} forceRender>
               <Row gutter={24}>
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'País'}
                     name={['location', 'country']}
@@ -270,7 +278,7 @@ export default function UserForm(props: UserFormProps) {
                     <Input placeholder={'E.g.: Brasil'} />
                   </Form.Item>
                 </Col>
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Estado'}
                     name={['location', 'state']}
@@ -281,7 +289,7 @@ export default function UserForm(props: UserFormProps) {
                     <Input placeholder={'E.g.: Espírito Santo'} />
                   </Form.Item>
                 </Col>
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Cidade'}
                     name={['location', 'city']}
@@ -293,7 +301,7 @@ export default function UserForm(props: UserFormProps) {
                   </Form.Item>
                 </Col>
 
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Telefone'}
                     name={'phone'}
@@ -307,7 +315,7 @@ export default function UserForm(props: UserFormProps) {
                     />
                   </Form.Item>
                 </Col>
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'CPF'}
                     name={'taxpayerId'}
@@ -326,7 +334,7 @@ export default function UserForm(props: UserFormProps) {
                     />
                   </Form.Item>
                 </Col>
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Preço por palavra'}
                     name={'pricePerWord'}
@@ -343,7 +351,7 @@ export default function UserForm(props: UserFormProps) {
                   .map((_, index) => {
                     return (
                       <React.Fragment key={index}>
-                        <Col sm={6}>
+                        <Col xs={19} lg={6}>
                           <Form.Item
                             label={'Habilidade'}
                             name={['skills', index, 'name']}
@@ -365,7 +373,7 @@ export default function UserForm(props: UserFormProps) {
                             />
                           </Form.Item>
                         </Col>
-                        <Col sm={2}>
+                        <Col xs={5} lg={2}>
                           <Form.Item
                             label={'%'}
                             name={['skills', index, 'percentage']}
@@ -397,14 +405,12 @@ export default function UserForm(props: UserFormProps) {
                       </React.Fragment>
                     );
                   })}
-
-                <Col sm={8}></Col>
               </Row>
             </TabPane>
 
             <TabPane key={'bankAccount'} tab={'Dados bancários'} forceRender>
               <Row gutter={24}>
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Instituição'}
                     name={['bankAccount', 'bankCode']}
@@ -421,7 +427,7 @@ export default function UserForm(props: UserFormProps) {
                   </Form.Item>
                 </Col>
 
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Agência'}
                     name={['bankAccount', 'agency']}
@@ -438,7 +444,7 @@ export default function UserForm(props: UserFormProps) {
                   </Form.Item>
                 </Col>
 
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Conta sem dígito'}
                     name={['bankAccount', 'number']}
@@ -455,7 +461,7 @@ export default function UserForm(props: UserFormProps) {
                   </Form.Item>
                 </Col>
 
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Dígito'}
                     name={['bankAccount', 'digit']}
@@ -472,7 +478,7 @@ export default function UserForm(props: UserFormProps) {
                   </Form.Item>
                 </Col>
 
-                <Col sm={8}>
+                <Col xs={24} lg={8}>
                   <Form.Item
                     label={'Tipo de conta'}
                     name={['bankAccount', 'type']}
@@ -494,7 +500,7 @@ export default function UserForm(props: UserFormProps) {
             </TabPane>
           </Tabs>
         </Col>
-        <Col sm={24}>
+        <Col xs={24} lg={24}>
           <Row justify={'end'}>
             <Button htmlType={'submit'} type={'primary'}>
               {props.user ? 'Atualizar usuário' : 'Cadastrar usuário'}
