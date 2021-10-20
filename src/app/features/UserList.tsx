@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import {
   Table,
@@ -10,6 +11,7 @@ import {
   Card,
   Input,
   Descriptions,
+  Tooltip,
 } from 'antd';
 import { EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 
@@ -223,11 +225,18 @@ export default function UserListFeature() {
             align: 'center',
             responsive: ['sm'],
             width: 100,
-            render() {
+            render(id: number) {
               return (
                 <Space>
-                  <Button size={'small'} icon={<EyeOutlined />} />
-                  <Button size={'small'} icon={<EditOutlined />} />
+                  <Tooltip title={'Visualizar usuário'} placement={'left'}>
+                    <Button size={'small'} icon={<EyeOutlined />} />
+                  </Tooltip>
+
+                  <Tooltip title={'Editar usuário'} placement={'right'}>
+                    <Link to={`/usuarios/edicao/${id}`}>
+                      <Button size={'small'} icon={<EditOutlined />} />
+                    </Link>
+                  </Tooltip>
                 </Space>
               );
             },
