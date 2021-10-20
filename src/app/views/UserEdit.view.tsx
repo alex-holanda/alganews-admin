@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useParams, Redirect } from 'react-router-dom';
 
-import { notification, Skeleton } from 'antd';
+import { notification, Skeleton, Card } from 'antd';
 
 import moment from 'moment';
 
@@ -13,7 +13,7 @@ import UserForm from '../features/UserForm';
 
 export default function UserEditView() {
   const params = useParams<{ id: string }>();
-  const { user, fetchUser } = useUser();
+  const { user, fetchUser, notFound } = useUser();
 
   useEffect(() => {
     if (!isNaN(Number(params.id))) {
@@ -38,6 +38,10 @@ export default function UserEditView() {
 
   if (isNaN(Number(params.id))) {
     return <Redirect to={'/usuarios'} />;
+  }
+
+  if (notFound) {
+    return <Card>Usuário não encontrado</Card>;
   }
 
   if (!user) {
