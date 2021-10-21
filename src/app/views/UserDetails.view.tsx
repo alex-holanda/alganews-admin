@@ -20,6 +20,7 @@ import confirm from 'antd/lib/modal/confirm';
 import { WarningFilled } from '@ant-design/icons';
 
 import { useUser } from '../../core/hooks/useUser';
+import EditorPostsList from '../features/EditorPostsList';
 
 export default function UserDetailsView() {
   const params = useParams<{ id: string }>();
@@ -139,6 +140,15 @@ export default function UserDetailsView() {
             </Descriptions.Item>
           </Descriptions>
         </Col>
+
+        {user.role === 'EDITOR' && (
+          <>
+            <Divider />
+            <Col span={24}>
+              <EditorPostsList editorId={user.id} />
+            </Col>
+          </>
+        )}
       </Row>
     </>
   );

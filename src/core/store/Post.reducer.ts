@@ -8,28 +8,36 @@ import {
 import { Post, PostService } from 'alex-holanda-sdk';
 
 interface PostState {
-  latestPosts: Post.Paginated;
+  posts: Post.Paginated;
   fetching: boolean;
 }
 
 const initialState: PostState = {
-  latestPosts: {} as Post.Paginated,
+  posts: {} as Post.Paginated,
   fetching: false,
 };
 
-export const getLatestPosts = createAsyncThunk(
-  'post/latestPosts',
+export const getAllPosts = createAsyncThunk(
+  'post/getAllPosts',
   async (query: Post.Query) => PostService.getAllPosts(query)
 );
 
+export const togglePostPublish = createAsyncThunk(
+  'post/publishPost',
+  async (post: Post.Summary) =>
+    post.published
+      ? PostService.deactivateExistingPost(post.id)
+      : PostService.publishExistingPost(post.id)
+);
+
 export default createReducer(initialState, (builder) => {
-  const success = isFulfilled(getLatestPosts);
-  const error = isRejected(getLatestPosts);
-  const loading = isPending(getLatestPosts);
+  const success = isFulfilled(getAllPosts, togglePostPublish);
+  const error = isRejected(getAllPosts, togglePostPublish);
+  const loading = isPending(getAllPosts, togglePostPublish);
 
   builder
-    .addCase(getLatestPosts.fulfilled, (state, action) => {
-      state.latestPosts = action.payload;
+    .addCase(getAllPosts.fulfilled, (state, action) => {
+      state.posts = action.payload;
     })
     .addMatcher(success, (state) => {
       state.fetching = false;

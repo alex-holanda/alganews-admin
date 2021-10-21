@@ -1,12 +1,14 @@
-import { Avatar, Card, Col, Row } from 'antd';
 import { useEffect } from 'react';
-import { useLatestPosts } from '../../core/hooks/useLatestPosts';
+
+import { Avatar, Card, Col, Row } from 'antd';
+
+import { usePosts } from '../../core/hooks/usePosts';
 
 export default function LatestPosts() {
-  const { fetchPosts, posts } = useLatestPosts();
+  const { fetchPosts, posts } = usePosts();
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts({ sort: ['createdAt', 'desc'], page: 0, size: 3 });
   }, [fetchPosts]);
 
   return (
