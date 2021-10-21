@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { useParams, Redirect } from 'react-router-dom';
+import { useParams, Redirect, useHistory } from 'react-router-dom';
 
 import { notification, Skeleton, Card } from 'antd';
 
@@ -12,6 +12,7 @@ import { useUser } from '../../core/hooks/useUser';
 import UserForm from '../features/UserForm';
 
 export default function UserEditView() {
+  const history = useHistory();
   const params = useParams<{ id: string }>();
   const { user, fetchUser, notFound } = useUser();
 
@@ -30,8 +31,9 @@ export default function UserEditView() {
     };
   }, []);
 
-  function handleUserUpdate(user: User.Input) {
-    UserService.updateExistingUser(Number(params.id), user).then(() => {
+  async function handleUserUpdate(user: User.Input) {
+    await UserService.updateExistingUser(Number(params.id), user).then(() => {
+      history.push(`/usuarios`);
       notification.success({ message: 'Usuário atualizado' });
     });
   }

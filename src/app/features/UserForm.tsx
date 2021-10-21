@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Form,
   Row,
@@ -35,15 +36,17 @@ type UserFormType = {
 
 interface UserFormProps {
   user?: UserFormType;
-  onUpdate?: (user: User.Input) => any;
+  onUpdate?: (user: User.Input) => Promise<any>;
 }
 
 export default function UserForm(props: UserFormProps) {
+  const history = useHistory();
   const [form] = Form.useForm<User.Input>();
   const [avatar, setAvatar] = useState(props.user?.avatarUrls.default || '');
   const [activeTab, setActiveTab] = useState<'personal' | 'bankAccount'>(
     'personal'
   );
+  const [loading, setLoading] = useState(false);
 
   const handleAvatarUpload = useCallback(async (file: File) => {
     const avatarSource = await FileService.upload(file);
@@ -60,6 +63,7 @@ export default function UserForm(props: UserFormProps) {
       layout={'vertical'}
       initialValues={props.user}
       onFinish={async (user: User.Input) => {
+        setLoading(true);
         const userDTO: User.Input = {
           ...user,
           phone: user.phone.replace(/\D/g, ''),
@@ -67,11 +71,17 @@ export default function UserForm(props: UserFormProps) {
         };
 
         if (props.user) {
-          return props.onUpdate && props.onUpdate(userDTO);
+          return (
+            props.onUpdate &&
+            props.onUpdate(userDTO).finally(() => {
+              setLoading(false);
+            })
+          );
         }
 
         try {
           await UserService.insertNewUser(userDTO);
+          history.push(`/usuarios`);
           notification.success({
             message: 'Sucesso',
             description: 'Usuário criado com sucesso',
@@ -110,6 +120,8 @@ export default function UserForm(props: UserFormProps) {
           } else {
             notification.error({ message: 'Houve um erro' });
           }
+        } finally {
+          setLoading(false);
         }
       }}
       onFinishFailed={(fields) => {
@@ -502,7 +514,7 @@ export default function UserForm(props: UserFormProps) {
         </Col>
         <Col xs={24} lg={24}>
           <Row justify={'end'}>
-            <Button htmlType={'submit'} type={'primary'}>
+            <Button htmlType={'submit'} type={'primary'} loading={loading}>
               {props.user ? 'Atualizar usuário' : 'Cadastrar usuário'}
             </Button>
           </Row>
