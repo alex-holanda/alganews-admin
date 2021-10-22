@@ -25,6 +25,7 @@ import { Moment } from 'moment';
 
 import { FileService, User, UserService } from 'alex-holanda-sdk';
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
+import CurrencyInput from '../components/CurrencyInput';
 
 const { TabPane } = Tabs;
 
@@ -75,6 +76,7 @@ export default function UserForm(props: UserFormProps) {
             props.onUpdate &&
             props.onUpdate(userDTO).finally(() => {
               setLoading(false);
+              history.push(`/usuarios`);
             })
           );
         }
@@ -352,9 +354,18 @@ export default function UserForm(props: UserFormProps) {
                     name={'pricePerWord'}
                     rules={[
                       { required: true, message: 'O campo é obrigatório' },
+                      {
+                        type: 'number',
+                        min: 0.01,
+                        message: 'O valor mínimo é 1 centavo',
+                      },
                     ]}
                   >
-                    <Input placeholder={'0'} />
+                    <CurrencyInput
+                      onChange={(e, value) => {
+                        form.setFieldsValue({ pricePerWord: value });
+                      }}
+                    />
                   </Form.Item>
                 </Col>
 
@@ -363,7 +374,7 @@ export default function UserForm(props: UserFormProps) {
                   .map((_, index) => {
                     return (
                       <React.Fragment key={index}>
-                        <Col xs={19} lg={6}>
+                        <Col xs={19} lg={5}>
                           <Form.Item
                             label={'Habilidade'}
                             name={['skills', index, 'name']}
@@ -385,7 +396,7 @@ export default function UserForm(props: UserFormProps) {
                             />
                           </Form.Item>
                         </Col>
-                        <Col xs={5} lg={2}>
+                        <Col xs={5} lg={3}>
                           <Form.Item
                             label={'%'}
                             name={['skills', index, 'percentage']}
