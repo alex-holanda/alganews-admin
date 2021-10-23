@@ -11,8 +11,11 @@ import { useUser } from '../../core/hooks/useUser';
 
 import UserForm from '../features/UserForm';
 import { NotFoundError } from '../components/NotFoundError';
+import { usePageTitle } from '../../core/hooks/usePageTitle';
 
 export default function UserEditView() {
+  usePageTitle('Edição de usuário');
+
   const params = useParams<{ id: string }>();
   const { user, fetchUser, notFound } = useUser();
 

@@ -22,8 +22,11 @@ import { WarningFilled } from '@ant-design/icons';
 import { useUser } from '../../core/hooks/useUser';
 import EditorPostsList from '../features/EditorPostsList';
 import { NotFoundError } from '../components/NotFoundError';
+import { usePageTitle } from '../../core/hooks/usePageTitle';
 
 export default function UserDetailsView() {
+  usePageTitle('Detelhe do usuário');
+
   const params = useParams<{ id: string }>();
   const { user, fetchUser, notFound, toggleUserStatus } = useUser();
 
