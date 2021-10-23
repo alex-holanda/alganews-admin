@@ -10,6 +10,7 @@ import { User, UserService } from 'alex-holanda-sdk';
 import { useUser } from '../../core/hooks/useUser';
 
 import UserForm from '../features/UserForm';
+import { NotFoundError } from '../components/NotFoundError';
 
 export default function UserEditView() {
   const params = useParams<{ id: string }>();
@@ -41,7 +42,15 @@ export default function UserEditView() {
   }
 
   if (notFound) {
-    return <Card>Usuário não encontrado</Card>;
+    return (
+      <Card>
+        <NotFoundError
+          title={'Usuário não encontrado'}
+          actionDestination={'/usuarios'}
+          actionTitle={'Voltar para a lista de usuários'}
+        />
+      </Card>
+    );
   }
 
   if (!user) {

@@ -21,6 +21,7 @@ import { WarningFilled } from '@ant-design/icons';
 
 import { useUser } from '../../core/hooks/useUser';
 import EditorPostsList from '../features/EditorPostsList';
+import { NotFoundError } from '../components/NotFoundError';
 
 export default function UserDetailsView() {
   const params = useParams<{ id: string }>();
@@ -39,7 +40,15 @@ export default function UserDetailsView() {
   }
 
   if (notFound) {
-    return <Card>Usuário não encontrado</Card>;
+    return (
+      <Card>
+        <NotFoundError
+          title={'Usuário não encontrado'}
+          actionDestination={'/usuarios'}
+          actionTitle={'Voltar para a lista de usuários'}
+        />
+      </Card>
+    );
   }
 
   if (!user) {
