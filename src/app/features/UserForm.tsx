@@ -48,6 +48,9 @@ export default function UserForm(props: UserFormProps) {
     'personal'
   );
   const [loading, setLoading] = useState(false);
+  const [isEditorRole, setIsEditorRole] = useState(
+    props.user?.role === 'EDITOR'
+  );
 
   const handleAvatarUpload = useCallback(async (file: File) => {
     const avatarSource = await FileService.upload(file);
@@ -243,7 +246,10 @@ export default function UserForm(props: UserFormProps) {
             name={'role'}
             rules={[{ required: true, message: 'O campo é obrigatório' }]}
           >
-            <Select placeholder={'Selecione um perfil'}>
+            <Select
+              placeholder={'Selecione um perfil'}
+              onChange={(value) => setIsEditorRole(value === 'EDITOR')}
+            >
               <Select.Option value={'EDITOR'}>Editor</Select.Option>
               <Select.Option value={'ASSISTENT'}>Assistente</Select.Option>
               <Select.Option value={'MANAGER'}>Gerente</Select.Option>
@@ -348,86 +354,90 @@ export default function UserForm(props: UserFormProps) {
                     />
                   </Form.Item>
                 </Col>
-                <Col xs={24} lg={8}>
-                  <Form.Item
-                    label={'Preço por palavra'}
-                    name={'pricePerWord'}
-                    rules={[
-                      { required: true, message: 'O campo é obrigatório' },
-                      {
-                        type: 'number',
-                        min: 0.01,
-                        message: 'O valor mínimo é 1 centavo',
-                      },
-                    ]}
-                  >
-                    <CurrencyInput
-                      onChange={(e, value) => {
-                        form.setFieldsValue({ pricePerWord: value });
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
+                {isEditorRole && (
+                  <>
+                    <Col xs={24} lg={8}>
+                      <Form.Item
+                        label={'Preço por palavra'}
+                        name={'pricePerWord'}
+                        rules={[
+                          { required: true, message: 'O campo é obrigatório' },
+                          {
+                            type: 'number',
+                            min: 0.01,
+                            message: 'O valor mínimo é 1 centavo',
+                          },
+                        ]}
+                      >
+                        <CurrencyInput
+                          onChange={(e, value) => {
+                            form.setFieldsValue({ pricePerWord: value });
+                          }}
+                        />
+                      </Form.Item>
+                    </Col>
 
-                {Array(3)
-                  .fill(null)
-                  .map((_, index) => {
-                    return (
-                      <React.Fragment key={index}>
-                        <Col xs={19} lg={5}>
-                          <Form.Item
-                            label={'Habilidade'}
-                            name={['skills', index, 'name']}
-                            rules={[
-                              {
-                                required: true,
-                                message: 'O campo é obrigatório',
-                              },
-                              {
-                                max: 50,
-                                message:
-                                  'O nome deve ter no máximo 50 caracteres',
-                              },
-                            ]}
-                          >
-                            <Input
-                              placeholder={'E.g.: Javascript'}
-                              maxLength={50}
-                            />
-                          </Form.Item>
-                        </Col>
-                        <Col xs={5} lg={3}>
-                          <Form.Item
-                            label={'%'}
-                            name={['skills', index, 'percentage']}
-                            rules={[
-                              {
-                                required: true,
-                                message: '',
-                              },
-                              {
-                                async validator(field, value) {
-                                  if (isNaN(Number(value))) {
-                                    throw new Error('Apenas números');
-                                  }
+                    {Array(3)
+                      .fill(null)
+                      .map((_, index) => {
+                        return (
+                          <React.Fragment key={index}>
+                            <Col xs={19} lg={5}>
+                              <Form.Item
+                                label={'Habilidade'}
+                                name={['skills', index, 'name']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'O campo é obrigatório',
+                                  },
+                                  {
+                                    max: 50,
+                                    message:
+                                      'O nome deve ter no máximo 50 caracteres',
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder={'E.g.: Javascript'}
+                                  maxLength={50}
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col xs={5} lg={3}>
+                              <Form.Item
+                                label={'%'}
+                                name={['skills', index, 'percentage']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: '',
+                                  },
+                                  {
+                                    async validator(field, value) {
+                                      if (isNaN(Number(value))) {
+                                        throw new Error('Apenas números');
+                                      }
 
-                                  if (Number(value) > 100) {
-                                    throw new Error('Máximo até 100');
-                                  }
+                                      if (Number(value) > 100) {
+                                        throw new Error('Máximo até 100');
+                                      }
 
-                                  if (Number(value) < 0) {
-                                    throw new Error('Mínimo 0');
-                                  }
-                                },
-                              },
-                            ]}
-                          >
-                            <Input />
-                          </Form.Item>
-                        </Col>
-                      </React.Fragment>
-                    );
-                  })}
+                                      if (Number(value) < 0) {
+                                        throw new Error('Mínimo 0');
+                                      }
+                                    },
+                                  },
+                                ]}
+                              >
+                                <Input />
+                              </Form.Item>
+                            </Col>
+                          </React.Fragment>
+                        );
+                      })}
+                  </>
+                )}
               </Row>
             </TabPane>
 
