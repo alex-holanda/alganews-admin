@@ -30,5 +30,6 @@ export function usePosts() {
     fetchPosts,
     fetching,
     togglePostPublish,
+    totalElements: posts.totalElements,
   };
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Descriptions, Switch, Table } from 'antd';
 
@@ -11,11 +11,13 @@ interface EditorPostsListProps {
 }
 
 export default function EditorPostsList(props: EditorPostsListProps) {
-  const { posts, fetchPosts, togglePostPublish, fetching } = usePosts();
+  const { posts, fetchPosts, togglePostPublish, fetching, totalElements } =
+    usePosts();
+  const [page, setPage] = useState(0);
 
   const query = useMemo<Post.Query>(() => {
-    return { editorId: props.editorId, showAll: true };
-  }, [props.editorId]);
+    return { editorId: props.editorId, showAll: true, page, size: 10 };
+  }, [props.editorId, page]);
 
   useEffect(() => {
     fetchPosts(query);
@@ -109,6 +111,11 @@ export default function EditorPostsList(props: EditorPostsListProps) {
             },
           },
         ]}
+        pagination={{
+          total: totalElements,
+          pageSize: 10,
+          onChange: (page) => setPage(page - 1),
+        }}
       />
     </>
   );
