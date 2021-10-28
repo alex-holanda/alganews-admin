@@ -148,7 +148,10 @@ export default function UserDetailsView() {
               {user.location.city}
             </Descriptions.Item>
             <Descriptions.Item label={'Telefone'}>
-              {user.phone}
+              {`(${user.phone.substring(0, 2)}) ${user.phone.substring(
+                2,
+                7
+              )}-${user.phone.substring(7)}`}
             </Descriptions.Item>
           </Descriptions>
         </Col>
