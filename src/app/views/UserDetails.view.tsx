@@ -124,17 +124,23 @@ export default function UserDetailsView() {
         </Col>
 
         <Divider />
-
-        <Col xs={24} lg={12}>
-          <Space direction={'vertical'} style={{ width: '100%' }}>
-            {user.skills?.map((skill, index) => (
-              <div key={index}>
-                <Typography.Text>{skill.name}</Typography.Text>
-                <Progress percent={skill.percentage} success={{ percent: 0 }} />
-              </div>
-            ))}
-          </Space>
-        </Col>
+        {!!user.skills?.length && (
+          <>
+            <Col xs={24} lg={12}>
+              <Space direction={'vertical'} style={{ width: '100%' }}>
+                {user.skills?.map((skill, index) => (
+                  <div key={index}>
+                    <Typography.Text>{skill.name}</Typography.Text>
+                    <Progress
+                      percent={skill.percentage}
+                      success={{ percent: 0 }}
+                    />
+                  </div>
+                ))}
+              </Space>
+            </Col>
+          </>
+        )}
 
         <Col xs={24} lg={12}>
           <Descriptions column={1} bordered size={'small'}>
@@ -148,10 +154,8 @@ export default function UserDetailsView() {
               {user.location.city}
             </Descriptions.Item>
             <Descriptions.Item label={'Telefone'}>
-              {`(${user.phone.substring(0, 2)}) ${user.phone.substring(
-                2,
-                7
-              )}-${user.phone.substring(7)}`}
+              {`(${user.phone.substring(0, 2)})
+              ${user.phone.substring(2, 7)}-${user.phone.substring(7)}`}
             </Descriptions.Item>
           </Descriptions>
         </Col>
