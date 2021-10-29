@@ -12,8 +12,15 @@ import {
   Input,
   Descriptions,
   Tooltip,
+  Col,
+  Row,
 } from 'antd';
-import { EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  EyeOutlined,
+  EditOutlined,
+  SearchOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons';
 
 import { ColumnProps } from 'antd/lib/table';
 
@@ -26,6 +33,10 @@ export default function UserListFeature() {
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+
+  function handleUpdateUserList() {
+    fetchUsers();
+  }
 
   const getColumnSearchProps = (
     dataIndex: keyof User.Summary,
@@ -79,6 +90,17 @@ export default function UserListFeature() {
 
   return (
     <>
+      <Row justify={'end'}>
+        <Col>
+          <Button
+            type={'default'}
+            onClick={handleUpdateUserList}
+            icon={<ReloadOutlined />}
+          >
+            Atualiar
+          </Button>
+        </Col>
+      </Row>
       <Table<User.Summary>
         loading={fetching}
         dataSource={users}
