@@ -8,21 +8,31 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './core/store';
 
+import { ConfigProvider } from 'antd';
+import ptBR from 'antd/lib/locale/pt_BR';
+
+import moment from 'moment';
+import 'moment/locale/pt-br';
+
 import DefaultLayout from './app/layouts/Default';
 
 import Routes from './app/routes';
 
 import './index.less';
 
+moment.locale('pt-br');
+
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <DefaultLayout>
-          <Routes />
-        </DefaultLayout>
-      </BrowserRouter>
-    </Provider>
+    <ConfigProvider locale={ptBR}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <DefaultLayout>
+            <Routes />
+          </DefaultLayout>
+        </BrowserRouter>
+      </Provider>
+    </ConfigProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

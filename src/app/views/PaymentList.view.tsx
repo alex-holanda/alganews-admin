@@ -48,6 +48,7 @@ export default function PaymentListView() {
               onOk() {
                 console.log('TODO: implement batch approval');
               },
+              cancelText: 'Cancelar',
             });
           }}
         >
@@ -165,6 +166,7 @@ export default function PaymentListView() {
                         onOk() {
                           console.log('TODO: remover agendamento');
                         },
+                        cancelText: 'Cancelar',
                       });
                     }}
                   >
