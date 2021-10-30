@@ -1,7 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Popconfirm, Row, Space, Table, Tag, Tooltip } from 'antd';
+import {
+  Button,
+  Popconfirm,
+  Row,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+  DatePicker,
+} from 'antd';
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { Payment } from 'alex-holanda-sdk';
@@ -13,13 +22,18 @@ import { Key } from 'antd/lib/table/interface';
 export default function PaymentListView() {
   const { payments, fetchPayments } = usePayments();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const [yearMonth, setYearMonth] = useState<string | undefined>();
 
   useEffect(() => {
-    fetchPayments({ sort: ['scheduledTo', 'desc'], page: 0 });
-  }, [fetchPayments]);
+    fetchPayments({
+      scheduledToYearMonth: yearMonth,
+      sort: ['scheduledTo', 'desc'],
+      page: 0,
+    });
+  }, [fetchPayments, yearMonth]);
   return (
     <>
-      <Row>
+      <Row justify={'space-between'}>
         <Popconfirm
           title={
             selectedRowKeys.length === 1
@@ -41,6 +55,14 @@ export default function PaymentListView() {
             Aprovar pagamentos
           </Button>
         </Popconfirm>
+
+        <DatePicker.MonthPicker
+          style={{ width: '240px' }}
+          onChange={(date) => {
+            setYearMonth(date ? date.format('YYYY-MM') : undefined);
+          }}
+          format={'MMMM - YYYY'}
+        />
       </Row>
       <Table<Payment.Summary>
         dataSource={payments}
