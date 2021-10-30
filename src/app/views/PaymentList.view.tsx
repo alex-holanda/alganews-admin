@@ -1,25 +1,57 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Popconfirm, Space, Table, Tag, Tooltip } from 'antd';
+import { Button, Popconfirm, Row, Space, Table, Tag, Tooltip } from 'antd';
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { Payment } from 'alex-holanda-sdk';
 
 import { usePayments } from '../../core/hooks/usePayments';
 import confirm from 'antd/lib/modal/confirm';
+import { Key } from 'antd/lib/table/interface';
 
 export default function PaymentListView() {
   const { payments, fetchPayments } = usePayments();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
   useEffect(() => {
     fetchPayments({ sort: ['scheduledTo', 'desc'], page: 0 });
   }, [fetchPayments]);
   return (
     <>
+      <Row>
+        <Popconfirm
+          title={
+            selectedRowKeys.length === 1
+              ? 'Você deseja aprovar o pagamento selecionado?'
+              : 'Você deseja aprovar os pagamentos selecionados?'
+          }
+          onConfirm={() => {
+            confirm({
+              title: 'Aprovar pagamento',
+              content:
+                'Esta é uma ação irreversível. Ao aprovar um pagamento, ele não poderá ser removido!',
+              onOk() {
+                console.log('TODO: implement batch approval');
+              },
+            });
+          }}
+        >
+          <Button type={'primary'} disabled={selectedRowKeys.length === 0}>
+            Aprovar pagamentos
+          </Button>
+        </Popconfirm>
+      </Row>
       <Table<Payment.Summary>
         dataSource={payments}
         rowKey={'id'}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: setSelectedRowKeys,
+          getCheckboxProps(payment) {
+            return !payment.canBeApproved ? { disabled: true } : {};
+          },
+        }}
         columns={[
           {
             dataIndex: 'id',
