@@ -21,6 +21,7 @@ import { usePayments } from '../../core/hooks/usePayments';
 import confirm from 'antd/lib/modal/confirm';
 import { Key } from 'antd/lib/table/interface';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
+import { DoubleConfirm } from '../components/DoubleConfirm';
 
 export default function PaymentListView() {
   const { payments, fetchPayments } = usePayments();
@@ -46,23 +47,19 @@ export default function PaymentListView() {
             ...(!xs && { justifyContent: 'space-between' }),
           }}
         >
-          <Popconfirm
-            title={
+          <DoubleConfirm
+            disabled={selectedRowKeys.length === 0}
+            popConfirmTitle={
               selectedRowKeys.length === 1
                 ? 'Você deseja aprovar o agendamento selecionado?'
                 : 'Você deseja aprovar os agendamentos selecionados?'
             }
-            disabled={selectedRowKeys.length === 0}
+            modalTitle={'Aprovar agendamento'}
+            modalContent={
+              'Esta é uma ação irreversível. Ao aprovar, não poderá ser removido!'
+            }
             onConfirm={() => {
-              confirm({
-                title: 'Aprovar agendamentos',
-                content:
-                  'Esta é uma ação irreversível. Ao aprovar, não poderá ser removido!',
-                onOk() {
-                  console.log('TODO: implement batch approval');
-                },
-                cancelText: 'Cancelar',
-              });
+              console.log('TODO: implement batch approval');
             }}
           >
             <Button
@@ -72,7 +69,7 @@ export default function PaymentListView() {
             >
               Aprovar agendamentos
             </Button>
-          </Popconfirm>
+          </DoubleConfirm>
 
           <DatePicker.MonthPicker
             style={{ width: xs ? '100%' : '240px' }}
@@ -158,19 +155,15 @@ export default function PaymentListView() {
                             </Link>
                           </Tooltip>
 
-                          <Popconfirm
-                            title={'Remover agendamento?'}
+                          <DoubleConfirm
                             disabled={!payment.canBeDeleted}
+                            popConfirmTitle={'Remover agendamento?'}
+                            modalTitle={'Remover agendamento'}
+                            modalContent={
+                              'Esta é uma ação irreversível. Ao remover um agendamento, ele não poderá ser recuperado!'
+                            }
                             onConfirm={() => {
-                              confirm({
-                                title: 'Remover agendamento',
-                                content:
-                                  'Esta é uma ação irreversível. Ao remover um agendamento, ele não poderá ser recuperado!',
-                                onOk() {
-                                  console.log('TODO: remover agendamento');
-                                },
-                                cancelText: 'Cancelar',
-                              });
+                              console.log('TODO: remover agendamento');
                             }}
                           >
                             <Tooltip
@@ -185,7 +178,7 @@ export default function PaymentListView() {
                                 disabled={!payment.canBeDeleted}
                               />
                             </Tooltip>
-                          </Popconfirm>
+                          </DoubleConfirm>
                         </Space>
                       </Descriptions.Item>
                     </Descriptions>
@@ -282,19 +275,15 @@ export default function PaymentListView() {
                         </Link>
                       </Tooltip>
 
-                      <Popconfirm
-                        title={'Remover agendamento?'}
+                      <DoubleConfirm
                         disabled={!payment.canBeDeleted}
+                        popConfirmTitle={'Remover agendamento'}
+                        modalTitle={'Remover agendamento'}
+                        modalContent={
+                          'Esta é uma ação irreversível. Ao remover um agendamento, ele não poderá ser recuperado!'
+                        }
                         onConfirm={() => {
-                          confirm({
-                            title: 'Remover agendamento',
-                            content:
-                              'Esta é uma ação irreversível. Ao remover um agendamento, ele não poderá ser recuperado!',
-                            onOk() {
-                              console.log('TODO: remover agendamento');
-                            },
-                            cancelText: 'Cancelar',
-                          });
+                          console.log('TODO: remover agendamento');
                         }}
                       >
                         <Tooltip
@@ -309,7 +298,7 @@ export default function PaymentListView() {
                             disabled={!payment.canBeDeleted}
                           />
                         </Tooltip>
-                      </Popconfirm>
+                      </DoubleConfirm>
                     </Space>
                   );
                 },
