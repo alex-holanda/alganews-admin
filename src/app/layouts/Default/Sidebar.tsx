@@ -12,6 +12,7 @@ import {
   FallOutlined,
   RiseOutlined,
 } from '@ant-design/icons';
+import { useEffect } from 'react';
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -20,11 +21,17 @@ export default function DefaulLayoutSidebar() {
   const history = useHistory();
   const location = useLocation();
 
+  useEffect(() => {
+    console.log(location.pathname);
+    console.log(location.pathname.split('/')[1]);
+  }, [location]);
+
   return (
     <Sider width={200} breakpoint='lg' collapsedWidth='0'>
       <Menu
         mode='inline'
         defaultSelectedKeys={[location.pathname]}
+        selectedKeys={[location.pathname]}
         defaultOpenKeys={[location.pathname.split('/')[1]]}
         style={{ height: '100%', borderRight: 0 }}
       >

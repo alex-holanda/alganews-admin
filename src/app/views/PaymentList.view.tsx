@@ -192,7 +192,7 @@ export default function PaymentListView() {
                 width: 220,
                 ellipsis: true,
                 render(payee: Payment.Summary['payee']) {
-                  return payee.name;
+                  return <Link to={`/usuarios/${payee.id}`}>{payee.name}</Link>;
                 },
               },
               {
