@@ -155,7 +155,7 @@ export default function PaymentListView() {
                   <Descriptions.Item label={'Ações'}>
                     <Space>
                       <Tooltip title={'Detalhar'} placement={'left'}>
-                        <Link to={`${payment.id}`}>
+                        <Link to={`/pagamentos/${payment.id}`}>
                           <Button size={'small'} icon={<EyeOutlined />} />
                         </Link>
                       </Tooltip>
@@ -275,7 +275,7 @@ export default function PaymentListView() {
               return (
                 <Space>
                   <Tooltip title={'Detalhar'} placement={'left'}>
-                    <Link to={`${id}`}>
+                    <Link to={`/pagamentos/${id}`}>
                       <Button size={'small'} icon={<EyeOutlined />} />
                     </Link>
                   </Tooltip>
