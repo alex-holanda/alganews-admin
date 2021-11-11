@@ -1,41 +1,43 @@
+import { useEffect } from 'react';
+import { useParams } from 'react-router';
+
+import { Card, Descriptions, Divider, Typography, Table } from 'antd';
+
 import { Post } from 'alex-holanda-sdk';
-import {
-  Card,
-  Descriptions,
-  Divider,
-  Space,
-  Tag,
-  Typography,
-  Table,
-} from 'antd';
+
+import { usePayment } from '../../core/hooks/usePayment';
+
+import { PaymentHeader } from '../features/PaymentHeader';
 
 export function PaymentDetailsView() {
+  const params = useParams<{ id: string }>();
+
+  const {
+    fetchPayment,
+    fetchPosts,
+    fetchingPayment,
+    fetchingPosts,
+    payment,
+    posts,
+  } = usePayment();
+
+  useEffect(() => {
+    if (!isNaN(Number(params.id))) {
+      fetchPosts(Number(params.id));
+      fetchPayment(Number(params.id));
+    }
+  }, [params, fetchPosts, fetchPayment]);
   return (
     <>
       <Card>
-        <Typography.Title>Pagamentos</Typography.Title>
-        <Typography.Text>
-          A base do pagamento é calculada pela quantidade de palavras escritas.
-        </Typography.Text>
-
-        <Divider />
-
-        <Descriptions column={2}>
-          <Descriptions.Item label={'Editor'}>EDITOR</Descriptions.Item>
-          <Descriptions.Item label={'Período'}>
-            <Space>
-              <Tag style={{ marginRight: 0 }}>20/12/2021</Tag>
-              <span>até</span>
-              <Tag>20/01/2022</Tag>
-            </Space>
-          </Descriptions.Item>
-          <Descriptions.Item label={'Ganhos por posts'}>
-            <Tag>{'R$ 123.98,27'}</Tag>
-          </Descriptions.Item>
-          <Descriptions.Item label={'Total'}>
-            <Tag>{'45.234,12'}</Tag>
-          </Descriptions.Item>
-        </Descriptions>
+        <PaymentHeader
+          editorId={payment?.payee.id}
+          editorName={payment?.payee.name}
+          periodStart={payment?.accountingPeriod.startsOn}
+          periodEnd={payment?.accountingPeriod.endsOn}
+          postsEarnings={payment?.earnings.totalAmount}
+          totalEarnings={payment?.grandTotalAmount}
+        />
 
         <Divider />
 
