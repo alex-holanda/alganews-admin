@@ -48,12 +48,12 @@ export default function Routes() {
       <Route path={'/usuarios/:id'} component={UserDetailsView} exact />
       <Route path={'/usuarios/edicao/:id'} component={UserEditView} exact />
       <Route path={'/pagamentos'} component={PaymentListView} exact />
-      <Route path={'/pagamentos/:id'} component={PaymentDetailsView} exact />
       <Route
         path={'/pagamentos/cadastro'}
         component={PaymentCreateView}
         exact
       />
+      <Route path={'/pagamentos/:id'} component={PaymentDetailsView} exact />
       <Route
         path={'/fluxo-de-caixa/despesas'}
         component={CashFlowExpensesView}

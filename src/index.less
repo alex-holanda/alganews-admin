@@ -24,7 +24,17 @@
 @layout-trigger-height: 120px;
 
 .ant-layout-sider-zero-width-trigger {
-  background-color: @text-color;
+  color: @text-color;
+  background-color: transparent;
+
+  top: -64px;
+  left: 0;
+
+  height: 64px;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #root > section.ant-layout {
