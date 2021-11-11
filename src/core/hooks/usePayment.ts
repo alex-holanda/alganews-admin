@@ -1,6 +1,11 @@
 import { useState, useCallback } from 'react';
 
-import { Post, Payment, PaymentService } from 'alex-holanda-sdk';
+import {
+  Post,
+  Payment,
+  PaymentService,
+  ResourceNotFoundError,
+} from 'alex-holanda-sdk';
 
 export function usePayment() {
   const [posts, setPosts] = useState<Post.WithEarnings[]>([]);
@@ -9,10 +14,19 @@ export function usePayment() {
   const [fetchingPosts, setFecthingPosts] = useState(false);
   const [fetchingPayment, setFetchingPayment] = useState(false);
 
+  const [notFound, setNotFound] = useState(false);
+
   const fetchPayment = useCallback(async (paymentId: number) => {
     setFetchingPayment(true);
     PaymentService.getExistingPayment(paymentId)
       .then(setPayment)
+      .catch((error) => {
+        if (error instanceof ResourceNotFoundError) {
+          setNotFound(true);
+        } else {
+          throw error;
+        }
+      })
       .finally(() => setFetchingPayment(false));
   }, []);
 
@@ -33,5 +47,6 @@ export function usePayment() {
     payment,
     fetchingPayment,
     fetchPayment,
+    notFound,
   };
 }
