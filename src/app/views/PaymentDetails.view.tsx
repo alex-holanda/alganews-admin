@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 
-import { Card, Descriptions, Divider, Typography, Table } from 'antd';
-
-import { Post } from 'alex-holanda-sdk';
+import { Card, Divider } from 'antd';
 
 import { usePayment } from '../../core/hooks/usePayment';
 
@@ -33,6 +31,7 @@ export function PaymentDetailsView() {
     <>
       <Card>
         <PaymentHeader
+          isLoading={fetchingPayment}
           editorId={payment?.payee.id}
           editorName={payment?.payee.name}
           periodStart={payment?.accountingPeriod.startsOn}
@@ -43,7 +42,7 @@ export function PaymentDetailsView() {
 
         <Divider />
 
-        <PaymentBonus bonus={payment?.bonuses} />
+        <PaymentBonus bonus={payment?.bonuses} isLoading={fetchingPayment} />
 
         <Divider />
 
