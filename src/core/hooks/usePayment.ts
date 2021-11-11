@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { Post, Payment, PaymentService } from 'alex-holanda-sdk';
 
 export function usePayment() {
-  const [posts, setPosts] = useState<Post.WithEarnings>();
+  const [posts, setPosts] = useState<Post.WithEarnings[]>([]);
   const [payment, setPayment] = useState<Payment.Detailed>();
 
   const [fetchingPosts, setFecthingPosts] = useState(false);

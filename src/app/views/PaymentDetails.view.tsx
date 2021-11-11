@@ -8,6 +8,8 @@ import { Post } from 'alex-holanda-sdk';
 import { usePayment } from '../../core/hooks/usePayment';
 
 import { PaymentHeader } from '../features/PaymentHeader';
+import { PaymentPosts } from '../features/PaymentPosts';
+import { PaymentBonus } from '../features/PaymentBonus';
 
 export function PaymentDetailsView() {
   const params = useParams<{ id: string }>();
@@ -41,40 +43,11 @@ export function PaymentDetailsView() {
 
         <Divider />
 
-        <Typography.Title level={2}>Bônus</Typography.Title>
-        <Descriptions bordered size={'small'} column={1}>
-          <Descriptions.Item label={'1 milhão de views em 1 dia'}>
-            {'R$ 123,56'}
-          </Descriptions.Item>
-          <Descriptions.Item label={'1 milhão de views em 1 dia'}>
-            {'R$ 123,56'}
-          </Descriptions.Item>
-        </Descriptions>
+        <PaymentBonus bonus={payment?.bonuses} />
 
         <Divider />
 
-        <Table<Post.WithEarnings>
-          dataSource={[]}
-          columns={[
-            {
-              dataIndex: 'title',
-              title: 'Post',
-              ellipsis: true,
-            },
-            {
-              dataIndex: 'earnings.pricePerword',
-              title: 'Preço por palavra',
-            },
-            {
-              dataIndex: 'earning.words',
-              title: 'Palavras',
-            },
-            {
-              dataIndex: 'earnings.totalAmount',
-              title: 'Total ganho nesse post',
-            },
-          ]}
-        />
+        <PaymentPosts posts={posts} isLoading={fetchingPosts} />
       </Card>
     </>
   );
