@@ -1,4 +1,5 @@
 import { Descriptions, Divider, Space, Tag, Typography } from 'antd';
+import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 
 import { transformNumberToCurrency } from '../../core/util/transformNumberToCurrency';
 import { transformStringToDate } from '../../core/util/transformStringToDate';
@@ -13,6 +14,7 @@ interface PaymentHeaderProps {
 }
 
 export function PaymentHeader(props: PaymentHeaderProps) {
+  const { xs } = useBreakpoint();
   return (
     <>
       <Typography.Title>Pagamentos</Typography.Title>
@@ -22,7 +24,7 @@ export function PaymentHeader(props: PaymentHeaderProps) {
 
       <Divider />
 
-      <Descriptions column={2}>
+      <Descriptions column={xs ? 1 : 2} size={xs ? 'small' : 'default'}>
         <Descriptions.Item label={'Editor'}>
           {props.editorName}
         </Descriptions.Item>
@@ -31,7 +33,7 @@ export function PaymentHeader(props: PaymentHeaderProps) {
             <Tag style={{ marginRight: 0 }}>
               {props.periodStart && transformStringToDate(props.periodStart)}
             </Tag>
-            <span>até</span>
+            <span>à</span>
             <Tag>
               {props.periodEnd && transformStringToDate(props.periodEnd)}
             </Tag>

@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Descriptions, Table, Tooltip } from 'antd';
 
 import { Post } from 'alex-holanda-sdk';
 import { transformNumberToCurrency } from '../../core/util/transformNumberToCurrency';
@@ -17,17 +17,48 @@ export function PaymentPosts(props: PaymentPostsProps) {
         loading={props.isLoading}
         columns={[
           {
+            responsive: ['xs'],
+            title: 'Posts',
+            render(post: Post.WithEarnings) {
+              return (
+                <Descriptions column={1}>
+                  <Descriptions.Item label={'Título'}>
+                    {post.title}
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label={'Preço por palavra'}>
+                    {transformNumberToCurrency(post.earnings.pricePerWord)}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'Total de palavras'}>
+                    {post.earnings.words}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'Ganho no posto'}>
+                    {transformNumberToCurrency(post.earnings.totalAmount)}
+                  </Descriptions.Item>
+                </Descriptions>
+              );
+            },
+          },
+          {
             dataIndex: 'title',
             title: 'Post',
             width: 240,
             responsive: ['sm'],
             ellipsis: true,
+            render(title: string) {
+              return (
+                <Tooltip title={title} placement={'top'}>
+                  {title}
+                </Tooltip>
+              );
+            },
           },
           {
             dataIndex: 'earnings',
             title: 'Preço por palavra',
             width: 160,
             responsive: ['sm'],
+            align: 'right',
             render(earnings: Post.WithEarnings['earnings']) {
               return transformNumberToCurrency(earnings.pricePerWord);
             },
@@ -37,7 +68,7 @@ export function PaymentPosts(props: PaymentPostsProps) {
             title: 'Palavras',
             width: 140,
             responsive: ['sm'],
-            align: 'center',
+            align: 'right',
             render(earnings: Post.WithEarnings['earnings']) {
               return earnings.words;
             },
@@ -47,6 +78,7 @@ export function PaymentPosts(props: PaymentPostsProps) {
             title: 'Total ganho nesse post',
             width: 220,
             responsive: ['sm'],
+            align: 'right',
             render(earnings: Post.WithEarnings['earnings']) {
               return transformNumberToCurrency(earnings.totalAmount);
             },
