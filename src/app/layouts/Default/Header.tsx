@@ -6,7 +6,7 @@ const { Header } = Layout;
 
 export default function DefaltLayoutHeader() {
   return (
-    <Header>
+    <Header className='no-print'>
       <Row
         justify={'space-between'}
         align={'middle'}
