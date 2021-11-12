@@ -1,7 +1,12 @@
+import { usePageTitle } from '../../core/hooks/usePageTitle';
+import { PaymentForm } from '../features/PaymentForm';
+
 export default function PaymentCreateView() {
+  usePageTitle('Cadastro de pagamento');
+
   return (
     <>
-      <h2>TODO: PaymentCreateView</h2>
+      <PaymentForm />
     </>
   );
 }

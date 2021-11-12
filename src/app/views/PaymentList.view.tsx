@@ -19,8 +19,11 @@ import { Payment } from 'alex-holanda-sdk';
 
 import { usePayments } from '../../core/hooks/usePayments';
 import { DoubleConfirm } from '../components/DoubleConfirm';
+import { usePageTitle } from '../../core/hooks/usePageTitle';
 
 export default function PaymentListView() {
+  usePageTitle('Consulta de pagamentos');
+
   const { payments, fetchPayments, totalElements, fetching } = usePayments();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [yearMonth, setYearMonth] = useState<string | undefined>();
