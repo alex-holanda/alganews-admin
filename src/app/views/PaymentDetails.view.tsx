@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Redirect, useParams } from 'react-router';
 
 import { Card, Divider, Space, Button } from 'antd';
-import { PrinterOutlined } from '@ant-design/icons';
+import { PrinterOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 import { usePayment } from '../../core/hooks/usePayment';
 
@@ -11,6 +11,9 @@ import { PaymentPosts } from '../features/PaymentPosts';
 import { PaymentBonus } from '../features/PaymentBonus';
 import { NotFoundError } from '../components/NotFoundError';
 import { usePageTitle } from '../../core/hooks/usePageTitle';
+import { DoubleConfirm } from '../components/DoubleConfirm';
+import { transformStringToDate } from '../../core/util/transformStringToDate';
+import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 
 export function PaymentDetailsView() {
   usePageTitle('Detalhes do pagamento');
@@ -26,6 +29,8 @@ export function PaymentDetailsView() {
     posts,
     notFound,
   } = usePayment();
+
+  const { xs } = useBreakpoint();
 
   useEffect(() => {
     if (!isNaN(Number(params.id))) {
@@ -54,14 +59,47 @@ export function PaymentDetailsView() {
 
   return (
     <Space direction={'vertical'}>
-      <Button
-        className='no-print'
-        icon={<PrinterOutlined />}
-        type={'primary'}
-        onClick={window.print}
+      <Space
+        direction={xs ? 'vertical' : 'horizontal'}
+        style={{ display: 'flex', justifyContent: 'space-between' }}
       >
-        Imprimir
-      </Button>
+        <Button
+          className='no-print'
+          style={{ width: '100%' }}
+          icon={<PrinterOutlined />}
+          type={'primary'}
+          onClick={window.print}
+        >
+          Imprimir
+        </Button>
+
+        <DoubleConfirm
+          disabled={!payment?.canBeDeleted}
+          popConfirmTitle={'Deseja aprovar este agendamento?'}
+          modalTitle={'Ação irreversível'}
+          modalContent={
+            'Aprovar um agendamento de pagamento gera uma despesa que não pode ser removida do fluxo de caixa. Essa ação não poderá ser desfeita.'
+          }
+          onConfirm={() => {
+            console.log('TODO: payment approval');
+          }}
+        >
+          <Button
+            className='no-print'
+            style={{ width: '100%' }}
+            disabled={!payment?.canBeDeleted}
+            icon={<CheckCircleOutlined />}
+            type={'primary'}
+            danger
+          >
+            {payment?.canBeDeleted
+              ? 'Aprovar agendamento'
+              : `Pagamento aprovado em ${transformStringToDate(
+                  payment?.approvedAt!
+                )}`}
+          </Button>
+        </DoubleConfirm>
+      </Space>
 
       <Card>
         <PaymentHeader
