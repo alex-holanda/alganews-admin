@@ -3,6 +3,7 @@ import { Col, Form, Row, Select, DatePicker } from 'antd';
 import { Payment } from 'alex-holanda-sdk';
 
 import { useUsers } from '../../core/hooks/useUsers';
+import moment from 'moment';
 
 export function PaymentForm() {
   const { editors } = useUsers();
@@ -46,7 +47,17 @@ export function PaymentForm() {
           </Col>
           <Col xs={24} sm={8}>
             <Form.Item label={'Agendamento'}>
-              <DatePicker format={'DD/MM/YYYY'} style={{ width: '100%' }} />
+              <DatePicker
+                showToday={false}
+                disabledDate={(date) => {
+                  return (
+                    date.isBefore(moment()) ||
+                    date.isAfter(moment().add(7, 'day'))
+                  );
+                }}
+                format={'DD/MM/YYYY'}
+                style={{ width: '100%' }}
+              />
             </Form.Item>
           </Col>
         </Row>
