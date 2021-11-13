@@ -4,6 +4,7 @@ import { Payment } from 'alex-holanda-sdk';
 
 import { useUsers } from '../../core/hooks/useUsers';
 import moment from 'moment';
+import { daysToWeeks } from 'date-fns';
 
 export function PaymentForm() {
   const { editors } = useUsers();
@@ -52,7 +53,9 @@ export function PaymentForm() {
                 disabledDate={(date) => {
                   return (
                     date.isBefore(moment()) ||
-                    date.isAfter(moment().add(7, 'day'))
+                    date.isAfter(moment().add(10, 'day')) ||
+                    date.weekday() === 0 ||
+                    date.weekday() === 6
                   );
                 }}
                 format={'DD/MM/YYYY'}
