@@ -3,12 +3,9 @@ import { Col, Form, Row, Select, DatePicker } from 'antd';
 import { Payment } from 'alex-holanda-sdk';
 
 import { useUsers } from '../../core/hooks/useUsers';
-import { useEffect } from 'react';
 
 export function PaymentForm() {
-  const { users } = useUsers();
-
-  useEffect(() => {}, []);
+  const { editors } = useUsers();
 
   return (
     <>
@@ -31,9 +28,9 @@ export function PaymentForm() {
                   );
                 }}
               >
-                {users.map((user) => (
-                  <Select.Option key={user.id} value={user.id}>
-                    {user.name}
+                {editors.map((editor) => (
+                  <Select.Option key={editor.id} value={editor.id}>
+                    {editor.name}
                   </Select.Option>
                 ))}
               </Select>
