@@ -21,7 +21,7 @@ import CurrencyInput from '../components/CurrencyInput';
 export function PaymentForm() {
   const { editors } = useUsers();
 
-  const [form] = useForm();
+  const [form] = useForm<Payment.Input>();
 
   return (
     <>
@@ -135,8 +135,16 @@ export function PaymentForm() {
                             >
                               <CurrencyInput
                                 onChange={(a, amount) => {
+                                  const { bonuses } = form.getFieldsValue();
                                   form.setFieldsValue({
-                                    [field.name]: amount,
+                                    bonuses: bonuses?.map((bonus, index) => {
+                                      return index === field.name
+                                        ? {
+                                            title: bonus.title,
+                                            amount,
+                                          }
+                                        : bonus;
+                                    }),
                                   });
                                 }}
                               />
