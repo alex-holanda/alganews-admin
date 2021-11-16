@@ -1,20 +1,26 @@
-import { Col, Form, Row, Select, DatePicker } from 'antd';
+import { Col, Form, Row, Select, DatePicker, Button, Input } from 'antd';
 
 import { Payment } from 'alex-holanda-sdk';
 
 import { useUsers } from '../../core/hooks/useUsers';
 import moment from 'moment';
-import { daysToWeeks } from 'date-fns';
+import { useForm } from 'antd/lib/form/Form';
 
 export function PaymentForm() {
   const { editors } = useUsers();
 
+  const [form] = useForm();
+
   return (
     <>
-      <Form<Payment.Input> layout={'vertical'}>
+      <Form<Payment.Input>
+        form={form}
+        layout={'vertical'}
+        onFinish={(form) => console.log(form)}
+      >
         <Row gutter={24}>
           <Col xs={24} sm={8}>
-            <Form.Item label={'Editor'}>
+            <Form.Item label={'Editor'} name={['payee', 'id']}>
               <Select
                 showSearch
                 filterOption={(input, option) => {
@@ -39,23 +45,45 @@ export function PaymentForm() {
             </Form.Item>
           </Col>
           <Col xs={24} sm={8}>
-            <Form.Item label={'Período'}>
+            <Form.Item hidden name={['accountingPeriod', 'startsOn']}>
+              <Input hidden />
+            </Form.Item>
+            <Form.Item hidden name={['accountingPeriod', 'endsOn']}>
+              <Input hidden />
+            </Form.Item>
+            <Form.Item label={'Período'} name={'_accountPeriod'}>
               <DatePicker.RangePicker
                 format={'DD/MM/YYYY'}
                 style={{ width: '100%' }}
+                onChange={(date) => {
+                  if (date !== null) {
+                    const [startsOn, endsOn] = date as moment.Moment[];
+                    form.setFieldsValue({
+                      accountingPeriod: {
+                        startsOn: startsOn?.format('YYYY-MM-DD'),
+                        endsOn: endsOn?.format('YYYY-MM-DD'),
+                      },
+                    });
+                  } else {
+                    form.setFieldsValue({
+                      accountingPeriod: {
+                        startsOn: undefined,
+                        endsOn: undefined,
+                      },
+                    });
+                  }
+                }}
               />
             </Form.Item>
           </Col>
           <Col xs={24} sm={8}>
-            <Form.Item label={'Agendamento'}>
+            <Form.Item label={'Agendamento'} name={'scheduledTo'}>
               <DatePicker
                 showToday={false}
                 disabledDate={(date) => {
                   return (
                     date.isBefore(moment()) ||
-                    date.isAfter(moment().add(10, 'day')) ||
-                    date.weekday() === 0 ||
-                    date.weekday() === 6
+                    date.isAfter(moment().add(7, 'day'))
                   );
                 }}
                 format={'DD/MM/YYYY'}
@@ -64,6 +92,8 @@ export function PaymentForm() {
             </Form.Item>
           </Col>
         </Row>
+
+        <Button htmlType={'submit'}>enviar</Button>
       </Form>
     </>
   );
