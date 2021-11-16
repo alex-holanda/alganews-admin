@@ -7,6 +7,8 @@ import {
   Button,
   Input,
   Divider,
+  Tabs,
+  Descriptions,
 } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
@@ -17,11 +19,16 @@ import { Payment } from 'alex-holanda-sdk';
 
 import { useUsers } from '../../core/hooks/useUsers';
 import CurrencyInput from '../components/CurrencyInput';
+import { useState } from 'react';
+import { TabPane } from 'rc-tabs';
 
 export function PaymentForm() {
   const { editors } = useUsers();
 
   const [form] = useForm<Payment.Input>();
+  const [activeTab, setActiveTab] = useState<'demonstrative' | 'bankAccount'>(
+    'demonstrative'
+  );
 
   return (
     <>
@@ -107,7 +114,82 @@ export function PaymentForm() {
           <Divider />
 
           <Col xs={24} sm={12}>
-            todo: payment preview
+            <Tabs
+              defaultActiveKey={'demonstrative'}
+              activeKey={activeTab}
+              onChange={(tab) =>
+                setActiveTab(tab as 'demonstrative' | 'bankAccount')
+              }
+            >
+              <TabPane key={'demonstrative'} tab={'Demonstrativo'} forceRender>
+                <Descriptions
+                  column={1}
+                  bordered
+                  labelStyle={{ width: 160 }}
+                  size={'small'}
+                >
+                  <Descriptions.Item label={'Editor'}>
+                    Daniel Bonifácio
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label={'Período'}>
+                    {'20/07/2021 á 30/07/2021'}
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label={'Agendamento'}>
+                    {' 05/08/2021'}
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label={'Palavras'}>
+                    {432}
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label={'Ganhos'}>
+                    {'R$ 23.432,00'}
+                  </Descriptions.Item>
+
+                  {[0].map((bonus, index) => {
+                    return (
+                      <Descriptions.Item label={'Bônus 1'} key={index}>
+                        {'R$ 15.000,00'}
+                      </Descriptions.Item>
+                    );
+                  })}
+
+                  <Descriptions.Item label={'Ganhos'}>
+                    {'R$ 7.432,00'}
+                  </Descriptions.Item>
+                </Descriptions>
+              </TabPane>
+              <TabPane key={'bankAccount'} tab={'Dados bancários'} forceRender>
+                <Descriptions
+                  column={1}
+                  bordered
+                  labelStyle={{ width: 160 }}
+                  size={'small'}
+                >
+                  <Descriptions.Item label={'Código do banco'}>
+                    {'341'}
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label={'Número da conta'}>
+                    {'1065160'}
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label={'Dígito da conta'}>
+                    {'8'}
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label={'Agência'}>
+                    {'0001'}
+                  </Descriptions.Item>
+
+                  <Descriptions.Item label={'Tipo de conta'}>
+                    {'Conta Corrente'}
+                  </Descriptions.Item>
+                </Descriptions>
+              </TabPane>
+            </Tabs>
           </Col>
 
           <Col xs={24} sm={12}>
