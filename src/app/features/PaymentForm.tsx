@@ -1,10 +1,22 @@
-import { Col, Form, Row, Select, DatePicker, Button, Input } from 'antd';
+import {
+  Col,
+  Form,
+  Row,
+  Select,
+  DatePicker,
+  Button,
+  Input,
+  Divider,
+} from 'antd';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useForm } from 'antd/lib/form/Form';
+
+import moment from 'moment';
 
 import { Payment } from 'alex-holanda-sdk';
 
 import { useUsers } from '../../core/hooks/useUsers';
-import moment from 'moment';
-import { useForm } from 'antd/lib/form/Form';
+import CurrencyInput from '../components/CurrencyInput';
 
 export function PaymentForm() {
   const { editors } = useUsers();
@@ -90,6 +102,71 @@ export function PaymentForm() {
                 style={{ width: '100%' }}
               />
             </Form.Item>
+          </Col>
+
+          <Divider />
+
+          <Col xs={24} sm={12}>
+            todo: payment preview
+          </Col>
+
+          <Col xs={24} sm={12}>
+            <Form.List name={'bonuses'}>
+              {(fields, { add, remove }) => {
+                return (
+                  <>
+                    {fields.map((field) => {
+                      return (
+                        <Row gutter={24} key={field.key}>
+                          <Col xs={24} sm={14}>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'title']}
+                              label={'Descrição'}
+                            >
+                              <Input placeholder={'E.g.: 1 milhão de views'} />
+                            </Form.Item>
+                          </Col>
+                          <Col xs={24} sm={6}>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'amount']}
+                              label={'Valor'}
+                            >
+                              <CurrencyInput
+                                onChange={(a, amount) => {
+                                  form.setFieldsValue({
+                                    [field.name]: amount,
+                                  });
+                                }}
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col xs={24} sm={4}>
+                            <Form.Item label={'Remover'}>
+                              <Button
+                                onClick={() => remove(field.name)}
+                                danger
+                                size={'small'}
+                                icon={<DeleteOutlined />}
+                              />
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      );
+                    })}
+                    <Button
+                      type='dashed'
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      Adicionar bônus
+                    </Button>
+                  </>
+                );
+              }}
+            </Form.List>
           </Col>
         </Row>
 
