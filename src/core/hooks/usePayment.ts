@@ -10,9 +10,11 @@ import {
 export function usePayment() {
   const [posts, setPosts] = useState<Post.WithEarnings[]>([]);
   const [payment, setPayment] = useState<Payment.Detailed>();
+  const [paymentPreview, setPaymentPreview] = useState<Payment.Preview>();
 
   const [fetchingPosts, setFecthingPosts] = useState(false);
   const [fetchingPayment, setFetchingPayment] = useState(false);
+  const [fetchingPaymentPreview, setFetchingPaymentPreview] = useState(false);
 
   const [notFound, setNotFound] = useState(false);
 
@@ -29,6 +31,16 @@ export function usePayment() {
       })
       .finally(() => setFetchingPayment(false));
   }, []);
+
+  const fetchPaymentPreview = useCallback(
+    async (paymentPreview: Payment.PreviewInput) => {
+      setFetchingPaymentPreview(true);
+      PaymentService.getPaymentPreview(paymentPreview)
+        .then(setPaymentPreview)
+        .finally(() => setFetchingPaymentPreview(false));
+    },
+    []
+  );
 
   const fetchPosts = useCallback(
     async (paymentId: number, query?: Payment.Sort) => {
@@ -48,5 +60,8 @@ export function usePayment() {
     fetchingPayment,
     fetchPayment,
     notFound,
+    paymentPreview,
+    fetchingPaymentPreview,
+    fetchPaymentPreview,
   };
 }
