@@ -15,6 +15,8 @@ import { useForm } from 'antd/lib/form/Form';
 
 import moment from 'moment';
 
+import debaunce from 'lodash.debounce';
+
 import { Payment } from 'alex-holanda-sdk';
 
 import { useUsers } from '../../core/hooks/useUsers';
@@ -43,13 +45,15 @@ export function PaymentForm() {
     }
   }, []);
 
+  const debouncedHandleFormChange = debaunce(handleFormChange, 1000);
+
   return (
     <>
       <Form<Payment.Input>
         form={form}
         layout={'vertical'}
         onFinish={(form) => console.log(form)}
-        onFieldsChange={handleFormChange}
+        onFieldsChange={debouncedHandleFormChange}
       >
         <Row gutter={24}>
           <Col xs={24} sm={8}>
