@@ -19,8 +19,9 @@ import { Payment } from 'alex-holanda-sdk';
 
 import { useUsers } from '../../core/hooks/useUsers';
 import CurrencyInput from '../components/CurrencyInput';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { TabPane } from 'rc-tabs';
+import { FieldData } from 'rc-field-form/lib/interface';
 
 export function PaymentForm() {
   const { editors } = useUsers();
@@ -30,12 +31,25 @@ export function PaymentForm() {
     'demonstrative'
   );
 
+  const handleFormChange = useCallback(([field]: FieldData[]) => {
+    if (Array.isArray(field.name)) {
+      if (
+        field.name.includes('payee') ||
+        field.name.includes('_accountingPeriod') ||
+        field.name.includes('bonuses')
+      ) {
+        console.log('É necessário atualizar à prévia de pagamento');
+      }
+    }
+  }, []);
+
   return (
     <>
       <Form<Payment.Input>
         form={form}
         layout={'vertical'}
         onFinish={(form) => console.log(form)}
+        onFieldsChange={handleFormChange}
       >
         <Row gutter={24}>
           <Col xs={24} sm={8}>
@@ -70,7 +84,7 @@ export function PaymentForm() {
             <Form.Item hidden name={['accountingPeriod', 'endsOn']}>
               <Input hidden />
             </Form.Item>
-            <Form.Item label={'Período'} name={'_accountPeriod'}>
+            <Form.Item label={'Período'} name={'_accountingPeriod'}>
               <DatePicker.RangePicker
                 format={'DD/MM/YYYY'}
                 style={{ width: '100%' }}
