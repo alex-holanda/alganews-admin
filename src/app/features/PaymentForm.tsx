@@ -32,9 +32,10 @@ import { Payment } from 'alex-holanda-sdk';
 import { useUsers } from '../../core/hooks/useUsers';
 import { usePayment } from '../../core/hooks/usePayment';
 
-import CurrencyInput from '../components/CurrencyInput';
 import { transformStringToDate } from '../../core/util/transformStringToDate';
 import { transformNumberToCurrency } from '../../core/util/transformNumberToCurrency';
+
+import CurrencyInput from '../components/CurrencyInput';
 
 export function PaymentForm() {
   const { editors } = useUsers();
@@ -46,6 +47,7 @@ export function PaymentForm() {
   const [activeTab, setActiveTab] = useState<'demonstrative' | 'bankAccount'>(
     'demonstrative'
   );
+  const [scheduledTo, setScheduledTo] = useState('');
 
   const getPaymentPreview = useCallback(() => {
     const { accountingPeriod, payee, bonuses } = form.getFieldsValue();
@@ -54,6 +56,11 @@ export function PaymentForm() {
       fetchPaymentPreview({ accountingPeriod, payee, bonuses: bonuses || [] });
     }
   }, [form, fetchPaymentPreview]);
+
+  const updateScheduledDate = useCallback(() => {
+    const { scheduledTo } = form.getFieldsValue();
+    setScheduledTo(scheduledTo);
+  }, [form]);
 
   const handleFormChange = useCallback(
     ([field]: FieldData[]) => {
@@ -65,9 +72,13 @@ export function PaymentForm() {
         ) {
           getPaymentPreview();
         }
+
+        if (field.name.includes('scheduledTo')) {
+          updateScheduledDate();
+        }
       }
     },
-    [getPaymentPreview]
+    [getPaymentPreview, updateScheduledDate]
   );
 
   const debouncedHandleFormChange = debaunce(handleFormChange, 1000);
@@ -176,15 +187,16 @@ export function PaymentForm() {
                   </Descriptions.Item>
 
                   <Descriptions.Item label={'Período'}>
-                    {`${transformStringToDate(
-                      paymentPreview?.accountingPeriod.startsOn || ''
-                    )} à ${transformStringToDate(
-                      paymentPreview?.accountingPeriod.endsOn || ''
-                    )}`}
+                    {paymentPreview?.accountingPeriod &&
+                      `${transformStringToDate(
+                        paymentPreview?.accountingPeriod.startsOn || ''
+                      )} à ${transformStringToDate(
+                        paymentPreview?.accountingPeriod.endsOn || ''
+                      )}`}
                   </Descriptions.Item>
 
                   <Descriptions.Item label={'Agendamento'}>
-                    {'06/10/2021'}
+                    {scheduledTo && moment(scheduledTo).format('DD/MM/YYYY')}
                   </Descriptions.Item>
 
                   <Descriptions.Item label={'Palavras'}>
