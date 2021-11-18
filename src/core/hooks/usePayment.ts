@@ -32,14 +32,22 @@ export function usePayment() {
       .finally(() => setFetchingPayment(false));
   }, []);
 
+  const clearPaymentPreview = useCallback(() => {
+    setPaymentPreview(undefined);
+  }, []);
+
   const fetchPaymentPreview = useCallback(
     async (paymentPreview: Payment.PreviewInput) => {
       setFetchingPaymentPreview(true);
       PaymentService.getPaymentPreview(paymentPreview)
         .then(setPaymentPreview)
+        .catch((error) => {
+          clearPaymentPreview();
+          throw error;
+        })
         .finally(() => setFetchingPaymentPreview(false));
     },
-    []
+    [clearPaymentPreview]
   );
 
   const fetchPosts = useCallback(
@@ -63,5 +71,6 @@ export function usePayment() {
     paymentPreview,
     fetchingPaymentPreview,
     fetchPaymentPreview,
+    clearPaymentPreview,
   };
 }
