@@ -13,6 +13,7 @@ import {
   Descriptions,
   Tooltip,
   Space,
+  Typography,
 } from 'antd';
 import {
   PlusOutlined,
@@ -36,6 +37,7 @@ import { transformStringToDate } from '../../core/util/transformStringToDate';
 import { transformNumberToCurrency } from '../../core/util/transformNumberToCurrency';
 
 import CurrencyInput from '../components/CurrencyInput';
+import { PaymentPreviewEmpty } from '../components/PaymentPreviewEmpty';
 
 export function PaymentForm() {
   const { editors } = useUsers();
@@ -178,7 +180,9 @@ export function PaymentForm() {
           <Divider />
 
           <Col xs={24} sm={12}>
-            {!paymentPreview ? null : (
+            {!paymentPreview ? (
+              <PaymentPreviewEmpty />
+            ) : (
               <Tabs
                 defaultActiveKey={'demonstrative'}
                 activeKey={activeTab}
