@@ -14,6 +14,7 @@ export function usePayment() {
 
   const [fetchingPosts, setFecthingPosts] = useState(false);
   const [fetchingPayment, setFetchingPayment] = useState(false);
+
   const [fetchingPaymentPreview, setFetchingPaymentPreview] = useState(false);
 
   const [notFound, setNotFound] = useState(false);
@@ -39,7 +40,7 @@ export function usePayment() {
   const fetchPaymentPreview = useCallback(
     async (paymentPreview: Payment.PreviewInput) => {
       setFetchingPaymentPreview(true);
-      PaymentService.getPaymentPreview(paymentPreview)
+      await PaymentService.getPaymentPreview(paymentPreview)
         .then(setPaymentPreview)
         .catch((error) => {
           clearPaymentPreview();

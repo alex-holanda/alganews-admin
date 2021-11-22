@@ -28,7 +28,7 @@ import moment from 'moment';
 
 import debaunce from 'lodash.debounce';
 
-import { Payment } from 'alex-holanda-sdk';
+import { BusinessError, Payment } from 'alex-holanda-sdk';
 
 import { useUsers } from '../../core/hooks/useUsers';
 import { usePayment } from '../../core/hooks/usePayment';
@@ -38,13 +38,14 @@ import { transformNumberToCurrency } from '../../core/util/transformNumberToCurr
 
 import CurrencyInput from '../components/CurrencyInput';
 import { PaymentPreviewEmpty } from '../components/PaymentPreviewEmpty';
+import CustomError from 'alex-holanda-sdk/dist/CustomError';
 
 export function PaymentForm() {
   const { editors } = useUsers();
 
   const {
     fetchPaymentPreview,
-    fetchingPaymentPreview,
+    // fetchingPaymentPreview,
     paymentPreview,
     clearPaymentPreview,
   } = usePayment();
@@ -54,20 +55,42 @@ export function PaymentForm() {
     'demonstrative'
   );
   const [scheduledTo, setScheduledTo] = useState('');
+  const [paymentPreviewError, setPaymentPreviewError] = useState<CustomError>();
 
-  const getPaymentPreview = useCallback(() => {
+  const clearPaymentPreviewError = useCallback(() => {
+    setPaymentPreviewError(undefined);
+  }, []);
+
+  const getPaymentPreview = useCallback(async () => {
     const { accountingPeriod, payee, bonuses } = form.getFieldsValue();
 
     if (payee.id && accountingPeriod.startsOn && accountingPeriod.endsOn) {
-      fetchPaymentPreview({
-        accountingPeriod,
-        payee,
-        bonuses: bonuses || [],
-      });
+      try {
+        await fetchPaymentPreview({
+          accountingPeriod,
+          payee,
+          bonuses: bonuses || [],
+        });
+        clearPaymentPreviewError();
+      } catch (error) {
+        clearPaymentPreview();
+
+        if (error instanceof BusinessError) {
+          setPaymentPreviewError(error);
+        }
+
+        throw error;
+      }
     } else {
       clearPaymentPreview();
+      clearPaymentPreviewError();
     }
-  }, [form, fetchPaymentPreview, clearPaymentPreview]);
+  }, [
+    form,
+    fetchPaymentPreview,
+    clearPaymentPreview,
+    clearPaymentPreviewError,
+  ]);
 
   const updateScheduledDate = useCallback(() => {
     const { scheduledTo } = form.getFieldsValue();
@@ -181,7 +204,7 @@ export function PaymentForm() {
 
           <Col xs={24} sm={12}>
             {!paymentPreview ? (
-              <PaymentPreviewEmpty />
+              <PaymentPreviewEmpty error={paymentPreviewError} />
             ) : (
               <Tabs
                 defaultActiveKey={'demonstrative'}
