@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
   Col,
@@ -41,7 +41,7 @@ import { PaymentPreviewEmpty } from '../components/PaymentPreviewEmpty';
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
 
 export function PaymentForm() {
-  const { editors } = useUsers();
+  const { editors, fetchUsers, fetching } = useUsers();
 
   const {
     fetchPaymentPreview,
@@ -56,6 +56,10 @@ export function PaymentForm() {
   );
   const [scheduledTo, setScheduledTo] = useState('');
   const [paymentPreviewError, setPaymentPreviewError] = useState<CustomError>();
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const clearPaymentPreviewError = useCallback(() => {
     setPaymentPreviewError(undefined);
@@ -130,6 +134,10 @@ export function PaymentForm() {
           <Col xs={24} sm={8}>
             <Form.Item label={'Editor'} name={['payee', 'id']}>
               <Select
+                loading={fetching}
+                placeholder={
+                  fetching ? 'Carregando editores...' : 'Selecione um editor'
+                }
                 showSearch
                 filterOption={(input, option) => {
                   return (
