@@ -13,6 +13,7 @@ export function PaymentPreviewEmpty(props: PaymentPreviewEmptyProps) {
     <Card bordered={false}>
       <Row justify={'center'} style={{ textAlign: 'center' }}>
         <img
+          key={props.error ? 'errorImg' : 'img'}
           src={props.error ? confusingSvg : taxSvg}
           alt={'tax'}
           width={240}

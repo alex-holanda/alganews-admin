@@ -13,7 +13,7 @@ import {
   Descriptions,
   Tooltip,
   Space,
-  Typography,
+  Skeleton,
 } from 'antd';
 import {
   PlusOutlined,
@@ -45,7 +45,7 @@ export function PaymentForm() {
 
   const {
     fetchPaymentPreview,
-    // fetchingPaymentPreview,
+    fetchingPaymentPreview,
     paymentPreview,
     clearPaymentPreview,
   } = usePayment();
@@ -203,7 +203,12 @@ export function PaymentForm() {
           <Divider />
 
           <Col xs={24} sm={12}>
-            {!paymentPreview ? (
+            {fetchingPaymentPreview ? (
+              <>
+                <Skeleton />
+                <Skeleton title={false} />
+              </>
+            ) : !paymentPreview ? (
               <PaymentPreviewEmpty error={paymentPreviewError} />
             ) : (
               <Tabs
