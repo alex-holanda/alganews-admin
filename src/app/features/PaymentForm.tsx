@@ -14,6 +14,7 @@ import {
   Tooltip,
   Space,
   Skeleton,
+  notification,
 } from 'antd';
 import {
   PlusOutlined,
@@ -39,8 +40,11 @@ import { transformNumberToCurrency } from '../../core/util/transformNumberToCurr
 import CurrencyInput from '../components/CurrencyInput';
 import { PaymentPreviewEmpty } from '../components/PaymentPreviewEmpty';
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
+import { useHistory } from 'react-router';
 
 export function PaymentForm() {
+  const history = useHistory();
+
   const { editors, fetchUsers, fetching } = useUsers();
 
   const {
@@ -48,6 +52,8 @@ export function PaymentForm() {
     fetchingPaymentPreview,
     paymentPreview,
     clearPaymentPreview,
+    schedulingPayment,
+    scheduledPayment,
   } = usePayment();
 
   const [form] = useForm<Payment.Input>();
@@ -68,26 +74,28 @@ export function PaymentForm() {
   const getPaymentPreview = useCallback(async () => {
     const { accountingPeriod, payee, bonuses } = form.getFieldsValue();
 
-    if (payee.id && accountingPeriod.startsOn && accountingPeriod.endsOn) {
-      try {
-        await fetchPaymentPreview({
-          accountingPeriod,
-          payee,
-          bonuses: bonuses || [],
-        });
-        clearPaymentPreviewError();
-      } catch (error) {
-        clearPaymentPreview();
+    if (payee && accountingPeriod) {
+      if (payee.id && accountingPeriod.startsOn && accountingPeriod.endsOn) {
+        try {
+          await fetchPaymentPreview({
+            accountingPeriod,
+            payee,
+            bonuses: bonuses || [],
+          });
+          clearPaymentPreviewError();
+        } catch (error) {
+          clearPaymentPreview();
 
-        if (error instanceof BusinessError) {
-          setPaymentPreviewError(error);
+          if (error instanceof BusinessError) {
+            setPaymentPreviewError(error);
+          }
+
+          throw error;
         }
-
-        throw error;
+      } else {
+        clearPaymentPreview();
+        clearPaymentPreviewError();
       }
-    } else {
-      clearPaymentPreview();
-      clearPaymentPreviewError();
     }
   }, [
     form,
@@ -122,17 +130,46 @@ export function PaymentForm() {
 
   const debouncedHandleFormChange = debaunce(handleFormChange, 1000);
 
+  const handleFormSubmit = useCallback(
+    async (form: Payment.Input) => {
+      const paymentDto: Payment.Input = {
+        accountingPeriod: form.accountingPeriod,
+        payee: form.payee,
+        scheduledTo: moment(form.scheduledTo).format('YYYY-MM-DD'),
+        bonuses: form.bonuses || [],
+      };
+
+      await scheduledPayment(paymentDto);
+
+      notification.success({
+        message: 'Pagamento agendado com sucesso',
+      });
+
+      history.push('/pagamentos');
+    },
+    [scheduledPayment, history]
+  );
+
   return (
     <>
       <Form<Payment.Input>
         form={form}
         layout={'vertical'}
-        onFinish={(form) => console.log(form)}
+        onFinish={handleFormSubmit}
         onFieldsChange={debouncedHandleFormChange}
       >
         <Row gutter={24}>
           <Col xs={24} sm={8}>
-            <Form.Item label={'Editor'} name={['payee', 'id']}>
+            <Form.Item
+              label={'Editor'}
+              name={['payee', 'id']}
+              rules={[
+                {
+                  required: true,
+                  message: 'O campo obrigatório',
+                },
+              ]}
+            >
               <Select
                 loading={fetching}
                 placeholder={
@@ -167,7 +204,16 @@ export function PaymentForm() {
             <Form.Item hidden name={['accountingPeriod', 'endsOn']}>
               <Input hidden />
             </Form.Item>
-            <Form.Item label={'Período'} name={'_accountingPeriod'}>
+            <Form.Item
+              label={'Período'}
+              name={'_accountingPeriod'}
+              rules={[
+                {
+                  required: true,
+                  message: 'O campo obrigatório',
+                },
+              ]}
+            >
               <DatePicker.RangePicker
                 format={'DD/MM/YYYY'}
                 style={{ width: '100%' }}
@@ -193,7 +239,16 @@ export function PaymentForm() {
             </Form.Item>
           </Col>
           <Col xs={24} sm={8}>
-            <Form.Item label={'Agendamento'} name={'scheduledTo'}>
+            <Form.Item
+              label={'Agendamento'}
+              name={'scheduledTo'}
+              rules={[
+                {
+                  required: true,
+                  message: 'Campo é obrigatório',
+                },
+              ]}
+            >
               <DatePicker
                 showToday={false}
                 disabledDate={(date) => {
@@ -340,6 +395,12 @@ export function PaymentForm() {
                               {...field}
                               name={[field.name, 'title']}
                               label={'Descrição'}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'O campo obrigatório',
+                                },
+                              ]}
                             >
                               <Input placeholder={'E.g.: 1 milhão de views'} />
                             </Form.Item>
@@ -349,6 +410,12 @@ export function PaymentForm() {
                               {...field}
                               name={[field.name, 'amount']}
                               label={'Valor'}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'O campo obrigatório',
+                                },
+                              ]}
                             >
                               <CurrencyInput
                                 onChange={(a, amount) => {
@@ -394,8 +461,15 @@ export function PaymentForm() {
             </Form.List>
           </Col>
         </Row>
-
-        <Button htmlType={'submit'}>enviar</Button>
+        <Row style={{ marginTop: 24 }} justify={'end'}>
+          <Button
+            type={'primary'}
+            loading={schedulingPayment}
+            htmlType={'submit'}
+          >
+            Cadastrar agendamento
+          </Button>
+        </Row>
       </Form>
     </>
   );
