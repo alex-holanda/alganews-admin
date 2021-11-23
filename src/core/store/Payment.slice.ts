@@ -8,11 +8,13 @@ import {
   isPending,
 } from '@reduxjs/toolkit';
 import { Payment, PaymentService } from 'alex-holanda-sdk';
+import { Key } from 'antd/lib/table/interface';
 
 interface PaymentState {
   paginated: Payment.Paginated;
   fetching: boolean;
   query: Payment.Query;
+  selected: Key[];
 }
 
 const initialState: PaymentState = {
@@ -29,6 +31,7 @@ const initialState: PaymentState = {
     page: 0,
     size: 7,
   },
+  selected: [],
 };
 
 export const getAllPayments = createAsyncThunk(
@@ -50,6 +53,8 @@ export const approvePaymentsInBatch = createAsyncThunk(
     await PaymentService.approvePaymentsBatch(paymentIds);
 
     await dispatch(getAllPayments());
+
+    await dispatch(storeSelectedKeys([]));
   }
 );
 
@@ -74,6 +79,9 @@ const PaymentSlice = createSlice({
         ...action.payload,
       };
     },
+    storeSelectedKeys(state, action: PayloadAction<Key[]>) {
+      state.selected = action.payload;
+    },
   },
   extraReducers(builder) {
     const success = isFulfilled(getAllPayments, approvePaymentsInBatch);
@@ -93,7 +101,8 @@ const PaymentSlice = createSlice({
   },
 });
 
-export const { storeQuery, storeList } = PaymentSlice.actions;
+export const { storeQuery, storeList, storeSelectedKeys } =
+  PaymentSlice.actions;
 
 const PaymentReducer = PaymentSlice.reducer;
 

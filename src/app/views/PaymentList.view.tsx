@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Key, SorterResult } from 'antd/lib/table/interface';
+import { SorterResult } from 'antd/lib/table/interface';
 
 import { Payment } from 'alex-holanda-sdk';
 
@@ -33,9 +33,9 @@ export default function PaymentListView() {
     query,
     setQuery,
     approvePaymentsInBatch,
+    selected,
+    setSelected,
   } = usePayments();
-
-  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
   const { xs } = useBreakpoint();
 
@@ -53,9 +53,9 @@ export default function PaymentListView() {
           }}
         >
           <DoubleConfirm
-            disabled={selectedRowKeys.length === 0}
+            disabled={selected.length === 0}
             popConfirmTitle={
-              selectedRowKeys.length === 1
+              selected.length === 1
                 ? 'Você deseja aprovar o agendamento selecionado?'
                 : 'Você deseja aprovar os agendamentos selecionados?'
             }
@@ -64,7 +64,7 @@ export default function PaymentListView() {
               'Esta é uma ação irreversível. Ao aprovar, não poderá ser removido!'
             }
             onConfirm={async () => {
-              await approvePaymentsInBatch(selectedRowKeys as number[]);
+              await approvePaymentsInBatch(selected as number[]);
 
               notification.success({
                 message: 'Os pagamentos selecionados foram aprovados',
@@ -73,7 +73,7 @@ export default function PaymentListView() {
           >
             <Button
               type={'primary'}
-              disabled={selectedRowKeys.length === 0}
+              disabled={selected.length === 0}
               style={{ width: xs ? '100%' : 240 }}
             >
               Aprovar agendamentos
@@ -105,8 +105,8 @@ export default function PaymentListView() {
           }
         }}
         rowSelection={{
-          selectedRowKeys,
-          onChange: setSelectedRowKeys,
+          selectedRowKeys: selected,
+          onChange: setSelected,
           getCheckboxProps(payment) {
             return !payment.canBeApproved ? { disabled: true } : {};
           },
