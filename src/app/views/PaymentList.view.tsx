@@ -10,6 +10,7 @@ import {
   Tooltip,
   DatePicker,
   Descriptions,
+  notification,
 } from 'antd';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 import { EyeOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -24,7 +25,15 @@ import { usePageTitle } from '../../core/hooks/usePageTitle';
 export default function PaymentListView() {
   usePageTitle('Consulta de pagamentos');
 
-  const { payments, fetchPayments, totalElements, fetching } = usePayments();
+  const {
+    payments,
+    fetchPayments,
+    totalElements,
+    fetching,
+    approvingPaymentsBatch,
+    approvePaymentsBatch,
+  } = usePayments();
+
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [yearMonth, setYearMonth] = useState<string | undefined>();
   const [page, setPage] = useState(1);
@@ -64,8 +73,12 @@ export default function PaymentListView() {
             modalContent={
               'Esta é uma ação irreversível. Ao aprovar, não poderá ser removido!'
             }
-            onConfirm={() => {
-              console.log('TODO: implement batch approval');
+            onConfirm={async () => {
+              await approvePaymentsBatch(selectedRowKeys as number[]);
+
+              notification.success({
+                message: 'Os pagamentos selecionados foram aprovados',
+              });
             }}
           >
             <Button
