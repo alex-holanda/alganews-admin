@@ -1,35 +1,43 @@
-import { useState, useCallback } from 'react';
+import { Payment } from 'alex-holanda-sdk';
+import { useCallback } from 'react';
 
-import { Payment, PaymentService } from 'alex-holanda-sdk';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { RootState } from './../store/index';
+import * as PaymentActions from './../store/Payment.slice';
 
 export function usePayments() {
-  const [payments, setPayments] = useState<Payment.Paginated>();
-  const [fetching, setFetching] = useState(false);
+  const dispatch = useDispatch();
 
-  const [approvingPaymentsBatch, setApprovingPaymentsBatch] = useState(false);
+  const fetching = useSelector((state: RootState) => state.payment.fetching);
+  const payments = useSelector((state: RootState) => state.payment.paginated);
+  const query = useSelector((state: RootState) => state.payment.query);
 
-  const fetchPayments = useCallback((query: Payment.Query) => {
-    setFetching(true);
-    PaymentService.getAllPayments(query)
-      .then(setPayments)
-      .finally(() => setFetching(false));
-  }, []);
+  const approvePaymentsInBatch = useCallback(
+    (ids: number[]) => {
+      dispatch(PaymentActions.approvePaymentsInBatch(ids));
+    },
+    [dispatch]
+  );
 
-  const approvePaymentsBatch = useCallback(async (paymentIds: number[]) => {
-    try {
-      setApprovingPaymentsBatch(true);
-      await PaymentService.approvePaymentsBatch(paymentIds);
-    } finally {
-      setApprovingPaymentsBatch(false);
-    }
-  }, []);
+  const fetchPayments = useCallback(() => {
+    dispatch(PaymentActions.getAllPayments());
+  }, [dispatch]);
+
+  const setQuery = useCallback(
+    async (query: Payment.Query) => {
+      await dispatch(PaymentActions.setQuery(query));
+    },
+    [dispatch]
+  );
 
   return {
     payments: payments?.content,
     totalElements: payments?.totalElements,
     fetchPayments,
     fetching,
-    approvingPaymentsBatch,
-    approvePaymentsBatch,
+    approvePaymentsInBatch,
+    query,
+    setQuery,
   };
 }

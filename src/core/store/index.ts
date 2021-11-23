@@ -7,6 +7,7 @@ import { notification } from 'antd';
 import MetricReducer from './Metric.reducer';
 import PostReducer from './Post.reducer';
 import UserReducer from './User.reducer';
+import PaymentReducer from './Payment.slice';
 
 const observeActions: Middleware = () => (next) => (action) => {
   if (isRejected(action)) {
@@ -23,6 +24,7 @@ export const store = configureStore({
     user: UserReducer,
     post: PostReducer,
     metric: MetricReducer,
+    payment: PaymentReducer,
   },
   middleware: function (getDefaultMiddlewares) {
     return getDefaultMiddlewares().concat(observeActions);

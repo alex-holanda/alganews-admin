@@ -30,28 +30,18 @@ export default function PaymentListView() {
     fetchPayments,
     totalElements,
     fetching,
-    approvingPaymentsBatch,
-    approvePaymentsBatch,
+    query,
+    setQuery,
+    approvePaymentsInBatch,
   } = usePayments();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
-  const [yearMonth, setYearMonth] = useState<string | undefined>();
-  const [page, setPage] = useState(1);
-  const [sortingOrder, seteSortingOrder] = useState<
-    'asc' | 'desc' | undefined
-  >();
-  const pageSize = 7;
 
   const { xs } = useBreakpoint();
 
   useEffect(() => {
-    fetchPayments({
-      scheduledToYearMonth: yearMonth,
-      sort: ['scheduledTo', sortingOrder || 'desc'],
-      page: page - 1,
-      size: pageSize,
-    });
-  }, [fetchPayments, yearMonth, page, pageSize, sortingOrder]);
+    fetchPayments();
+  }, [fetchPayments]);
   return (
     <>
       <Row align={'middle'} justify={'space-between'} gutter={24}>
@@ -74,7 +64,7 @@ export default function PaymentListView() {
               'Esta é uma ação irreversível. Ao aprovar, não poderá ser removido!'
             }
             onConfirm={async () => {
-              await approvePaymentsBatch(selectedRowKeys as number[]);
+              await approvePaymentsInBatch(selectedRowKeys as number[]);
 
               notification.success({
                 message: 'Os pagamentos selecionados foram aprovados',
@@ -93,7 +83,9 @@ export default function PaymentListView() {
           <DatePicker.MonthPicker
             style={{ width: xs ? '100%' : '240px' }}
             onChange={(date) => {
-              setYearMonth(date ? date.format('YYYY-MM') : undefined);
+              setQuery({
+                scheduledToYearMonth: date ? date.format('YYYY-MM') : undefined,
+              });
             }}
             format={'MMMM - YYYY'}
           />
@@ -106,9 +98,11 @@ export default function PaymentListView() {
         loading={fetching}
         onChange={(p, f, sorter) => {
           const { order } = sorter as SorterResult<Payment.Summary>;
-          order === 'ascend'
-            ? seteSortingOrder('asc')
-            : seteSortingOrder('desc');
+          const direction = order?.replace('end', '');
+
+          if (direction && direction !== query.sort![1]) {
+            setQuery({ sort: [query.sort![0], direction as 'asc' | 'desc'] });
+          }
         }}
         rowSelection={{
           selectedRowKeys,
@@ -324,10 +318,10 @@ export default function PaymentListView() {
           },
         ]}
         pagination={{
-          current: page,
-          onChange: setPage,
+          current: query.page ? query.page + 1 : 1,
+          onChange: (page) => setQuery({ page: page - 1 }),
           total: totalElements,
-          pageSize: pageSize,
+          pageSize: query.size,
         }}
       />
     </>
