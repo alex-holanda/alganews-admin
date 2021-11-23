@@ -46,8 +46,10 @@ export const getAllPayments = createAsyncThunk(
 
 export const approvePaymentsInBatch = createAsyncThunk(
   'payment/approvePaymentsInBatch',
-  async (paymentIds: number[]) => {
+  async (paymentIds: number[], { dispatch }) => {
     await PaymentService.approvePaymentsBatch(paymentIds);
+
+    await dispatch(getAllPayments());
   }
 );
 
