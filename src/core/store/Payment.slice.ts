@@ -66,6 +66,15 @@ export const setQuery = createAsyncThunk(
   }
 );
 
+export const removePayment = createAsyncThunk(
+  'payment/remove',
+  async (paymentId: number, { dispatch }) => {
+    await PaymentService.removeExistingPayment(paymentId);
+
+    await dispatch(getAllPayments());
+  }
+);
+
 const PaymentSlice = createSlice({
   initialState,
   name: 'payment',

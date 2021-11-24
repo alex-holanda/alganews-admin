@@ -40,6 +40,13 @@ export function usePayments() {
     [dispatch]
   );
 
+  const removePayment = useCallback(
+    async (paymentId: number) => {
+      await dispatch(PaymentActions.removePayment(paymentId));
+    },
+    [dispatch]
+  );
+
   return {
     payments: payments?.content,
     totalElements: payments?.totalElements,
@@ -50,5 +57,6 @@ export function usePayments() {
     setQuery,
     selected,
     setSelected,
+    removePayment,
   };
 }

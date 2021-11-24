@@ -35,6 +35,7 @@ export default function PaymentListView() {
     approvePaymentsInBatch,
     selected,
     setSelected,
+    removePayment,
   } = usePayments();
 
   const { xs } = useBreakpoint();
@@ -177,8 +178,8 @@ export default function PaymentListView() {
                         modalContent={
                           'Esta é uma ação irreversível. Ao remover um agendamento, ele não poderá ser recuperado!'
                         }
-                        onConfirm={() => {
-                          console.log('TODO: remover agendamento');
+                        onConfirm={async () => {
+                          await removePayment(payment.id);
                         }}
                       >
                         <Tooltip
@@ -297,8 +298,8 @@ export default function PaymentListView() {
                     modalContent={
                       'Esta é uma ação irreversível. Ao remover um agendamento, ele não poderá ser recuperado!'
                     }
-                    onConfirm={() => {
-                      console.log('TODO: remover agendamento');
+                    onConfirm={async () => {
+                      await removePayment(id);
                     }}
                   >
                     <Tooltip

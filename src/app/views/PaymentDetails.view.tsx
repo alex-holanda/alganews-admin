@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Redirect, useParams } from 'react-router';
 
-import { Card, Divider, Space, Button } from 'antd';
+import { Card, Divider, Space, Button, notification } from 'antd';
 import { PrinterOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 import { usePayment } from '../../core/hooks/usePayment';
@@ -28,6 +28,8 @@ export function PaymentDetailsView() {
     payment,
     posts,
     notFound,
+    approvePayment,
+    fetchingPaymentApprove,
   } = usePayment();
 
   const { xs } = useBreakpoint();
@@ -80,8 +82,10 @@ export function PaymentDetailsView() {
           modalContent={
             'Aprovar um agendamento de pagamento gera uma despesa que não pode ser removida do fluxo de caixa. Essa ação não poderá ser desfeita.'
           }
-          onConfirm={() => {
-            console.log('TODO: payment approval');
+          onConfirm={async () => {
+            await approvePayment(payment?.id!);
+
+            notification.success({ message: 'Pagamento aprovado com sucesso' });
           }}
         >
           <Button
@@ -90,6 +94,7 @@ export function PaymentDetailsView() {
             disabled={!payment?.canBeDeleted}
             icon={<CheckCircleOutlined />}
             type={'primary'}
+            loading={fetchingPaymentApprove}
             danger
           >
             {payment?.canBeDeleted
