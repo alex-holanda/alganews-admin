@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 
 import { Button, Card, DatePicker, Space, Table, Tag, Tooltip } from 'antd';
 import { DeleteOutlined, EyeOutlined, EditOutlined } from '@ant-design/icons';
-import { Key } from 'antd/lib/table/interface';
 
 import moment from 'moment';
 
@@ -14,13 +13,18 @@ import { transformNumberToCurrency } from 'core/util/transformNumberToCurrency';
 
 interface EntriesListProps {
   type: CashFlow.EntrySummary['type'];
-  selected?: Key[];
-  onSelect?: (keys: Key[]) => any;
 }
 
 function EntriesList(props: EntriesListProps) {
-  const { entries, fetchingEntries, fetchEntries, query, setQuery } =
-    useCashFlow(props.type);
+  const {
+    entries,
+    fetching,
+    fetchEntries,
+    selected,
+    setSelected,
+    query,
+    setQuery,
+  } = useCashFlow(props.type);
 
   useEffect(() => {
     fetchEntries();
@@ -28,12 +32,12 @@ function EntriesList(props: EntriesListProps) {
 
   return (
     <Table<CashFlow.EntrySummary>
-      loading={fetchingEntries}
+      loading={fetching}
       rowKey={'id'}
       dataSource={entries}
       rowSelection={{
-        selectedRowKeys: props.selected,
-        onChange: props.onSelect,
+        selectedRowKeys: selected,
+        onChange: setSelected,
         getCheckboxProps(record) {
           return !record.canBeDeleted ? { disabled: true } : {};
         },

@@ -29,10 +29,18 @@ const initialState: RevenueState = {
 export const getRevenues = createAsyncThunk(
   'cash-flow/revenues/getRevenues',
   async (_, { getState, dispatch }) => {
-    const { query } = (getState() as RootState).revenue;
+    const { query } = (getState() as RootState).cashFlow.revenue;
     const revenues = await CashFlowService.getAllEntries(query);
 
     await dispatch(storeList(revenues));
+  }
+);
+
+export const setQuery = createAsyncThunk(
+  'cash-flow/revenues/query',
+  async (query: Partial<CashFlow.Query>, { dispatch }) => {
+    await dispatch(storeQuery(query));
+    await dispatch(getRevenues());
   }
 );
 
@@ -51,10 +59,10 @@ const RevenueSlice = createSlice({
     storeList(state, action: PayloadAction<CashFlow.EntrySummary[]>) {
       state.list = action.payload;
     },
-    setSelectExpanses(state, action: PayloadAction<Key[]>) {
+    setSelectedExpanses(state, action: PayloadAction<Key[]>) {
       state.selected = action.payload;
     },
-    setQuery(state, action: PayloadAction<Partial<CashFlow.Query>>) {
+    storeQuery(state, action: PayloadAction<Partial<CashFlow.Query>>) {
       state.query = {
         ...state.query,
         ...action.payload,
@@ -83,7 +91,7 @@ const RevenueSlice = createSlice({
   },
 });
 
-export const { storeList, setFetching, setQuery, setSelectExpanses } =
+export const { storeList, setFetching, storeQuery, setSelectedExpanses } =
   RevenueSlice.actions;
 
 const RevenueReducer = RevenueSlice.reducer;

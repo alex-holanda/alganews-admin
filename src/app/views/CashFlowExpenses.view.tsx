@@ -12,7 +12,7 @@ const { Title, Text } = Typography;
 export default function CashFlowExpensesView() {
   const type: CashFlow.EntrySummary['type'] = 'EXPENSE';
 
-  const { selected, setSelected, deleteEntriesInBatch } = useCashFlow(type);
+  const { selected, removeEntriesInBatch } = useCashFlow(type);
 
   return (
     <>
@@ -41,7 +41,7 @@ export default function CashFlowExpensesView() {
             'Remover uma ou mais entradas, pode gerar impacto negativo no gráfico de receitas e despesas da empresa. Essa é uma ação irreversível'
           }
           onConfirm={async () =>
-            await deleteEntriesInBatch(selected as number[])
+            await removeEntriesInBatch(selected as number[])
           }
         >
           <Button type={'primary'} disabled={!selected.length}>
@@ -50,7 +50,7 @@ export default function CashFlowExpensesView() {
         </DoubleConfirm>
       </Row>
 
-      <EntriesList type={type} selected={selected} onSelect={setSelected} />
+      <EntriesList type={type} />
     </>
   );
 }

@@ -1,15 +1,15 @@
 import { Middleware } from 'redux';
 
-import { configureStore, isRejected } from '@reduxjs/toolkit';
+import { configureStore, isRejected, combineReducers } from '@reduxjs/toolkit';
 
 import { notification } from 'antd';
 
-import MetricReducer from './Metric.reducer';
-import PostReducer from './Post.reducer';
-import UserReducer from './User.reducer';
-import PaymentReducer from './Payment.slice';
-import ExpenseReducer from './Expense.slice';
-import RevenueReducer from './Revenue.slice';
+import metricReducer from './Metric.reducer';
+import postReducer from './Post.reducer';
+import userReducer from './User.reducer';
+import paymentReducer from './Payment.slice';
+import expenseReducer from './Expense.slice';
+import revenueReducer from './Revenue.slice';
 
 const observeActions: Middleware = () => (next) => (action) => {
   if (isRejected(action)) {
@@ -21,14 +21,18 @@ const observeActions: Middleware = () => (next) => (action) => {
   next(action);
 };
 
+const cashFlowReducer = combineReducers({
+  expense: expenseReducer,
+  revenue: revenueReducer,
+});
+
 export const store = configureStore({
   reducer: {
-    user: UserReducer,
-    post: PostReducer,
-    metric: MetricReducer,
-    payment: PaymentReducer,
-    expense: ExpenseReducer,
-    revenue: RevenueReducer,
+    user: userReducer,
+    post: postReducer,
+    metric: metricReducer,
+    payment: paymentReducer,
+    cashFlow: cashFlowReducer,
   },
   middleware: function (getDefaultMiddlewares) {
     return getDefaultMiddlewares().concat(observeActions);
