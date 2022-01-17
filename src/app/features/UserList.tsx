@@ -250,15 +250,15 @@ export default function UserListFeature() {
             render(id: number) {
               return (
                 <Space>
-                  <Tooltip title={'Visualizar usuário'} placement={'left'}>
-                    <Link to={`/usuarios/${id}`}>
-                      <Button size={'small'} icon={<EyeOutlined />} />
+                  <Tooltip title={'Editar usuário'} placement={'right'}>
+                    <Link to={`/usuarios/edicao/${id}`}>
+                      <Button type={'text'} size={'small'} icon={<EditOutlined />} />
                     </Link>
                   </Tooltip>
 
-                  <Tooltip title={'Editar usuário'} placement={'right'}>
-                    <Link to={`/usuarios/edicao/${id}`}>
-                      <Button size={'small'} icon={<EditOutlined />} />
+                  <Tooltip title={'Visualizar usuário'} placement={'left'}>
+                    <Link to={`/usuarios/${id}`}>
+                      <Button type={'text'} size={'small'} icon={<EyeOutlined />} />
                     </Link>
                   </Tooltip>
                 </Space>

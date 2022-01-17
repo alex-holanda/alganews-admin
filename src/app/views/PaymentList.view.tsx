@@ -285,12 +285,6 @@ export default function PaymentListView() {
             render(id: number, payment) {
               return (
                 <Space>
-                  <Tooltip title={'Detalhar'} placement={'left'}>
-                    <Link to={`/pagamentos/${id}`}>
-                      <Button size={'small'} icon={<EyeOutlined />} />
-                    </Link>
-                  </Tooltip>
-
                   <DoubleConfirm
                     disabled={!payment.canBeDeleted}
                     popConfirmTitle={'Remover agendamento'}
@@ -307,12 +301,24 @@ export default function PaymentListView() {
                       placement={'right'}
                     >
                       <Button
+                        danger
+                        type={'text'}
                         size={'small'}
                         icon={<DeleteOutlined />}
                         disabled={!payment.canBeDeleted}
                       />
                     </Tooltip>
                   </DoubleConfirm>
+
+                  <Tooltip title={'Detalhar'} placement={'left'}>
+                    <Link to={`/pagamentos/${id}`}>
+                      <Button
+                        type={'text'}
+                        size={'small'}
+                        icon={<EyeOutlined />}
+                      />
+                    </Link>
+                  </Tooltip>
                 </Space>
               );
             },
