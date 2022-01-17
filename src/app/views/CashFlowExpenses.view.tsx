@@ -1,10 +1,18 @@
-import { Divider, Space, Tooltip, Typography } from 'antd';
+import { Button, Divider, Row, Space, Tooltip, Typography } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
+
 import EntriesList from 'app/features/EntriesList';
+import useCashFlow from 'core/hooks/useCashFlow';
+
+import { CashFlow } from 'alex-holanda-sdk';
 
 const { Title, Text } = Typography;
 
 export default function CashFlowExpensesView() {
+  const type: CashFlow.EntrySummary['type'] = 'EXPENSE';
+
+  const { selected, setSelected } = useCashFlow(type);
+
   return (
     <>
       <Space direction={'vertical'}>
@@ -19,7 +27,13 @@ export default function CashFlowExpensesView() {
 
       <Divider />
 
-      <EntriesList />
+      <Row>
+        <Button type={'primary'} disabled={!selected.length}>
+          Remover
+        </Button>
+      </Row>
+
+      <EntriesList type={type} selected={selected} onSelect={setSelected} />
     </>
   );
 }

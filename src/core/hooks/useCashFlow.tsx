@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
 
+import { Key } from 'antd/lib/table/interface';
+
 import moment from 'moment';
 
 import { CashFlow, CashFlowService } from 'alex-holanda-sdk';
@@ -14,6 +16,7 @@ function useCashFlow(type: CashFlowEntryType) {
     sort: ['transactedOn', 'desc'],
     yearMonth: moment().format('YYYY-MM'),
   });
+  const [selected, setSelected] = useState<Key[]>([]);
 
   const fetchEntries = useCallback(async () => {
     try {
@@ -32,6 +35,8 @@ function useCashFlow(type: CashFlowEntryType) {
     fetchEntries,
     query,
     setQuery,
+    selected,
+    setSelected,
   };
 }
 

@@ -2,17 +2,25 @@ import { useEffect } from 'react';
 
 import { Button, Card, DatePicker, Space, Table, Tag, Tooltip } from 'antd';
 import { DeleteOutlined, EyeOutlined, EditOutlined } from '@ant-design/icons';
+import { Key } from 'antd/lib/table/interface';
+
+import moment from 'moment';
 
 import { CashFlow } from 'alex-holanda-sdk';
 
 import useCashFlow from 'core/hooks/useCashFlow';
 import { transformStringToDate } from 'core/util/transformStringToDate';
 import { transformNumberToCurrency } from 'core/util/transformNumberToCurrency';
-import moment from 'moment';
 
-function EntriesList() {
+interface EntriesListProps {
+  type: CashFlow.EntrySummary['type'];
+  selected?: Key[];
+  onSelect?: (keys: Key[]) => any;
+}
+
+function EntriesList(props: EntriesListProps) {
   const { entries, fetchingEntries, fetchEntries, query, setQuery } =
-    useCashFlow('EXPENSE');
+    useCashFlow(props.type);
 
   useEffect(() => {
     fetchEntries();
@@ -23,6 +31,13 @@ function EntriesList() {
       loading={fetchingEntries}
       rowKey={'id'}
       dataSource={entries}
+      rowSelection={{
+        selectedRowKeys: props.selected,
+        onChange: props.onSelect,
+        getCheckboxProps(record) {
+          return !record.canBeDeleted ? { disabled: true } : {};
+        },
+      }}
       columns={[
         {
           dataIndex: 'description',
