@@ -5,13 +5,14 @@ import EntriesList from 'app/features/EntriesList';
 import useCashFlow from 'core/hooks/useCashFlow';
 
 import { CashFlow } from 'alex-holanda-sdk';
+import { DoubleConfirm } from 'app/components/DoubleConfirm';
 
 const { Title, Text } = Typography;
 
 export default function CashFlowExpensesView() {
   const type: CashFlow.EntrySummary['type'] = 'EXPENSE';
 
-  const { selected, setSelected } = useCashFlow(type);
+  const { selected, setSelected, deleteEntriesInBatch } = useCashFlow(type);
 
   return (
     <>
@@ -28,9 +29,22 @@ export default function CashFlowExpensesView() {
       <Divider />
 
       <Row>
-        <Button type={'primary'} disabled={!selected.length}>
-          Remover
-        </Button>
+        <DoubleConfirm
+          popConfirmTitle={`Remover ${
+            selected.length > 1
+              ? 'entradas selecionadas'
+              : 'entrada selecionada'
+          }?`}
+          modalTitle={'Remover entradas'}
+          modalContent={
+            'Remover uma ou mais entradas, pode gerar impacto negativo no gráfico de receitas e despesas da empresa. Essa é uma ação irreversível'
+          }
+          onConfirm={async () => await deleteEntriesInBatch(selected as number[])}
+        >
+          <Button type={'primary'} disabled={!selected.length}>
+            Remover
+          </Button>
+        </DoubleConfirm>
       </Row>
 
       <EntriesList type={type} selected={selected} onSelect={setSelected} />
