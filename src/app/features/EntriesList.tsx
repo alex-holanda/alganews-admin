@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Button, Space, Table, Tag } from 'antd';
+import { Button, Card, DatePicker, Space, Table, Tag, Tooltip } from 'antd';
 import { DeleteOutlined, EyeOutlined, EditOutlined } from '@ant-design/icons';
 
 import { CashFlow } from 'alex-holanda-sdk';
@@ -8,16 +8,14 @@ import { CashFlow } from 'alex-holanda-sdk';
 import useCashFlow from 'core/hooks/useCashFlow';
 import { transformStringToDate } from 'core/util/transformStringToDate';
 import { transformNumberToCurrency } from 'core/util/transformNumberToCurrency';
+import moment from 'moment';
 
 function EntriesList() {
-  const { entries, fetchingEntries, fetchEntries } = useCashFlow();
+  const { entries, fetchingEntries, fetchEntries, query, setQuery } =
+    useCashFlow('EXPENSE');
 
   useEffect(() => {
-    fetchEntries({
-      type: 'EXPENSE',
-      sort: ['transactedOn', 'desc'],
-      yearMonth: '2021-12',
-    });
+    fetchEntries();
   }, [fetchEntries]);
 
   return (
@@ -31,6 +29,9 @@ function EntriesList() {
           title: 'Descrição',
           width: 300,
           ellipsis: true,
+          render(description: CashFlow.EntrySummary['description']) {
+            return <Tooltip title={description}>{description}</Tooltip>;
+          },
         },
         {
           dataIndex: 'category',
@@ -44,6 +45,22 @@ function EntriesList() {
           dataIndex: 'transactedOn',
           title: 'Data',
           align: 'center',
+          filterDropdown() {
+            return (
+              <Card>
+                <DatePicker.MonthPicker
+                  format={'YYYY - MMMM'}
+                  onChange={(date) => {
+                    setQuery({
+                      ...query,
+                      yearMonth:
+                        date?.format('YYYY-MM') || moment().format('YYYY-MM'),
+                    });
+                  }}
+                />
+              </Card>
+            );
+          },
           render: transformStringToDate,
         },
         {
