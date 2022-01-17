@@ -8,6 +8,8 @@ import MetricReducer from './Metric.reducer';
 import PostReducer from './Post.reducer';
 import UserReducer from './User.reducer';
 import PaymentReducer from './Payment.slice';
+import ExpenseReducer from './Expense.slice';
+import RevenueReducer from './Revenue.slice';
 
 const observeActions: Middleware = () => (next) => (action) => {
   if (isRejected(action)) {
@@ -25,6 +27,8 @@ export const store = configureStore({
     post: PostReducer,
     metric: MetricReducer,
     payment: PaymentReducer,
+    expense: ExpenseReducer,
+    revenue: RevenueReducer,
   },
   middleware: function (getDefaultMiddlewares) {
     return getDefaultMiddlewares().concat(observeActions);

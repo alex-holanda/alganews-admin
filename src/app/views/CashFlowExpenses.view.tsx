@@ -30,6 +30,7 @@ export default function CashFlowExpensesView() {
 
       <Row>
         <DoubleConfirm
+          disabled={!selected.length}
           popConfirmTitle={`Remover ${
             selected.length > 1
               ? 'entradas selecionadas'
@@ -39,7 +40,9 @@ export default function CashFlowExpensesView() {
           modalContent={
             'Remover uma ou mais entradas, pode gerar impacto negativo no gráfico de receitas e despesas da empresa. Essa é uma ação irreversível'
           }
-          onConfirm={async () => await deleteEntriesInBatch(selected as number[])}
+          onConfirm={async () =>
+            await deleteEntriesInBatch(selected as number[])
+          }
         >
           <Button type={'primary'} disabled={!selected.length}>
             Remover
