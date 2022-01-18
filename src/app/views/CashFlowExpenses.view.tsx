@@ -1,6 +1,5 @@
 import {
   Button,
-  Col,
   Divider,
   Modal,
   Row,
