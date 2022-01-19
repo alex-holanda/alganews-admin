@@ -7,7 +7,7 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import { InfoCircleFilled, TagOutlined } from '@ant-design/icons';
+import { InfoCircleFilled, TagOutlined, CloseOutlined } from '@ant-design/icons';
 
 import EntriesList from 'app/features/EntriesList';
 import useCashFlow from 'core/hooks/useCashFlow';
@@ -34,9 +34,10 @@ export default function CashFlowExpensesView() {
       <Modal
         visible={showCategoryModal}
         onCancel={closeCategoryModal}
-        closeIcon={<></>}
+        closeIcon={<CloseOutlined />}
+        footer={null}
       >
-        <EntryCategoryManager />
+        <EntryCategoryManager type={type} />
       </Modal>
 
       <Space direction={'vertical'}>

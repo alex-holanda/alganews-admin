@@ -7,7 +7,11 @@ import { CashFlow } from 'alex-holanda-sdk';
 
 import useEntryCategories from 'core/hooks/useEntryCategories';
 
-function EntryCategoryManager() {
+interface EntryCategoryManagerProps {
+  type: CashFlow.EntrySummary['type'];
+}
+
+function EntryCategoryManager(props: EntryCategoryManagerProps) {
   const { expenses, revenues, fetching, fetchCategories } =
     useEntryCategories();
 
@@ -18,13 +22,15 @@ function EntryCategoryManager() {
   return (
     <>
       <Typography.Title level={3}>Categorias</Typography.Title>
-      <Row justify={'space-between'}>
+      <Row justify={'space-between'} style={{marginBottom: 16}}>
         <Button>Atualizar</Button>
         <Button>Adicionar</Button>
       </Row>
       <Table<CashFlow.CategorySummary>
         rowKey={'id'}
-        dataSource={expenses}
+        size={'small'}
+        loading={fetching}
+        dataSource={props.type === 'EXPENSE' ? expenses : revenues}
         columns={[
           {
             dataIndex: 'name',
