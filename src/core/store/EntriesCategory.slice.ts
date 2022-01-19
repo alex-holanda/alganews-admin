@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { CashFlow, CashFlowService } from 'alex-holanda-sdk';
+
+import getThunkStatus from 'core/util/getThunkStatus';
 
 interface EntriesCategoryState {
   fetching: boolean;
@@ -48,6 +51,20 @@ const entriesCategorySlice = createSlice({
     storeRevenues(state, action: PayloadAction<CashFlow.CategorySummary[]>) {
       state.revenues = action.payload;
     },
+  },
+  extraReducers(builder) {
+    const { error, loading, success } = getThunkStatus([getCategories]);
+
+    builder
+      .addMatcher(error, (state) => {
+        state.fetching = false;
+      })
+      .addMatcher(loading, (state) => {
+        state.fetching = true;
+      })
+      .addMatcher(success, (state) => {
+        state.fetching = false;
+      });
   },
 });
 

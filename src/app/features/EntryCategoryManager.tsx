@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
-import { Row, Table, Button, Typography } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Row, Col, Table, Button, Form, Input, Modal } from 'antd';
+import { DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 import { CashFlow } from 'alex-holanda-sdk';
 
@@ -15,16 +15,28 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
   const { expenses, revenues, fetching, fetchCategories } =
     useEntryCategories();
 
+  const [showCreationModal, setShowCreationModal] = useState(false);
+
+  const openCreationModal = useCallback(() => setShowCreationModal(true), []);
+  const closeCreationModal = useCallback(() => setShowCreationModal(false), []);
+
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
   return (
     <>
-      <Typography.Title level={3}>Categorias</Typography.Title>
-      <Row justify={'space-between'} style={{marginBottom: 16}}>
+      <Modal
+        visible={showCreationModal}
+        onCancel={closeCreationModal}
+        title={'Adicionar categoria'}
+        footer={null}
+      >
+        <CategoryForm />
+      </Modal>
+      <Row justify={'space-between'} style={{ marginBottom: 16 }}>
         <Button>Atualizar</Button>
-        <Button>Adicionar</Button>
+        <Button onClick={openCreationModal}>Adicionar</Button>
       </Row>
       <Table<CashFlow.CategorySummary>
         rowKey={'id'}
@@ -61,6 +73,38 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
           },
         ]}
       />
+    </>
+  );
+}
+
+function CategoryForm() {
+  return (
+    <>
+      <Form layout='vertical'>
+        <Row justify='end'>
+          <Col xs={24}>
+            <Form.Item
+              label={'Categoria'}
+              name={'name'}
+              rules={[
+                {
+                  required: true,
+                  message: 'O nome da categoria é obrigatório',
+                },
+              ]}
+            >
+              <Input placeholder={'E.g.: Infra'} />
+            </Form.Item>
+          </Col>
+          <Button
+            type={'primary'}
+            htmlType='submit'
+            icon={<CheckCircleOutlined />}
+          >
+            Cadastrar categoria
+          </Button>
+        </Row>
+      </Form>
     </>
   );
 }
