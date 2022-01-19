@@ -1,6 +1,15 @@
 import { useEffect, useState, useCallback } from 'react';
 
-import { Row, Col, Table, Button, Form, Input, Modal } from 'antd';
+import {
+  Row,
+  Col,
+  Table,
+  Button,
+  Form,
+  Input,
+  Modal,
+  notification,
+} from 'antd';
 import { DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 import { CashFlow } from 'alex-holanda-sdk';
@@ -28,11 +37,18 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
     <>
       <Modal
         visible={showCreationModal}
-        onCancel={closeCreationModal}
+        onCancel={() => {
+          closeCreationModal();
+
+          notification.success({
+            message: 'Categoria cadastrada com sucesso',
+          });
+        }}
         title={'Adicionar categoria'}
         footer={null}
+        destroyOnClose
       >
-        <CategoryForm />
+        <CategoryForm onSuccess={closeCreationModal} />
       </Modal>
       <Row justify={'space-between'} style={{ marginBottom: 16 }}>
         <Button>Atualizar</Button>
@@ -77,10 +93,28 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
   );
 }
 
-function CategoryForm() {
+function CategoryForm(props: { onSuccess: () => any }) {
+  const { onSuccess } = props;
+
+  const { createCategory } = useEntryCategories();
+
+  const handleFormSubmit = useCallback(
+    async (form: CashFlow.CategoryInput) => {
+      const newCategoryDTO: CashFlow.CategoryInput = {
+        ...form,
+        type: 'EXPENSE',
+      };
+
+      await createCategory(newCategoryDTO);
+
+      onSuccess();
+    },
+    [createCategory, onSuccess]
+  );
+
   return (
     <>
-      <Form layout='vertical'>
+      <Form layout='vertical' onFinish={handleFormSubmit}>
         <Row justify='end'>
           <Col xs={24}>
             <Form.Item
