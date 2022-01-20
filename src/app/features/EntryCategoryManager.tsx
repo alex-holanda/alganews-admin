@@ -39,16 +39,12 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
         visible={showCreationModal}
         onCancel={() => {
           closeCreationModal();
-
-          notification.success({
-            message: 'Categoria cadastrada com sucesso',
-          });
         }}
         title={'Adicionar categoria'}
         footer={null}
         destroyOnClose
       >
-        <CategoryForm onSuccess={closeCreationModal} />
+        <CategoryForm type={props.type} onSuccess={closeCreationModal} />
       </Modal>
       <Row justify={'space-between'} style={{ marginBottom: 16 }}>
         <Button>Atualizar</Button>
@@ -93,28 +89,38 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
   );
 }
 
-function CategoryForm(props: { onSuccess: () => any }) {
-  const { onSuccess } = props;
+interface CategoryFormProps {
+  type: CashFlow.EntrySummary['type'];
+  onSuccess: () => any;
+}
 
+function CategoryForm(props: CategoryFormProps) {
+  const { type, onSuccess } = props;
+
+  const [form] = Form.useForm<CashFlow.CategoryInput>();
   const { createCategory } = useEntryCategories();
 
   const handleFormSubmit = useCallback(
-    async (form: CashFlow.CategoryInput) => {
+    async (categoryInput: CashFlow.CategoryInput) => {
       const newCategoryDTO: CashFlow.CategoryInput = {
-        ...form,
-        type: 'EXPENSE',
+        ...categoryInput,
+        type,
       };
 
       await createCategory(newCategoryDTO);
 
       onSuccess();
+
+      notification.success({
+        message: 'Categoria cadastrada com sucesso',
+      });
     },
-    [createCategory, onSuccess]
+    [createCategory, onSuccess, type]
   );
 
   return (
     <>
-      <Form layout='vertical' onFinish={handleFormSubmit}>
+      <Form layout='vertical' onFinish={handleFormSubmit} form={form}>
         <Row justify='end'>
           <Col xs={24}>
             <Form.Item

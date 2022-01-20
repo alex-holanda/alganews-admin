@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { RootState } from '../store';
-import * as CategoryActions from '../store/EntriesCategory.slice';
+import { AppDispatch, RootState } from 'core/store';
+import * as CategoryActions from 'core/store/EntriesCategory.slice';
 
 import { CashFlow } from 'alex-holanda-sdk';
 
 function useEntryCategories() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const expenses = useSelector(
     (state: RootState) => state.cashFlow.category.expenses
@@ -20,13 +20,13 @@ function useEntryCategories() {
   );
 
   const fetchCategories = useCallback(
-    () => dispatch(CategoryActions.getCategories()),
+    async () => await dispatch(CategoryActions.getCategories()),
     [dispatch]
   );
 
   const createCategory = useCallback(
-    (category: CashFlow.CategoryInput) =>
-      dispatch(CategoryActions.createCategory(category)),
+    async (category: CashFlow.CategoryInput) =>
+      await dispatch(CategoryActions.createCategory(category)).unwrap(),
     [dispatch]
   );
 
