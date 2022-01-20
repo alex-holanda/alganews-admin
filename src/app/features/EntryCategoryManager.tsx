@@ -9,6 +9,7 @@ import {
   Input,
   Modal,
   notification,
+  Popconfirm,
 } from 'antd';
 import { DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
@@ -21,7 +22,7 @@ interface EntryCategoryManagerProps {
 }
 
 function EntryCategoryManager(props: EntryCategoryManagerProps) {
-  const { expenses, revenues, fetching, fetchCategories } =
+  const { expenses, revenues, fetching, fetchCategories, deleteCategory } =
     useEntryCategories();
 
   const [showCreationModal, setShowCreationModal] = useState(false);
@@ -70,16 +71,28 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
             dataIndex: 'id',
             title: 'Ações',
             align: 'right',
-            render(id: CashFlow.CategorySummary['id']) {
+            render(
+              id: CashFlow.CategorySummary['id'],
+              category: CashFlow.CategorySummary
+            ) {
               return (
-                <>
+                <Popconfirm
+                  title={'Remover categoria'}
+                  onConfirm={async () => {
+                    await deleteCategory(id);
+
+                    notification.success({ message: 'Categoria removida' });
+                  }}
+                  disabled={!category.canBeDeleted}
+                >
                   <Button
+                    disabled={!category.canBeDeleted}
                     type={'text'}
                     size={'small'}
                     danger
                     icon={<DeleteOutlined />}
                   />
-                </>
+                </Popconfirm>
               );
             },
           },

@@ -30,12 +30,19 @@ function useEntryCategories() {
     [dispatch]
   );
 
+  const deleteCategory = useCallback(
+    async (categoryId: number) =>
+      await dispatch(CategoryActions.deleteCategory(categoryId)).unwrap(),
+    [dispatch]
+  );
+
   return {
     expenses,
     revenues,
     fetching,
     fetchCategories,
     createCategory,
+    deleteCategory,
   };
 }
 
