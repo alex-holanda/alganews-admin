@@ -3,6 +3,7 @@ import {
   InfoCircleFilled,
   TagOutlined,
   CloseOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 
 import EntriesList from 'app/features/EntriesList';
@@ -13,6 +14,7 @@ import { DoubleConfirm } from 'app/components/DoubleConfirm';
 import { useCallback, useState } from 'react';
 import EntryCategoryManager from 'app/features/EntryCategoryManager';
 import moment from 'moment';
+import EntryForm from 'app/features/EntryForm';
 
 const { Title, Text } = Typography;
 
@@ -26,6 +28,11 @@ export default function CashFlowExpensesView() {
   const openCategoryModal = useCallback(() => setShowCategoryModal(true), []);
   const closeCategoryModal = useCallback(() => setShowCategoryModal(false), []);
 
+  const [showFormModal, setShowFormModal] = useState(false);
+
+  const openFormModal = useCallback(() => setShowFormModal(true), []);
+  const closeFormModal = useCallback(() => setShowFormModal(false), []);
+
   return (
     <>
       <Modal
@@ -37,6 +44,17 @@ export default function CashFlowExpensesView() {
         destroyOnClose
       >
         <EntryCategoryManager type={type} />
+      </Modal>
+
+      <Modal
+        visible={showFormModal}
+        onCancel={closeFormModal}
+        closeIcon={<CloseOutlined />}
+        title={'Cadastrar despesa'}
+        footer={null}
+        destroyOnClose
+      >
+        <EntryForm />
       </Modal>
 
       <Space direction={'vertical'}>
@@ -76,14 +94,24 @@ export default function CashFlowExpensesView() {
           </Button>
         </DoubleConfirm>
 
-        <Button
-          onClick={openCategoryModal}
-          type={'primary'}
-          size={'middle'}
-          icon={<TagOutlined />}
-        >
-          Categorias
-        </Button>
+        <Space>
+          <Button
+            onClick={openCategoryModal}
+            type={'primary'}
+            size={'middle'}
+            icon={<TagOutlined />}
+          >
+            Categorias
+          </Button>
+          <Button
+            onClick={openFormModal}
+            type={'primary'}
+            size={'middle'}
+            icon={<PlusCircleOutlined />}
+          >
+            Adicionar despesa
+          </Button>
+        </Space>
       </Row>
 
       <EntriesList type={type} />

@@ -1,11 +1,15 @@
-import { CashFlow } from 'alex-holanda-sdk';
+import { useCallback, useState } from 'react';
+
 import { Button, Modal, Row } from 'antd';
+import { TagOutlined, CloseOutlined } from '@ant-design/icons';
+
 import { DoubleConfirm } from 'app/components/DoubleConfirm';
 import EntriesList from 'app/features/EntriesList';
 import EntryCategoryManager from 'app/features/EntryCategoryManager';
+
 import useCashFlow from 'core/hooks/useCashFlow';
-import { useCallback, useState } from 'react';
-import { TagOutlined, CloseOutlined } from '@ant-design/icons';
+
+import { CashFlow } from 'alex-holanda-sdk';
 
 export default function CashFlowRevenuesView() {
   const type: CashFlow.CategorySummary['type'] = 'REVENUE';
