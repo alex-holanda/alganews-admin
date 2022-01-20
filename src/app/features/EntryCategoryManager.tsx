@@ -48,7 +48,9 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
         <CategoryForm type={props.type} onSuccess={closeCreationModal} />
       </Modal>
       <Row justify={'space-between'} style={{ marginBottom: 16 }}>
-        <Button>Atualizar</Button>
+        <Button onClick={() => fetchCategories()} loading={fetching}>
+          Atualizar
+        </Button>
         <Button onClick={openCreationModal}>Adicionar</Button>
       </Row>
       <Table<CashFlow.CategorySummary>
@@ -111,7 +113,7 @@ function CategoryForm(props: CategoryFormProps) {
   const { type, onSuccess } = props;
 
   const [form] = Form.useForm<CashFlow.CategoryInput>();
-  const { createCategory } = useEntryCategories();
+  const { createCategory, fetching } = useEntryCategories();
 
   const handleFormSubmit = useCallback(
     async (categoryInput: CashFlow.CategoryInput) => {
@@ -153,6 +155,7 @@ function CategoryForm(props: CategoryFormProps) {
             type={'primary'}
             htmlType='submit'
             icon={<CheckCircleOutlined />}
+            loading={fetching}
           >
             Cadastrar categoria
           </Button>

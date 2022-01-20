@@ -34,6 +34,7 @@ export default function CashFlowExpensesView() {
         closeIcon={<CloseOutlined />}
         title={'Gerenciar categorias'}
         footer={null}
+        destroyOnClose
       >
         <EntryCategoryManager type={type} />
       </Modal>
