@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
   Form,
@@ -11,13 +11,14 @@ import {
   Space,
   Button,
   notification,
+  Skeleton,
 } from 'antd';
 
 import CurrencyInput from 'app/components/CurrencyInput';
 
 import moment, { Moment } from 'moment';
 
-import { CashFlow } from 'alex-holanda-sdk';
+import { CashFlow, CashFlowService } from 'alex-holanda-sdk';
 
 import { useMemo } from 'react';
 
@@ -31,15 +32,32 @@ type EntryInputForm = Omit<CashFlow.EntryInput, 'transactedOn'> & {
 interface EntryFormProps {
   type: CashFlow.EntrySummary['type'];
   onSuccess: () => any;
+  editingEntry?: number | undefined;
 }
 
-function EntryForm({ type, onSuccess }: EntryFormProps) {
+function EntryForm({ type, onSuccess, editingEntry }: EntryFormProps) {
+  const [loading, setLoading] = useState(false);
+
   const [form] = Form.useForm();
 
   const { revenues, expenses, fetching, fetchCategories } =
     useEntriesCategory();
 
   const { createEntry, fetching: fetchingEntries } = useCashFlow(type);
+
+  useEffect(() => {
+    if (editingEntry) {
+      setLoading(true);
+
+      CashFlowService.getExistingEntry(editingEntry)
+        .then((entry) => ({
+          ...entry,
+          transactedOn: moment(entry.transactedOn),
+        }))
+        .then(form.setFieldsValue)
+        .finally(() => setLoading(false));
+    }
+  }, [editingEntry, form]);
 
   useEffect(() => {
     fetchCategories();
@@ -94,7 +112,13 @@ function EntryForm({ type, onSuccess }: EntryFormProps) {
     [type, createEntry, onSuccess, form]
   );
 
-  return (
+  return loading ? (
+    <>
+      <Skeleton />
+      <Skeleton title={false} />
+      <Skeleton title={false} />
+    </>
+  ) : (
     <>
       <Form
         autoComplete={'off'}

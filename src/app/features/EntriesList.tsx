@@ -13,6 +13,7 @@ import { transformNumberToCurrency } from 'core/util/transformNumberToCurrency';
 
 interface EntriesListProps {
   type: CashFlow.EntrySummary['type'];
+  onEdit: (entryId: number) => any;
 }
 
 function EntriesList(props: EntriesListProps) {
@@ -101,7 +102,12 @@ function EntriesList(props: EntriesListProps) {
                   danger
                   icon={<DeleteOutlined />}
                 />
-                <Button type={'text'} size={'small'} icon={<EditOutlined />} />
+                <Button
+                  type={'text'}
+                  size={'small'}
+                  onClick={() => props.onEdit(id)}
+                  icon={<EditOutlined />}
+                />
                 <Button type={'text'} size={'small'} icon={<EyeOutlined />} />
               </Space>
             );

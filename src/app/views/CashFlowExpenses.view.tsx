@@ -32,6 +32,10 @@ export default function CashFlowExpensesView() {
 
   const { selected, removeEntriesInBatch, query } = useCashFlow(type);
 
+  const [editingEnty, setEditingEntry] = useState<number | undefined>(
+    undefined
+  );
+
   const [showCategoryModal, setShowCategoryModal] = useState(false);
 
   const openCategoryModal = useCallback(() => setShowCategoryModal(true), []);
@@ -57,7 +61,10 @@ export default function CashFlowExpensesView() {
 
       <Modal
         visible={showFormModal}
-        onCancel={closeFormModal}
+        onCancel={() => {
+          closeFormModal();
+          setEditingEntry(undefined);
+        }}
         closeIcon={<CloseOutlined />}
         title={'Cadastrar despesa'}
         footer={null}
@@ -65,6 +72,7 @@ export default function CashFlowExpensesView() {
       >
         <EntryForm
           type={type}
+          editingEntry={editingEnty}
           onSuccess={() => {
             closeFormModal();
 
@@ -132,7 +140,13 @@ export default function CashFlowExpensesView() {
         </Space>
       </Row>
 
-      <EntriesList type={type} />
+      <EntriesList
+        onEdit={(id) => {
+          setEditingEntry(id);
+          openFormModal();
+        }}
+        type={type}
+      />
     </>
   );
 }
