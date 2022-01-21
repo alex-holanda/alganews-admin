@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { Key } from 'antd/lib/table/interface';
 
-import { RootState } from '../store';
+import { AppDispatch, RootState } from '../store';
 
 import { CashFlow } from 'alex-holanda-sdk';
 
@@ -14,7 +14,7 @@ import * as RevenuesActions from '../store/Revenue.slice';
 type CashFlowEntryType = CashFlow.EntrySummary['type'];
 
 function useCashFlow(type: CashFlowEntryType) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const query = useSelector((state: RootState) =>
     type === 'EXPENSE'
@@ -38,6 +38,16 @@ function useCashFlow(type: CashFlowEntryType) {
     type === 'EXPENSE'
       ? state.cashFlow.expense.selected
       : state.cashFlow.revenue.selected
+  );
+
+  const createEntry = useCallback(
+    async (entry: CashFlow.EntryInput) =>
+      await dispatch(
+        type === 'EXPENSE'
+          ? ExpensesActions.createExpense(entry)
+          : RevenuesActions.createRevenue(entry)
+      ).unwrap(),
+    [dispatch, type]
   );
 
   const fetchEntries = useCallback(() => {
@@ -87,6 +97,7 @@ function useCashFlow(type: CashFlowEntryType) {
     removeEntriesInBatch,
     setSelected,
     setQuery,
+    createEntry,
   };
 }
 

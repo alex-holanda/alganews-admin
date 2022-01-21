@@ -21,6 +21,7 @@ import { CashFlow } from 'alex-holanda-sdk';
 import { useMemo } from 'react';
 
 import useEntriesCategory from 'core/hooks/useEntryCategories';
+import useCashFlow from 'core/hooks/useCashFlow';
 
 type EntryInputForm = Omit<CashFlow.EntryInput, 'transactedOn'> & {
   transactedOn: Moment;
@@ -28,13 +29,16 @@ type EntryInputForm = Omit<CashFlow.EntryInput, 'transactedOn'> & {
 
 interface EntryFormProps {
   type: CashFlow.EntrySummary['type'];
+  onSuccess: () => any;
 }
 
-function EntryForm({ type }: EntryFormProps) {
+function EntryForm({ type, onSuccess }: EntryFormProps) {
   const [form] = Form.useForm();
 
   const { revenues, expenses, fetching, fetchCategories } =
     useEntriesCategory();
+
+  const { createEntry, fetching: fetchingEntries } = useCashFlow(type);
 
   useEffect(() => {
     fetchCategories();
@@ -46,16 +50,18 @@ function EntryForm({ type }: EntryFormProps) {
   );
 
   const handleFormSubmit = useCallback(
-    (entry: EntryInputForm) => {
+    async (entry: EntryInputForm) => {
       const newEntryDTO: CashFlow.EntryInput = {
         ...entry,
-        transactedOn: entry.transactedOn.format('DD/MM/YYYY'),
+        transactedOn: entry.transactedOn.format('YYYY-MM-DD'),
         type,
       };
 
-      console.log(newEntryDTO);
+      await createEntry(newEntryDTO);
+
+      onSuccess();
     },
-    [type]
+    [type, createEntry, onSuccess]
   );
 
   return (
@@ -148,7 +154,11 @@ function EntryForm({ type }: EntryFormProps) {
         <Row justify={'end'}>
           <Space>
             <Button>Cancelar</Button>
-            <Button type={'primary'} htmlType={'submit'}>
+            <Button
+              loading={fetchingEntries}
+              type={'primary'}
+              htmlType={'submit'}
+            >
               Cadastrar despesa
             </Button>
           </Space>

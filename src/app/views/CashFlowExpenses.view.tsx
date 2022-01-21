@@ -1,4 +1,13 @@
-import { Button, Divider, Modal, Row, Space, Tooltip, Typography } from 'antd';
+import {
+  Button,
+  Divider,
+  Modal,
+  Row,
+  Space,
+  Tooltip,
+  Typography,
+  notification,
+} from 'antd';
 import {
   InfoCircleFilled,
   TagOutlined,
@@ -54,7 +63,16 @@ export default function CashFlowExpensesView() {
         footer={null}
         destroyOnClose
       >
-        <EntryForm type={type} />
+        <EntryForm
+          type={type}
+          onSuccess={() => {
+            closeFormModal();
+
+            notification.success({
+              message: 'Entrada cadastrada com sucesso',
+            });
+          }}
+        />
       </Modal>
 
       <Space direction={'vertical'}>
