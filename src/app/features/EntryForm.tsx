@@ -10,6 +10,7 @@ import {
   Divider,
   Space,
   Button,
+  notification,
 } from 'antd';
 
 import CurrencyInput from 'app/components/CurrencyInput';
@@ -51,17 +52,46 @@ function EntryForm({ type, onSuccess }: EntryFormProps) {
 
   const handleFormSubmit = useCallback(
     async (entry: EntryInputForm) => {
-      const newEntryDTO: CashFlow.EntryInput = {
-        ...entry,
-        transactedOn: entry.transactedOn.format('YYYY-MM-DD'),
-        type,
-      };
+      try {
+        const newEntryDTO: CashFlow.EntryInput = {
+          ...entry,
+          transactedOn: entry.transactedOn.format('YYYY-MM-DD'),
+          type,
+        };
 
-      await createEntry(newEntryDTO);
+        await createEntry(newEntryDTO);
 
-      onSuccess();
+        onSuccess();
+      } catch (error) {
+        if (error?.data?.objects) {
+          form.setFields(
+            error.data.objects.map((err: any) => {
+              return {
+                name: err.name
+                  ?.split(/(\.|\[|\])/gi)
+                  .filter(
+                    (str: string) =>
+                      str !== '.' && str !== '[' && str !== ']' && str !== ''
+                  )
+                  .map((str: string) =>
+                    isNaN(Number(str)) ? str : Number(str)
+                  ) as string[],
+                errors: [err.userMessage],
+              };
+            })
+          );
+        } else {
+          notification.error({
+            message: error.message,
+            description:
+              error.data?.detail === 'Network Error'
+                ? 'Erro na rede'
+                : error.data?.detail || 'Houve um erro',
+          });
+        }
+      }
     },
-    [type, createEntry, onSuccess]
+    [type, createEntry, onSuccess, form]
   );
 
   return (
