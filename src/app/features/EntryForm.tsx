@@ -15,7 +15,7 @@ import {
 
 import CurrencyInput from 'app/components/CurrencyInput';
 
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 
 import { CashFlow } from 'alex-holanda-sdk';
 
@@ -174,7 +174,13 @@ function EntryForm({ type, onSuccess }: EntryFormProps) {
                 },
               ]}
             >
-              <DatePicker format={'DD/MM/YYYY'} style={{ width: '100%' }} />
+              <DatePicker
+                format={'DD/MM/YYYY'}
+                style={{ width: '100%' }}
+                disabledDate={(date) => {
+                  return date.isAfter(moment());
+                }}
+              />
             </Form.Item>
           </Col>
         </Row>
