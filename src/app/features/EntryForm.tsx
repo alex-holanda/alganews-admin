@@ -1,10 +1,11 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import {
   Form,
   Row,
   Col,
   Input,
+  Select,
   DatePicker,
   Divider,
   Space,
@@ -13,9 +14,11 @@ import {
 
 import CurrencyInput from 'app/components/CurrencyInput';
 
+import { Moment } from 'moment';
+
 import { CashFlow } from 'alex-holanda-sdk';
 
-import { Moment } from 'moment';
+import useEntriesCategory from 'core/hooks/useEntryCategories';
 
 type EntryInputForm = Omit<CashFlow.EntryInput, 'transactedOn'> & {
   transactedOn: Moment;
@@ -23,6 +26,13 @@ type EntryInputForm = Omit<CashFlow.EntryInput, 'transactedOn'> & {
 
 function EntryForm() {
   const [form] = Form.useForm();
+
+  const { revenues, expenses, fetching, fetchCategories } =
+    useEntriesCategory();
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const handleFormSubmit = useCallback(
     (entry: EntryInputForm) => {
@@ -62,7 +72,16 @@ function EntryForm() {
                 },
               ]}
             >
-              <Input placeholder={'E.g.: Pagamento mensal AWS'} />
+              <Select
+                placeholder={'Selecione uma categoria'}
+                loading={fetching}
+              >
+                {expenses.map((category) => (
+                  <Select.Option key={category.id} value={category.id}>
+                    {category.name}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
 
