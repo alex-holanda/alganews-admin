@@ -54,7 +54,7 @@ export default function CashFlowExpensesView() {
         footer={null}
         destroyOnClose
       >
-        <EntryForm />
+        <EntryForm type={type} />
       </Modal>
 
       <Space direction={'vertical'}>

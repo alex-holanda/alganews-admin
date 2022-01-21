@@ -18,13 +18,19 @@ import { Moment } from 'moment';
 
 import { CashFlow } from 'alex-holanda-sdk';
 
+import { useMemo } from 'react';
+
 import useEntriesCategory from 'core/hooks/useEntryCategories';
 
 type EntryInputForm = Omit<CashFlow.EntryInput, 'transactedOn'> & {
   transactedOn: Moment;
 };
 
-function EntryForm() {
+interface EntryFormProps {
+  type: CashFlow.EntrySummary['type'];
+}
+
+function EntryForm({ type }: EntryFormProps) {
   const [form] = Form.useForm();
 
   const { revenues, expenses, fetching, fetchCategories } =
@@ -34,17 +40,32 @@ function EntryForm() {
     fetchCategories();
   }, [fetchCategories]);
 
+  const categories = useMemo(
+    () => (type === 'EXPENSE' ? expenses : revenues),
+    [type, revenues, expenses]
+  );
+
   const handleFormSubmit = useCallback(
     (entry: EntryInputForm) => {
-      console.log(entry);
-      console.log(form);
+      const newEntryDTO: CashFlow.EntryInput = {
+        ...entry,
+        transactedOn: entry.transactedOn.format('DD/MM/YYYY'),
+        type,
+      };
+
+      console.log(newEntryDTO);
     },
-    [form]
+    [type]
   );
 
   return (
     <>
-      <Form form={form} layout={'vertical'} onFinish={handleFormSubmit}>
+      <Form
+        autoComplete={'off'}
+        form={form}
+        layout={'vertical'}
+        onFinish={handleFormSubmit}
+      >
         <Row gutter={16}>
           <Col xs={24}>
             <Form.Item
@@ -76,7 +97,7 @@ function EntryForm() {
                 placeholder={'Selecione uma categoria'}
                 loading={fetching}
               >
-                {expenses.map((category) => (
+                {categories.map((category) => (
                   <Select.Option key={category.id} value={category.id}>
                     {category.name}
                   </Select.Option>
