@@ -73,6 +73,14 @@ export const updateRevenue = createAsyncThunk(
   }
 );
 
+export const removeEntry = createAsyncThunk(
+  'cash-flow/revenues/removeEntry',
+  async (id: number, { dispatch }) => {
+    await CashFlowService.removeExistingEntry(id);
+    await dispatch(getRevenues());
+  }
+);
+
 export const removeEntriesInBatch = createAsyncThunk(
   'cash-flow/revenues/removeEntriesInBatch',
   async (ids: number[], { dispatch }) => {
@@ -106,7 +114,8 @@ const RevenueSlice = createSlice({
       getRevenues,
       removeEntriesInBatch,
       createRevenue,
-      updateRevenue
+      updateRevenue,
+      removeEntry,
     ]);
 
     builder

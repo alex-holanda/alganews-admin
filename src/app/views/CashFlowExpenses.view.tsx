@@ -30,7 +30,8 @@ const { Title, Text } = Typography;
 export default function CashFlowExpensesView() {
   const type: CashFlow.EntrySummary['type'] = 'EXPENSE';
 
-  const { selected, removeEntriesInBatch, query } = useCashFlow(type);
+  const { selected, removeEntriesInBatch, query, removeEntry } =
+    useCashFlow(type);
 
   const [editingEntry, setEditingEntry] = useState<number | undefined>(
     undefined
@@ -147,6 +148,7 @@ export default function CashFlowExpensesView() {
           setEditingEntry(id);
           openFormModal();
         }}
+        onRemove={removeEntry}
         type={type}
       />
     </>

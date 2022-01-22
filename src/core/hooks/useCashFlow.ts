@@ -68,6 +68,16 @@ function useCashFlow(type: CashFlowEntryType) {
     );
   }, [type, dispatch]);
 
+  const removeEntry = useCallback(
+    (id: number) =>
+      dispatch(
+        type === 'EXPENSE'
+          ? ExpensesActions.removeEntry(id)
+          : RevenuesActions.removeEntry(id)
+      ),
+    [type, dispatch]
+  );
+
   const removeEntriesInBatch = useCallback(
     (ids: number[]) =>
       dispatch(
@@ -108,7 +118,8 @@ function useCashFlow(type: CashFlowEntryType) {
     setSelected,
     setQuery,
     createEntry,
-    updateEntry
+    updateEntry,
+    removeEntry,
   };
 }
 

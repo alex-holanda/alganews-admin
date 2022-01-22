@@ -73,6 +73,14 @@ export const updateExpense = createAsyncThunk(
   }
 );
 
+export const removeEntry = createAsyncThunk(
+  'cash-flow/expenses/removeEntry',
+  async (id: number, { dispatch }) => {
+    await CashFlowService.removeExistingEntry(id);
+    await dispatch(getExpenses());
+  }
+);
+
 export const removeEntriesInBatch = createAsyncThunk(
   'cash-flow/expenses/removeEntriesInBatch',
   async (ids: number[], { dispatch }) => {
@@ -107,6 +115,7 @@ const expenseSlice = createSlice({
       removeEntriesInBatch,
       createExpense,
       updateExpense,
+      removeEntry,
     ]);
 
     builder

@@ -10,10 +10,12 @@ import { CashFlow } from 'alex-holanda-sdk';
 import useCashFlow from 'core/hooks/useCashFlow';
 import { transformStringToDate } from 'core/util/transformStringToDate';
 import { transformNumberToCurrency } from 'core/util/transformNumberToCurrency';
+import { DoubleConfirm } from 'app/components/DoubleConfirm';
 
 interface EntriesListProps {
   type: CashFlow.EntrySummary['type'];
   onEdit: (entryId: number) => any;
+  onRemove: (entryId: number) => any;
 }
 
 function EntriesList(props: EntriesListProps) {
@@ -93,19 +95,30 @@ function EntriesList(props: EntriesListProps) {
           dataIndex: 'id',
           title: 'Ações',
           align: 'right',
-          render(id: number) {
+          render(id: number, entry: CashFlow.EntrySummary) {
             return (
               <Space>
+                <DoubleConfirm
+                  popConfirmTitle={'Remover despesa?'}
+                  modalTitle={'Deseja mesmo remover essa despesa?'}
+                  modalContent={
+                    'Remover uma despesa pode gerar um impacto negativo no gráfico de receitas e despesas. Esta ação é irreversível.'
+                  }
+                  disabled={!entry.canBeDeleted}
+                  onConfirm={() => props.onRemove(id)}
+                >
+                  <Button
+                    disabled={!entry.canBeDeleted}
+                    type={'text'}
+                    size={'small'}
+                    danger
+                    icon={<DeleteOutlined />}
+                  />
+                </DoubleConfirm>
                 <Button
-                  type={'text'}
-                  size={'small'}
-                  danger
-                  icon={<DeleteOutlined />}
-                />
-                <Button
-                  type={'text'}
-                  size={'small'}
                   onClick={() => props.onEdit(id)}
+                  type={'text'}
+                  size={'small'}
                   icon={<EditOutlined />}
                 />
                 <Button type={'text'} size={'small'} icon={<EyeOutlined />} />
