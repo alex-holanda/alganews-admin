@@ -43,7 +43,11 @@ function EntryForm({ type, onSuccess, editingEntry }: EntryFormProps) {
   const { revenues, expenses, fetching, fetchCategories } =
     useEntriesCategory();
 
-  const { createEntry, fetching: fetchingEntries } = useCashFlow(type);
+  const {
+    createEntry,
+    fetching: fetchingEntries,
+    updateEntry,
+  } = useCashFlow(type);
 
   useEffect(() => {
     if (editingEntry) {
@@ -77,7 +81,9 @@ function EntryForm({ type, onSuccess, editingEntry }: EntryFormProps) {
           type,
         };
 
-        await createEntry(newEntryDTO);
+        editingEntry
+          ? await updateEntry(editingEntry, newEntryDTO)
+          : await createEntry(newEntryDTO);
 
         onSuccess();
       } catch (error) {
@@ -109,7 +115,7 @@ function EntryForm({ type, onSuccess, editingEntry }: EntryFormProps) {
         }
       }
     },
-    [type, createEntry, onSuccess, form]
+    [type, createEntry, onSuccess, form, editingEntry, updateEntry]
   );
 
   return loading ? (
@@ -219,7 +225,7 @@ function EntryForm({ type, onSuccess, editingEntry }: EntryFormProps) {
               type={'primary'}
               htmlType={'submit'}
             >
-              Cadastrar despesa
+              {editingEntry ? 'Atualizar despesa' : 'Cadastrar despesa'}
             </Button>
           </Space>
         </Row>

@@ -50,6 +50,16 @@ function useCashFlow(type: CashFlowEntryType) {
     [dispatch, type]
   );
 
+  const updateEntry = useCallback(
+    async (entryId: number, entry: CashFlow.EntryInput) =>
+      await dispatch(
+        type === 'EXPENSE'
+          ? ExpensesActions.updateExpense({ entryId, entry })
+          : RevenuesActions.updateRevenue({ entryId, entry })
+      ).unwrap(),
+    [dispatch, type]
+  );
+
   const fetchEntries = useCallback(() => {
     dispatch(
       type === 'EXPENSE'
@@ -98,6 +108,7 @@ function useCashFlow(type: CashFlowEntryType) {
     setSelected,
     setQuery,
     createEntry,
+    updateEntry
   };
 }
 

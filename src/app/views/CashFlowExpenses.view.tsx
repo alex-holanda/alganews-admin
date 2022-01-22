@@ -32,7 +32,7 @@ export default function CashFlowExpensesView() {
 
   const { selected, removeEntriesInBatch, query } = useCashFlow(type);
 
-  const [editingEnty, setEditingEntry] = useState<number | undefined>(
+  const [editingEntry, setEditingEntry] = useState<number | undefined>(
     undefined
   );
 
@@ -66,18 +66,20 @@ export default function CashFlowExpensesView() {
           setEditingEntry(undefined);
         }}
         closeIcon={<CloseOutlined />}
-        title={'Cadastrar despesa'}
+        title={editingEntry ? 'Atualizar despesa' : 'Cadastrar despesa'}
         footer={null}
         destroyOnClose
       >
         <EntryForm
           type={type}
-          editingEntry={editingEnty}
+          editingEntry={editingEntry}
           onSuccess={() => {
             closeFormModal();
 
             notification.success({
-              message: 'Entrada cadastrada com sucesso',
+              message: editingEntry
+                ? 'Entrada atualizada com sucesso'
+                : 'Entrada cadastrada com sucesso',
             });
           }}
         />
