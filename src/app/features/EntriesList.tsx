@@ -16,6 +16,7 @@ interface EntriesListProps {
   type: CashFlow.EntrySummary['type'];
   onEdit: (entryId: number) => any;
   onRemove: (entryId: number) => any;
+  onView: (entryId: number) => any;
 }
 
 function EntriesList(props: EntriesListProps) {
@@ -116,12 +117,18 @@ function EntriesList(props: EntriesListProps) {
                   />
                 </DoubleConfirm>
                 <Button
+                  disabled={!entry.canBeEdited}
                   onClick={() => props.onEdit(id)}
                   type={'text'}
                   size={'small'}
                   icon={<EditOutlined />}
                 />
-                <Button type={'text'} size={'small'} icon={<EyeOutlined />} />
+                <Button
+                  onClick={() => props.onView(id)}
+                  type={'text'}
+                  size={'small'}
+                  icon={<EyeOutlined />}
+                />
               </Space>
             );
           },

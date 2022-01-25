@@ -24,6 +24,7 @@ import { useCallback, useState } from 'react';
 import EntryCategoryManager from 'app/features/EntryCategoryManager';
 import moment from 'moment';
 import EntryForm from 'app/features/EntryForm';
+import EntryDetails from 'app/features/EntryDetails';
 
 const { Title, Text } = Typography;
 
@@ -46,6 +47,14 @@ export default function CashFlowExpensesView() {
 
   const openFormModal = useCallback(() => setShowFormModal(true), []);
   const closeFormModal = useCallback(() => setShowFormModal(false), []);
+
+  const [detailedEntry, setDetailedEntry] = useState<number | undefined>(
+    undefined
+  );
+  const [showDetailModal, setShowDetailModal] = useState(false);
+
+  const openDetailModal = useCallback(() => setShowDetailModal(true), []);
+  const closeDetailModal = useCallback(() => setShowDetailModal(false), []);
 
   return (
     <>
@@ -83,7 +92,24 @@ export default function CashFlowExpensesView() {
                 : 'Entrada cadastrada com sucesso',
             });
           }}
+          onCancel={() => {
+            closeFormModal();
+            setEditingEntry(undefined);
+          }}
         />
+      </Modal>
+
+      <Modal
+        visible={showDetailModal}
+        onCancel={() => {
+          closeDetailModal();
+        }}
+        closeIcon={<CloseOutlined />}
+        title={'Detalhes da despesa'}
+        footer={null}
+        destroyOnClose
+      >
+        {detailedEntry && <EntryDetails entryId={detailedEntry} />}
       </Modal>
 
       <Space direction={'vertical'}>
@@ -149,6 +175,10 @@ export default function CashFlowExpensesView() {
           openFormModal();
         }}
         onRemove={removeEntry}
+        onView={(id) => {
+          setDetailedEntry(id);
+          openDetailModal();
+        }}
         type={type}
       />
     </>

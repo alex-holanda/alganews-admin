@@ -32,10 +32,16 @@ type EntryInputForm = Omit<CashFlow.EntryInput, 'transactedOn'> & {
 interface EntryFormProps {
   type: CashFlow.EntrySummary['type'];
   onSuccess: () => any;
+  onCancel: () => any;
   editingEntry?: number | undefined;
 }
 
-function EntryForm({ type, onSuccess, editingEntry }: EntryFormProps) {
+function EntryForm({
+  type,
+  onSuccess,
+  editingEntry,
+  onCancel,
+}: EntryFormProps) {
   const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
@@ -219,7 +225,7 @@ function EntryForm({ type, onSuccess, editingEntry }: EntryFormProps) {
 
         <Row justify={'end'}>
           <Space>
-            <Button>Cancelar</Button>
+            <Button onClick={onCancel}>Cancelar</Button>
             <Button
               loading={fetchingEntries}
               type={'primary'}
