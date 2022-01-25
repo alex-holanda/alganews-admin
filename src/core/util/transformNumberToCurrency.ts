@@ -5,3 +5,8 @@ export function transformNumberToCurrency(value?: number) {
     maximumFractionDigits: 2,
   });
 }
+
+// new Intl.NumberFormat('pt-BR', {
+//   style: 'currency',
+//   currency: 'BRL'
+// }).format(transaction.amount)

@@ -1,7 +1,10 @@
 import { CashFlow, CashFlowService } from 'alex-holanda-sdk';
 import { Descriptions, Skeleton } from 'antd';
 import { transformNumberToCurrency } from 'core/util/transformNumberToCurrency';
-import { transformStringToDate } from 'core/util/transformStringToDate';
+import {
+  transformStringToDate,
+  transformStringToDateTime,
+} from 'core/util/transformStringToDate';
 import { useEffect, useState } from 'react';
 
 interface EntryDetailsProps {
@@ -42,8 +45,21 @@ function EntryDetails({ entryId }: EntryDetailsProps) {
             {transformNumberToCurrency(entry.amount)}
           </Descriptions.Item>
           <Descriptions.Item label={'Criado em'}>
-            {transformStringToDate(entry.createdAt)}
+            {transformStringToDateTime(entry.createdAt)}
           </Descriptions.Item>
+          <Descriptions.Item label={'Criado por'}>
+            {entry.createdBy.name}
+          </Descriptions.Item>
+          {entry.createdAt !== entry.updatedAt && (
+            <>
+              <Descriptions.Item label={'Atualizado em'}>
+                {transformStringToDateTime(entry.updatedAt)}
+              </Descriptions.Item>
+              <Descriptions.Item label={'Atualizado por'}>
+                {entry.updatedBy.name}
+              </Descriptions.Item>
+            </>
+          )}
         </Descriptions>
       )}
     </>
