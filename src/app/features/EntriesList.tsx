@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import { Button, Card, DatePicker, Space, Table, Tag, Tooltip } from 'antd';
 import { DeleteOutlined, EyeOutlined, EditOutlined } from '@ant-design/icons';
@@ -20,19 +21,32 @@ interface EntriesListProps {
 }
 
 function EntriesList(props: EntriesListProps) {
-  const {
-    entries,
-    fetching,
-    fetchEntries,
-    selected,
-    setSelected,
-    query,
-    setQuery,
-  } = useCashFlow(props.type);
+  const location = useLocation();
+  const history = useHistory();
+
+  const { entries, fetching, fetchEntries, selected, setSelected, setQuery } =
+    useCashFlow(props.type);
+
+  const didMount = useRef(false);
 
   useEffect(() => {
     fetchEntries();
   }, [fetchEntries]);
+
+  useEffect(() => {
+    if (didMount.current) {
+      const params = new URLSearchParams(location.search);
+      const yearMonth = params.get('yearMonth');
+
+      if (yearMonth) {
+        setQuery({
+          yearMonth,
+        });
+      }
+    } else {
+      didMount.current = true;
+    }
+  }, [location.search, setQuery]);
 
   return (
     <Table<CashFlow.EntrySummary>
@@ -74,10 +88,10 @@ function EntriesList(props: EntriesListProps) {
                 <DatePicker.MonthPicker
                   format={'YYYY - MMMM'}
                   onChange={(date) => {
-                    setQuery({
-                      ...query,
-                      yearMonth:
-                        date?.format('YYYY-MM') || moment().format('YYYY-MM'),
+                    history.push({
+                      search: `yearMonth=${
+                        date?.format('YYYY-MM') || moment().format('YYYY-MM')
+                      }`,
                     });
                   }}
                 />
