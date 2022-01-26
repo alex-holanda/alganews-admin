@@ -114,11 +114,15 @@ function EntriesList(props: EntriesListProps) {
             return (
               <Space>
                 <DoubleConfirm
-                  popConfirmTitle={'Remover despesa?'}
-                  modalTitle={'Deseja mesmo remover essa despesa?'}
-                  modalContent={
-                    'Remover uma despesa pode gerar um impacto negativo no gráfico de receitas e despesas. Esta ação é irreversível.'
-                  }
+                  popConfirmTitle={`Remover ${
+                    props.type === 'EXPENSE' ? 'despesa' : 'receita'
+                  }?`}
+                  modalTitle={`Deseja mesmo remover essa ${
+                    props.type === 'EXPENSE' ? 'despesa' : 'receita'
+                  }?`}
+                  modalContent={`Remover uma ${
+                    props.type === 'EXPENSE' ? 'despesa' : 'receita'
+                  } pode gerar um impacto negativo no gráfico de receitas e despesas. Esta ação é irreversível.`}
                   disabled={!entry.canBeDeleted}
                   onConfirm={() => props.onRemove(id)}
                 >

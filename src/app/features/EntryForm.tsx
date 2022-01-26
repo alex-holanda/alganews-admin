@@ -201,7 +201,7 @@ function EntryForm({
 
           <Col xs={24} sm={12}>
             <Form.Item
-              label={'Data de entrada'}
+              label={type === 'EXPENSE' ? 'Data de saída' : 'Data de entrada'}
               name={'transactedOn'}
               rules={[
                 {
@@ -231,7 +231,13 @@ function EntryForm({
               type={'primary'}
               htmlType={'submit'}
             >
-              {editingEntry ? 'Atualizar despesa' : 'Cadastrar despesa'}
+              {editingEntry
+                ? type === 'EXPENSE'
+                  ? 'Atualizar despesa'
+                  : 'Atualizar receita'
+                : type === 'EXPENSE'
+                ? 'Cadastrar despesa'
+                : 'Cadastrar receita'}
             </Button>
           </Space>
         </Row>

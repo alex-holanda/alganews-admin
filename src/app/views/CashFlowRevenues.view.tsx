@@ -1,7 +1,9 @@
+import EntryCRUD from 'app/features/EntryCRUD';
+
 export default function CashFlowRevenuesView() {
   return (
     <>
-      <h2>TODO: CashFlowRevenuesView</h2>
+      <EntryCRUD type={'REVENUE'} />
     </>
   );
 }
