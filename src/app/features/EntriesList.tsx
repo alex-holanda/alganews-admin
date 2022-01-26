@@ -1,7 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 
-import { Button, Card, DatePicker, Space, Table, Tag, Tooltip } from 'antd';
+import {
+  Button,
+  Card,
+  DatePicker,
+  Descriptions,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+} from 'antd';
 import { DeleteOutlined, EyeOutlined, EditOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
@@ -62,10 +71,73 @@ function EntriesList(props: EntriesListProps) {
       }}
       columns={[
         {
+          responsive: ['xs'],
+          title: props.type === 'EXPENSE' ? 'Despesas' : 'Receitas',
+          render(entry: CashFlow.EntrySummary) {
+            return (
+              <>
+                <Descriptions column={1} size={'small'}>
+                  <Descriptions.Item label={'Descrição'}>
+                    {entry.description}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'Categoria'}>
+                    <Tag>{entry.category.name}</Tag>
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'Data'}>
+                    {transformStringToDate(entry.transactedOn)}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'Valor'}>
+                    {transformNumberToCurrency(entry.amount)}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={'Ações'}>
+                    <Space>
+                      <DoubleConfirm
+                        popConfirmTitle={`Remover ${
+                          props.type === 'EXPENSE' ? 'despesa' : 'receita'
+                        }?`}
+                        modalTitle={`Deseja mesmo remover essa ${
+                          props.type === 'EXPENSE' ? 'despesa' : 'receita'
+                        }?`}
+                        modalContent={`Remover uma ${
+                          props.type === 'EXPENSE' ? 'despesa' : 'receita'
+                        } pode gerar um impacto negativo no gráfico de receitas e despesas. Esta ação é irreversível.`}
+                        disabled={!entry.canBeDeleted}
+                        onConfirm={() => props.onRemove(entry.id)}
+                      >
+                        <Button
+                          disabled={!entry.canBeDeleted}
+                          type={'text'}
+                          size={'small'}
+                          danger
+                          icon={<DeleteOutlined />}
+                        />
+                      </DoubleConfirm>
+                      <Button
+                        disabled={!entry.canBeEdited}
+                        onClick={() => props.onEdit(entry.id)}
+                        type={'text'}
+                        size={'small'}
+                        icon={<EditOutlined />}
+                      />
+                      <Button
+                        onClick={() => props.onView(entry.id)}
+                        type={'text'}
+                        size={'small'}
+                        icon={<EyeOutlined />}
+                      />
+                    </Space>
+                  </Descriptions.Item>
+                </Descriptions>
+              </>
+            );
+          },
+        },
+        {
           dataIndex: 'description',
           title: 'Descrição',
           width: 300,
           ellipsis: true,
+          responsive: ['sm'],
           render(description: CashFlow.EntrySummary['description']) {
             return <Tooltip title={description}>{description}</Tooltip>;
           },
@@ -74,6 +146,8 @@ function EntriesList(props: EntriesListProps) {
           dataIndex: 'category',
           title: 'Categoria',
           align: 'center',
+          width: 120,
+          responsive: ['sm'],
           render(category: CashFlow.EntrySummary['category']) {
             return <Tag>{category.name}</Tag>;
           },
@@ -82,6 +156,8 @@ function EntriesList(props: EntriesListProps) {
           dataIndex: 'transactedOn',
           title: 'Data',
           align: 'center',
+          width: 120,
+          responsive: ['sm'],
           filterDropdown() {
             return (
               <Card>
@@ -104,12 +180,16 @@ function EntriesList(props: EntriesListProps) {
           dataIndex: 'amount',
           title: 'Valor',
           align: 'right',
+          width: 120,
+          responsive: ['sm'],
           render: transformNumberToCurrency,
         },
         {
           dataIndex: 'id',
           title: 'Ações',
           align: 'right',
+          width: 120,
+          responsive: ['sm'],
           render(id: number, entry: CashFlow.EntrySummary) {
             return (
               <Space>
