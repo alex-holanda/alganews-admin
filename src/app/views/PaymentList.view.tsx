@@ -43,6 +43,7 @@ export default function PaymentListView() {
   useEffect(() => {
     fetchPayments();
   }, [fetchPayments]);
+
   return (
     <>
       <Row align={'middle'} justify={'space-between'} gutter={24}>
