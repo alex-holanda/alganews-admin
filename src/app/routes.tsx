@@ -1,5 +1,6 @@
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
 import { message, notification } from 'antd';
+import AuthService from 'auth/Authorization.service';
 import { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import CashFlowExpensesView from './views/CashFlowExpenses.view';
@@ -38,6 +39,20 @@ export default function Routes() {
     return () => {
       window.onunhandledrejection = null;
     };
+  }, []);
+
+  useEffect(() => {
+    async function identify() {
+      const isInAuthorizationRoute = window.location.pathname === '/authorize';
+
+      const accessToken = AuthService.getAccessToken();
+
+      if (!accessToken && !isInAuthorizationRoute) {
+        AuthService.imperativelySendToLoginScreen();
+      }
+    }
+
+    identify();
   }, []);
 
   return (
