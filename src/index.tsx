@@ -14,6 +14,8 @@ import ptBR from 'antd/lib/locale/pt_BR';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 
+import './auth/httpConfig';
+
 import DefaultLayout from './app/layouts/Default';
 
 import Routes from './app/routes';
