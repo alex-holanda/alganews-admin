@@ -1,8 +1,11 @@
-import CustomError from 'alex-holanda-sdk/dist/CustomError';
-import { message, notification } from 'antd';
-import AuthService from 'auth/Authorization.service';
 import { useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
+
+import { message, notification } from 'antd';
+
+import CustomError from 'alex-holanda-sdk/dist/CustomError';
+import AuthService from 'auth/Authorization.service';
+
 import CashFlowExpensesView from './views/CashFlowExpenses.view';
 import CashFlowRevenuesView from './views/CashFlowRevenues.view';
 import HomeView from './views/Home.view';
@@ -15,6 +18,8 @@ import UserEditView from './views/UserEdit.view';
 import UserListView from './views/UserList.view';
 
 export default function Routes() {
+  const history = useHistory();
+
   useEffect(() => {
     window.onunhandledrejection = ({ reason }) => {
       if (reason instanceof CustomError) {
@@ -44,16 +49,43 @@ export default function Routes() {
   useEffect(() => {
     async function identify() {
       const isInAuthorizationRoute = window.location.pathname === '/authorize';
+      const code = new URLSearchParams(window.location.search).get('code');
 
+      const codeVerifier = AuthService.getCodeVerifier();
       const accessToken = AuthService.getAccessToken();
 
       if (!accessToken && !isInAuthorizationRoute) {
         AuthService.imperativelySendToLoginScreen();
       }
+
+      if (isInAuthorizationRoute) {
+        if (!code) {
+          notification.error({ message: 'Código não informado' });
+          return;
+        }
+
+        if (!codeVerifier) {
+          // necessário fazer logout
+          return;
+        }
+
+        // busca o primeiro token de acesso
+        const { access_token, refresh_token } =
+          await AuthService.getFirstAccessToken({
+            code,
+            codeVerifier,
+            redirectUri: 'http://localhost:3000/authorize',
+          });
+
+        AuthService.setAccessToken(access_token);
+        AuthService.setRefreshToken(refresh_token);
+
+        history.push('/');
+      }
     }
 
     identify();
-  }, []);
+  }, [history]);
 
   return (
     <Switch>
