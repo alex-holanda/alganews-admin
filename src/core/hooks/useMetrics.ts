@@ -1,20 +1,24 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { RootState } from '../store';
+import { AppDispatch, RootState } from '../store';
 import * as MetricAcion from '../store/Metric.slice';
 import transformDataIntoAntdChart from '../util/transformDataIntoAntdChart';
 
-export function useMetric() {
-  const dispatch = useDispatch();
+export function useMetrics() {
+  const dispatch = useDispatch<AppDispatch>();
   const monthlyRevenuesExpenses = useSelector(
     (state: RootState) => state.metric.list
   );
   const fetching = useSelector((state: RootState) => state.metric.fetching);
   const forbidden = useSelector((state: RootState) => state.metric.forbidden);
 
-  const fetchMonthlyRevenuesExpenses = useCallback(() => {
-    dispatch(MetricAcion.getMonthlyRevenuesExpenses());
+  const fetchMonthlyRevenuesExpenses = useCallback(async () => {
+    await dispatch(MetricAcion.getMonthlyRevenuesExpenses())
+      .unwrap()
+      .catch((error) => {
+        console.log(error.message);
+      });
   }, [dispatch]);
 
   return {

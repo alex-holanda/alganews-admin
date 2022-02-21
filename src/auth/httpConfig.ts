@@ -55,5 +55,7 @@ Service.setResponseInterceptors(
       // retorna uma nova chamada do axios com essa requisição
       return axios(originalRequest);
     }
+
+    throw error;
   }
 );

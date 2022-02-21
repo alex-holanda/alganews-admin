@@ -1,19 +1,57 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import { Card, Space, Typography } from 'antd';
+import { LockFilled } from '@ant-design/icons';
 import { Area, AreaConfig } from '@ant-design/charts';
 
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { useMetric } from '../../core/hooks/useMetrics';
+import { ForbiddenError, MetricService } from 'alex-holanda-sdk';
+import transformDataIntoAntdChart from 'core/util/transformDataIntoAntdChart';
 
 export default function CompanyMetrics() {
-  const { data, fetchMonthlyRevenuesExpenses, forbidden } = useMetric();
+  const [data, setData] = useState<
+    {
+      yearMonth: string;
+      value: number;
+      category: 'totalRevenues' | 'totalExpenses';
+    }[]
+  >([]);
+
+  const [forbidden, setForbidden] = useState(false);
 
   useEffect(() => {
-    fetchMonthlyRevenuesExpenses();
-    console.log(forbidden);
-  }, [fetchMonthlyRevenuesExpenses, forbidden]);
+    MetricService.getMonthlyRevenuesExpenses()
+      .then(transformDataIntoAntdChart)
+      .then(setData)
+      .catch((error) => {
+        if (error instanceof ForbiddenError) {
+          setForbidden(true);
+          return;
+        } else {
+          throw error;
+        }
+      });
+  }, []);
+
+  if (forbidden) {
+    return (
+      <Card style={{ minHeight: 256, display: 'flex', alignItems: 'center' }}>
+        <Space direction={'vertical'}>
+          <Space align={'center'}>
+            <LockFilled style={{ fontSize: 32 }} />
+            <Typography.Title style={{ margin: 0 }}>
+              Acesso negado
+            </Typography.Title>
+          </Space>
+          <Typography.Paragraph>
+            Você não tem permissão para visualizar estes dados
+          </Typography.Paragraph>
+        </Space>
+      </Card>
+    );
+  }
 
   const config: AreaConfig = {
     data,

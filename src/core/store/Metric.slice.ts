@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ForbiddenError, Metric, MetricService } from 'alex-holanda-sdk';
+import { Metric, MetricService } from 'alex-holanda-sdk';
 import getThunkStatus from 'core/util/getThunkStatus';
 
 interface MetricState {
@@ -24,10 +24,6 @@ export const getMonthlyRevenuesExpenses = createAsyncThunk(
 
       await dispatch(storeList(metricMonthlyRevenuesExpenses));
     } catch (error) {
-      console.table(error);
-      console.log(error instanceof ForbiddenError);
-      await dispatch(setForbidden(error instanceof ForbiddenError));
-
       return rejectWithValue({ ...error });
     }
   }

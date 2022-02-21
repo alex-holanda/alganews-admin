@@ -13,7 +13,6 @@ import revenueReducer from './Revenue.slice';
 import metricReducer from './Metric.slice';
 import entriesCategoryReducer from './EntriesCategory.slice';
 
-
 const observeActions: Middleware = () => (next) => (action) => {
   if (isRejected(action)) {
     const ignoredActions = [
@@ -21,6 +20,7 @@ const observeActions: Middleware = () => (next) => (action) => {
       'cash-flow/categories/deleteCategory/rejected',
       'cash-flow/expenses/createExpense/rejected',
       'cash-flow/revenues/createRevenue/rejected',
+      'metric/monthlyRevenuesExpenses/rejected',
     ];
 
     const shouldNotify = !ignoredActions.includes(action.type);
