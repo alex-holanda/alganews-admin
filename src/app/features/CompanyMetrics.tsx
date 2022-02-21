@@ -8,11 +8,12 @@ import { ptBR } from 'date-fns/locale';
 import { useMetric } from '../../core/hooks/useMetrics';
 
 export default function CompanyMetrics() {
-  const { data, fetchMonthlyRevenuesExpenses } = useMetric();
+  const { data, fetchMonthlyRevenuesExpenses, forbidden } = useMetric();
 
   useEffect(() => {
     fetchMonthlyRevenuesExpenses();
-  }, [fetchMonthlyRevenuesExpenses]);
+    console.log(forbidden);
+  }, [fetchMonthlyRevenuesExpenses, forbidden]);
 
   const config: AreaConfig = {
     data,

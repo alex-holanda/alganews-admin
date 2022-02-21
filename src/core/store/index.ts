@@ -4,13 +4,15 @@ import { configureStore, isRejected, combineReducers } from '@reduxjs/toolkit';
 
 import { notification } from 'antd';
 
-import metricReducer from './Metric.reducer';
 import postReducer from './Post.reducer';
 import userReducer from './User.reducer';
+
 import paymentReducer from './Payment.slice';
 import expenseReducer from './Expense.slice';
 import revenueReducer from './Revenue.slice';
+import metricReducer from './Metric.slice';
 import entriesCategoryReducer from './EntriesCategory.slice';
+
 
 const observeActions: Middleware = () => (next) => (action) => {
   if (isRejected(action)) {

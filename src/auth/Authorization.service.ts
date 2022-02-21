@@ -4,6 +4,8 @@ import qs from 'qs';
 
 import pkceChallenge from 'pkce-challenge';
 
+import { Authentication } from './auth';
+
 const authServer = axios.create({
   baseURL: 'http://localhost:8081',
 });
@@ -15,15 +17,6 @@ authServer.interceptors.response.use(undefined, async (error) => {
 
   return Promise.reject(error);
 });
-
-export interface OAuthAuthorizationTokenResponse {
-  access_token: string;
-  refresh_token: 'string';
-  token_type: 'bearer' | string;
-  expires_in: number;
-  scope: string;
-  [key: string]: string | number;
-}
 
 export default class AuthService {
   public static imperativelySendToLogout() {
@@ -43,11 +36,15 @@ export default class AuthService {
     });
 
     return authServer
-      .post<OAuthAuthorizationTokenResponse>('/oauth/token', formUrlEncoded, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      })
+      .post<Authentication.OAuthAuthorizationTokenResponse>(
+        '/oauth/token',
+        formUrlEncoded,
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      )
       .then((res) => res.data);
   }
 
@@ -67,11 +64,15 @@ export default class AuthService {
     const encodedData = qs.stringify(data);
 
     return authServer
-      .post<OAuthAuthorizationTokenResponse>('/oauth/token', encodedData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      })
+      .post<Authentication.OAuthAuthorizationTokenResponse>(
+        '/oauth/token',
+        encodedData,
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      )
       .then((res) => res.data);
   }
 
