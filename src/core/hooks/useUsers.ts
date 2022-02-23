@@ -2,11 +2,11 @@ import { User } from 'alex-holanda-sdk';
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { RootState } from '../store';
+import { AppDispatch, RootState } from '../store';
 import * as UserActions from '../store/User.reducer';
 
 export function useUsers() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const users = useSelector((state: RootState) => state.user.list);
   const fetching = useSelector((state: RootState) => state.user.fetching);
   const editors = useSelector((state: RootState) =>
@@ -14,7 +14,7 @@ export function useUsers() {
   );
 
   const fetchUsers = useCallback(() => {
-    dispatch(UserActions.getAllUsers());
+    return dispatch(UserActions.getAllUsers()).unwrap();
   }, [dispatch]);
 
   const toggleUserStatus = useCallback(

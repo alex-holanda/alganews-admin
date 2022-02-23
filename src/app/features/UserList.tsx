@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -26,12 +26,22 @@ import { ColumnProps } from 'antd/lib/table';
 
 import { useUsers } from '../../core/hooks/useUsers';
 import { User } from 'alex-holanda-sdk';
+import { Forbidden } from 'app/components/Forbidden';
 
 export default function UserListFeature() {
   const { users, fetchUsers, toggleUserStatus, fetching } = useUsers();
 
+  const [forbidden, setForbidden] = useState(false);
+
   useEffect(() => {
-    fetchUsers();
+    fetchUsers().catch((error) => {
+      if (error?.data?.status === 403) {
+        setForbidden(true);
+        return;
+      }
+
+      throw error;
+    });
   }, [fetchUsers]);
 
   function handleUpdateUserList() {
@@ -87,6 +97,10 @@ export default function UserListFeature() {
       <SearchOutlined style={{ color: filtered ? '#0099ff' : undefined }} />
     ),
   });
+
+  if (forbidden) {
+    return <Forbidden />;
+  }
 
   return (
     <>
@@ -252,13 +266,21 @@ export default function UserListFeature() {
                 <Space>
                   <Tooltip title={'Editar usuário'} placement={'right'}>
                     <Link to={`/usuarios/edicao/${id}`}>
-                      <Button type={'text'} size={'small'} icon={<EditOutlined />} />
+                      <Button
+                        type={'text'}
+                        size={'small'}
+                        icon={<EditOutlined />}
+                      />
                     </Link>
                   </Tooltip>
 
                   <Tooltip title={'Visualizar usuário'} placement={'left'}>
                     <Link to={`/usuarios/${id}`}>
-                      <Button type={'text'} size={'small'} icon={<EyeOutlined />} />
+                      <Button
+                        type={'text'}
+                        size={'small'}
+                        icon={<EyeOutlined />}
+                      />
                     </Link>
                   </Tooltip>
                 </Space>
