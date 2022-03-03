@@ -3,6 +3,8 @@ import { Switch, Route, useHistory } from 'react-router-dom';
 
 import { message, notification } from 'antd';
 
+import jwtDecode from 'jwt-decode';
+
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
 import AuthService from 'auth/Authorization.service';
 
@@ -16,14 +18,14 @@ import UserCreateView from './views/UserCreate.view';
 import UserDetailsView from './views/UserDetails.view';
 import UserEditView from './views/UserEdit.view';
 import UserListView from './views/UserList.view';
-import { useDispatch } from 'react-redux';
-import { fetchUser } from 'core/store/Auth.slice';
-import jwtDecode from 'jwt-decode';
+
 import { Authentication } from 'auth/auth';
+
+import { useAuth } from 'core/hooks/useAuth';
 
 export default function Routes() {
   const history = useHistory();
-  const dispatch = useDispatch();
+  const { fetchUser } = useAuth();
 
   useEffect(() => {
     window.onunhandledrejection = ({ reason }) => {
@@ -92,12 +94,12 @@ export default function Routes() {
         const decodedToken: Authentication.AccessTokenDecodedBody =
           jwtDecode(accessToken);
 
-        dispatch(fetchUser(decodedToken['alganews:user_id']));
+        fetchUser(decodedToken['alganews:user_id']);
       }
     }
 
     identify();
-  }, [history, dispatch]);
+  }, [history, fetchUser]);
 
   return (
     <Switch>
