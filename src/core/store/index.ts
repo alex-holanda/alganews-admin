@@ -7,6 +7,7 @@ import { notification } from 'antd';
 import postReducer from './Post.reducer';
 import userReducer from './User.reducer';
 
+import authReducer from './Auth.slice';
 import paymentReducer from './Payment.slice';
 import expenseReducer from './Expense.slice';
 import revenueReducer from './Revenue.slice';
@@ -48,6 +49,7 @@ const cashFlowReducer = combineReducers({
 
 export const store = configureStore({
   reducer: {
+    auth: authReducer,
     user: userReducer,
     post: postReducer,
     metric: metricReducer,

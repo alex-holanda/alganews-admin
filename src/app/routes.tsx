@@ -16,9 +16,14 @@ import UserCreateView from './views/UserCreate.view';
 import UserDetailsView from './views/UserDetails.view';
 import UserEditView from './views/UserEdit.view';
 import UserListView from './views/UserList.view';
+import { useDispatch } from 'react-redux';
+import { fetchUser } from 'core/store/Auth.slice';
+import jwtDecode from 'jwt-decode';
+import { Authentication } from 'auth/auth';
 
 export default function Routes() {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     window.onunhandledrejection = ({ reason }) => {
@@ -82,10 +87,17 @@ export default function Routes() {
 
         history.push('/');
       }
+
+      if (accessToken) {
+        const decodedToken: Authentication.AccessTokenDecodedBody =
+          jwtDecode(accessToken);
+
+        dispatch(fetchUser(decodedToken['alganews:user_id']));
+      }
     }
 
     identify();
-  }, [history]);
+  }, [history, dispatch]);
 
   return (
     <Switch>

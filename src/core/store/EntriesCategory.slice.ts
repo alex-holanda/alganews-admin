@@ -29,7 +29,7 @@ export const getCategories = createAsyncThunk(
        * forma de recuperar as categorias separadamente
        * por tipo
        *
-       * @todo: melhorar quanod a API prover um endpoint
+       * @todo: melhorar quando a API prover um endpoint
        */
       const expensesCategory = categories.filter((c) => c.type === 'EXPENSE');
       const revenuesCategory = categories.filter((c) => c.type === 'REVENUE');
