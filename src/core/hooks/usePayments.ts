@@ -4,11 +4,11 @@ import { useCallback } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { RootState } from './../store/index';
+import { AppDispatch, RootState } from './../store/index';
 import * as PaymentActions from './../store/Payment.slice';
 
 export function usePayments() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const fetching = useSelector((state: RootState) => state.payment.fetching);
   const payments = useSelector((state: RootState) => state.payment.paginated);
@@ -23,7 +23,7 @@ export function usePayments() {
   );
 
   const fetchPayments = useCallback(() => {
-    dispatch(PaymentActions.getAllPayments());
+    return dispatch(PaymentActions.getAllPayments()).unwrap();
   }, [dispatch]);
 
   const setQuery = useCallback(

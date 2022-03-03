@@ -19,10 +19,9 @@ function useEntryCategories() {
     (state: RootState) => state.cashFlow.category.fetching
   );
 
-  const fetchCategories = useCallback(
-    async () => await dispatch(CategoryActions.getCategories()),
-    [dispatch]
-  );
+  const fetchCategories = useCallback(async () => {
+    return dispatch(CategoryActions.getCategories()).unwrap();
+  }, [dispatch]);
 
   const createCategory = useCallback(
     async (category: CashFlow.CategoryInput) =>

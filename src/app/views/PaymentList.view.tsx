@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -21,6 +21,7 @@ import { Payment } from 'alex-holanda-sdk';
 import { usePayments } from '../../core/hooks/usePayments';
 import { DoubleConfirm } from '../components/DoubleConfirm';
 import { usePageTitle } from '../../core/hooks/usePageTitle';
+import { Forbidden } from 'app/components/Forbidden';
 
 export default function PaymentListView() {
   usePageTitle('Consulta de pagamentos');
@@ -40,9 +41,22 @@ export default function PaymentListView() {
 
   const { xs } = useBreakpoint();
 
+  const [forbidden, setForbidden] = useState(false);
+
   useEffect(() => {
-    fetchPayments();
+    fetchPayments().catch((error) => {
+      if (error?.data?.status === 403) {
+        setForbidden(true);
+        return;
+      }
+
+      throw error;
+    });
   }, [fetchPayments]);
+
+  if (forbidden) {
+    return <Forbidden />
+  }
 
   return (
     <>

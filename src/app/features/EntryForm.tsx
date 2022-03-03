@@ -24,6 +24,7 @@ import { useMemo } from 'react';
 
 import useEntriesCategory from 'core/hooks/useEntryCategories';
 import useCashFlow from 'core/hooks/useCashFlow';
+import { Forbidden } from 'app/components/Forbidden';
 
 type EntryInputForm = Omit<CashFlow.EntryInput, 'transactedOn'> & {
   transactedOn: Moment;
@@ -55,6 +56,8 @@ function EntryForm({
     updateEntry,
   } = useCashFlow(type);
 
+  const [forbidden, setForbidden] = useState(false);
+
   useEffect(() => {
     if (editingEntry) {
       setLoading(true);
@@ -70,7 +73,14 @@ function EntryForm({
   }, [editingEntry, form]);
 
   useEffect(() => {
-    fetchCategories();
+    fetchCategories().catch((error) => {
+      if (error?.data?.status === 403) {
+        setForbidden(true);
+        return;
+      }
+
+      throw error;
+    });
   }, [fetchCategories]);
 
   const categories = useMemo(
@@ -123,6 +133,10 @@ function EntryForm({
     },
     [type, createEntry, onSuccess, form, editingEntry, updateEntry]
   );
+
+  if (forbidden) {
+    return <Forbidden />;
+  }
 
   return loading ? (
     <>

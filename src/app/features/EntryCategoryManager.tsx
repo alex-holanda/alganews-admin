@@ -16,6 +16,7 @@ import { DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { CashFlow } from 'alex-holanda-sdk';
 
 import useEntryCategories from 'core/hooks/useEntryCategories';
+import { Forbidden } from 'app/components/Forbidden';
 
 interface EntryCategoryManagerProps {
   type: CashFlow.EntrySummary['type'];
@@ -30,9 +31,22 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
   const openCreationModal = useCallback(() => setShowCreationModal(true), []);
   const closeCreationModal = useCallback(() => setShowCreationModal(false), []);
 
+  const [forbidden, setForbidden] = useState(false);
+
   useEffect(() => {
-    fetchCategories();
+    fetchCategories().catch((error) => {
+      if (error?.data?.status === 403) {
+        setForbidden(true);
+        return;
+      }
+
+      throw error;
+    });
   }, [fetchCategories]);
+
+  if (forbidden) {
+    return <Forbidden />;
+  }
 
   return (
     <>

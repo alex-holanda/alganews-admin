@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 
 import {
@@ -21,6 +21,7 @@ import useCashFlow from 'core/hooks/useCashFlow';
 import { transformStringToDate } from 'core/util/transformStringToDate';
 import { transformNumberToCurrency } from 'core/util/transformNumberToCurrency';
 import { DoubleConfirm } from 'app/components/DoubleConfirm';
+import { Forbidden } from 'app/components/Forbidden';
 
 interface EntriesListProps {
   type: CashFlow.EntrySummary['type'];
@@ -38,8 +39,17 @@ function EntriesList(props: EntriesListProps) {
 
   const didMount = useRef(false);
 
+  const [forbidden, setForbidden] = useState(false);
+
   useEffect(() => {
-    fetchEntries();
+    fetchEntries().catch((error) => {
+      if (error?.data?.status === 403) {
+        setForbidden(true);
+        return;
+      }
+
+      throw error;
+    });
   }, [fetchEntries]);
 
   useEffect(() => {
@@ -56,6 +66,14 @@ function EntriesList(props: EntriesListProps) {
       didMount.current = true;
     }
   }, [location.search, setQuery]);
+
+  if (forbidden) {
+    return (
+      <div style={{ marginTop: 15 }}>
+        <Forbidden />
+      </div>
+    );
+  }
 
   return (
     <Table<CashFlow.EntrySummary>

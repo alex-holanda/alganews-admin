@@ -41,6 +41,7 @@ import CurrencyInput from '../components/CurrencyInput';
 import { PaymentPreviewEmpty } from '../components/PaymentPreviewEmpty';
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
 import { useHistory } from 'react-router';
+import { Forbidden } from 'app/components/Forbidden';
 
 export function PaymentForm() {
   const history = useHistory();
@@ -63,8 +64,17 @@ export function PaymentForm() {
   const [scheduledTo, setScheduledTo] = useState('');
   const [paymentPreviewError, setPaymentPreviewError] = useState<CustomError>();
 
+  const [forbidden, setForbidden] = useState(false);
+
   useEffect(() => {
-    fetchUsers();
+    fetchUsers().catch((error) => {
+      if (error?.data?.status === 403) {
+        setForbidden(true);
+        return;
+      }
+
+      throw error;
+    });
   }, [fetchUsers]);
 
   const clearPaymentPreviewError = useCallback(() => {
@@ -149,6 +159,10 @@ export function PaymentForm() {
     },
     [scheduledPayment, history]
   );
+
+  if (forbidden) {
+    return <Forbidden />;
+  }
 
   return (
     <>

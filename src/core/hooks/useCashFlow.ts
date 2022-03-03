@@ -61,11 +61,11 @@ function useCashFlow(type: CashFlowEntryType) {
   );
 
   const fetchEntries = useCallback(() => {
-    dispatch(
+    return dispatch(
       type === 'EXPENSE'
         ? ExpensesActions.getExpenses()
         : RevenuesActions.getRevenues()
-    );
+    ).unwrap();
   }, [type, dispatch]);
 
   const removeEntry = useCallback(
