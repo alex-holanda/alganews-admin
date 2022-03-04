@@ -247,7 +247,7 @@ export default function UserForm(props: UserFormProps) {
             rules={[{ required: true, message: 'O campo é obrigatório' }]}
           >
             <Select
-              disabled={!props.user?.canSensitiveDataBeUpdated}
+              disabled={props.user && !props.user?.canSensitiveDataBeUpdated}
               placeholder={'Selecione um perfil'}
               onChange={(value) => setIsEditorRole(value === 'EDITOR')}
             >
@@ -270,7 +270,7 @@ export default function UserForm(props: UserFormProps) {
             ]}
           >
             <Input
-              disabled={!props.user?.canSensitiveDataBeUpdated}
+              disabled={props.user && !props.user?.canSensitiveDataBeUpdated}
               type={'email'}
               placeholder={'E.g.: contato@joao.silva.com'}
             />
@@ -332,7 +332,7 @@ export default function UserForm(props: UserFormProps) {
                     ]}
                   >
                     <MaskedInput
-                      disabled={!props.user?.canSensitiveDataBeUpdated}
+                      disabled={props.user && !props.user?.canSensitiveDataBeUpdated}
                       mask={'(11) 11111-1111'}
                       placeholder={'(27) 99999-0000'}
                     />
