@@ -1,4 +1,6 @@
-import { Layout, Row, Avatar } from 'antd';
+import { Layout, Row, Avatar, Dropdown, Menu, Card, Tag } from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+
 import { useAuth } from 'core/hooks/useAuth';
 
 import logo from '../../../assets/logo.svg';
@@ -16,7 +18,44 @@ export default function DefaltLayoutHeader() {
         style={{ height: '100%', maxWidth: 1190, margin: '0 auto' }}
       >
         <img src={logo} alt={'AlgaNews - Admin'} />
-        <Avatar src={user?.avatarUrls.small} alt={user?.name} />
+        <Dropdown
+          placement={'bottomRight'}
+          overlay={
+            <Card style={{ width: 200 }}>
+              <Card bordered={false}>
+                <Card.Meta
+                  title={user?.name}
+                  description={
+                    <Tag
+                      color={
+                        user?.role === 'MANAGER'
+                          ? 'red'
+                          : user?.role === 'EDITOR'
+                          ? 'green'
+                          : 'blue'
+                      }
+                    >
+                      {user?.role === 'EDITOR'
+                        ? 'Editor'
+                        : user?.role === 'MANAGER'
+                        ? 'Gerente'
+                        : 'Assitente'}
+                    </Tag>
+                  }
+                />
+              </Card>
+
+              <Menu>
+                <Menu.Item icon={<UserOutlined />}>Meu perfil</Menu.Item>
+                <Menu.Item icon={<LogoutOutlined />} danger>
+                  Fazer logout
+                </Menu.Item>
+              </Menu>
+            </Card>
+          }
+        >
+          <Avatar src={user?.avatarUrls.small} alt={user?.name} />
+        </Dropdown>
       </Row>
     </Header>
   );

@@ -87,6 +87,12 @@ export default function Routes() {
         AuthService.setAccessToken(access_token);
         AuthService.setRefreshToken(refresh_token);
 
+        // busca o usuário
+        const decodedToken: Authentication.AccessTokenDecodedBody =
+          jwtDecode(access_token);
+
+        fetchUser(decodedToken['alganews:user_id']);
+
         history.push('/');
       }
 
