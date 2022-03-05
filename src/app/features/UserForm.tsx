@@ -26,6 +26,7 @@ import { Moment } from 'moment';
 import { FileService, User, UserService } from 'alex-holanda-sdk';
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
 import CurrencyInput from '../components/CurrencyInput';
+import { useAuth } from 'core/hooks/useAuth';
 
 const { TabPane } = Tabs;
 
@@ -56,6 +57,8 @@ export default function UserForm(props: UserFormProps) {
     const avatarSource = await FileService.upload(file);
     setAvatar(avatarSource);
   }, []);
+
+  const { user: authenticatedUser } = useAuth();
 
   useEffect(() => {
     form.setFieldsValue({ avatarUrl: avatar || undefined });
@@ -253,7 +256,12 @@ export default function UserForm(props: UserFormProps) {
             >
               <Select.Option value={'EDITOR'}>Editor</Select.Option>
               <Select.Option value={'ASSISTENT'}>Assistente</Select.Option>
-              <Select.Option value={'MANAGER'}>Gerente</Select.Option>
+              <Select.Option
+                disabled={authenticatedUser?.role !== 'MANAGER'}
+                value={'MANAGER'}
+              >
+                Gerente
+              </Select.Option>
             </Select>
           </Form.Item>
         </Col>
@@ -332,7 +340,9 @@ export default function UserForm(props: UserFormProps) {
                     ]}
                   >
                     <MaskedInput
-                      disabled={props.user && !props.user?.canSensitiveDataBeUpdated}
+                      disabled={
+                        props.user && !props.user?.canSensitiveDataBeUpdated
+                      }
                       mask={'(11) 11111-1111'}
                       placeholder={'(27) 99999-0000'}
                     />
