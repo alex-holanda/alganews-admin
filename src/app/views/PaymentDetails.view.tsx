@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Redirect, useParams } from 'react-router';
 
-import { Card, Divider, Space, Button, notification } from 'antd';
+import { Card, Divider, Space, Button, notification, Tag } from 'antd';
 import { PrinterOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 import { usePayment } from '../../core/hooks/usePayment';
@@ -66,6 +66,7 @@ export function PaymentDetailsView() {
         style={{ display: 'flex', justifyContent: 'space-between' }}
       >
         <Button
+          disabled={!payment}
           className='no-print'
           style={{ width: '100%' }}
           icon={<PrinterOutlined />}
@@ -75,35 +76,41 @@ export function PaymentDetailsView() {
           Imprimir
         </Button>
 
-        <DoubleConfirm
-          disabled={!payment?.canBeDeleted}
-          popConfirmTitle={'Deseja aprovar este agendamento?'}
-          modalTitle={'Ação irreversível'}
-          modalContent={
-            'Aprovar um agendamento de pagamento gera uma despesa que não pode ser removida do fluxo de caixa. Essa ação não poderá ser desfeita.'
-          }
-          onConfirm={async () => {
-            await approvePayment(payment?.id!);
+        {payment?.approvedAt && !payment?.canBeApproved ? (
+          <Tag>
+            {`Pagamento aprovado em ${transformStringToDate(
+              payment?.approvedAt!
+            )}`}
+          </Tag>
+        ) : (
+          <DoubleConfirm
+            disabled={!payment || !payment.canBeApproved}
+            popConfirmTitle={'Deseja aprovar este agendamento?'}
+            modalTitle={'Ação irreversível'}
+            modalContent={
+              'Aprovar um agendamento de pagamento gera uma despesa que não pode ser removida do fluxo de caixa. Essa ação não poderá ser desfeita.'
+            }
+            onConfirm={async () => {
+              await approvePayment(payment?.id!);
 
-            notification.success({ message: 'Pagamento aprovado com sucesso' });
-          }}
-        >
-          <Button
-            className='no-print'
-            style={{ width: '100%' }}
-            disabled={!payment?.canBeDeleted}
-            icon={<CheckCircleOutlined />}
-            type={'primary'}
-            loading={fetchingPaymentApprove}
-            danger
+              notification.success({
+                message: 'Pagamento aprovado com sucesso',
+              });
+            }}
           >
-            {payment?.canBeDeleted
-              ? 'Aprovar agendamento'
-              : `Pagamento aprovado em ${transformStringToDate(
-                  payment?.approvedAt!
-                )}`}
-          </Button>
-        </DoubleConfirm>
+            <Button
+              className='no-print'
+              style={{ width: '100%' }}
+              disabled={!payment || !payment.canBeApproved}
+              icon={<CheckCircleOutlined />}
+              type={'primary'}
+              loading={fetchingPaymentApprove}
+              danger
+            >
+              Aprovar agendamento
+            </Button>
+          </DoubleConfirm>
+        )}
       </Space>
 
       <Card>
