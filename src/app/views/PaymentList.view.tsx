@@ -22,9 +22,12 @@ import { usePayments } from '../../core/hooks/usePayments';
 import { DoubleConfirm } from '../components/DoubleConfirm';
 import { usePageTitle } from '../../core/hooks/usePageTitle';
 import { Forbidden } from 'app/components/Forbidden';
+import { useBreadcrumb } from 'core/hooks/useBreadcrumb';
 
 export default function PaymentListView() {
   usePageTitle('Consulta de pagamentos');
+
+  useBreadcrumb('Pagamentos/Consulta');
 
   const {
     payments,

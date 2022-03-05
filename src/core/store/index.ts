@@ -13,6 +13,7 @@ import expenseReducer from './Expense.slice';
 import revenueReducer from './Revenue.slice';
 import metricReducer from './Metric.slice';
 import entriesCategoryReducer from './EntriesCategory.slice';
+import uiReducer from './UI.slice';
 
 const observeActions: Middleware = () => (next) => (action) => {
   if (isRejected(action)) {
@@ -55,6 +56,7 @@ export const store = configureStore({
     metric: metricReducer,
     payment: paymentReducer,
     cashFlow: cashFlowReducer,
+    ui: uiReducer
   },
   middleware: function (getDefaultMiddlewares) {
     return getDefaultMiddlewares().concat(observeActions);

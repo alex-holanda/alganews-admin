@@ -1,5 +1,6 @@
 import { Col, Row, Typography, Space, Divider } from 'antd';
 import { useAuth } from 'core/hooks/useAuth';
+import { useBreadcrumb } from 'core/hooks/useBreadcrumb';
 import { usePageTitle } from '../../core/hooks/usePageTitle';
 
 import CompanyMetrics from '../features/CompanyMetrics';
@@ -9,6 +10,8 @@ const { Title, Paragraph } = Typography;
 
 function HomeView() {
   usePageTitle('Home');
+
+  useBreadcrumb('Home');
 
   const { user } = useAuth();
 

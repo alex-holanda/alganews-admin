@@ -14,9 +14,12 @@ import { usePageTitle } from '../../core/hooks/usePageTitle';
 import { DoubleConfirm } from '../components/DoubleConfirm';
 import { transformStringToDate } from '../../core/util/transformStringToDate';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
+import { useBreadcrumb } from 'core/hooks/useBreadcrumb';
 
 export function PaymentDetailsView() {
   usePageTitle('Detalhes do pagamento');
+
+  useBreadcrumb('Pagamento/Detalhes');
 
   const params = useParams<{ id: string }>();
 
