@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 
 import { message, notification } from 'antd';
 
@@ -22,10 +22,18 @@ import UserListView from './views/UserList.view';
 import { Authentication } from 'auth/auth';
 
 import { useAuth } from 'core/hooks/useAuth';
+import { GlobalLoading } from './components/GlobalLoading';
 
 export default function Routes() {
   const history = useHistory();
-  const { fetchUser } = useAuth();
+  const { pathname } = useLocation();
+
+  const { fetchUser, user } = useAuth();
+
+  const isAuthorizationRoute = useMemo(
+    () => pathname === '/authorize',
+    [pathname]
+  );
 
   useEffect(() => {
     window.onunhandledrejection = ({ reason }) => {
@@ -106,6 +114,10 @@ export default function Routes() {
 
     identify();
   }, [history, fetchUser]);
+
+  if (isAuthorizationRoute || !user) {
+    return <GlobalLoading />;
+  }
 
   return (
     <Switch>
