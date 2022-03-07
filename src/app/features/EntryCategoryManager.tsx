@@ -11,12 +11,18 @@ import {
   notification,
   Popconfirm,
 } from 'antd';
-import { DeleteOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  CheckCircleOutlined,
+  ReloadOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons';
 
 import { CashFlow } from 'alex-holanda-sdk';
 
 import useEntryCategories from 'core/hooks/useEntryCategories';
 import { Forbidden } from 'app/components/Forbidden';
+import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 
 interface EntryCategoryManagerProps {
   type: CashFlow.EntrySummary['type'];
@@ -32,6 +38,8 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
   const closeCreationModal = useCallback(() => setShowCreationModal(false), []);
 
   const [forbidden, setForbidden] = useState(false);
+
+  const { xs } = useBreakpoint();
 
   useEffect(() => {
     fetchCategories().catch((error) => {
@@ -62,10 +70,20 @@ function EntryCategoryManager(props: EntryCategoryManagerProps) {
         <CategoryForm type={props.type} onSuccess={closeCreationModal} />
       </Modal>
       <Row justify={'space-between'} style={{ marginBottom: 16 }}>
-        <Button onClick={() => fetchCategories()} loading={fetching}>
-          Atualizar
+        <Button
+          icon={<ReloadOutlined />}
+          onClick={() => fetchCategories()}
+          loading={fetching}
+        >
+          {xs ? 'Atualizar' : 'Atualizar categorias'}
         </Button>
-        <Button onClick={openCreationModal}>Adicionar</Button>
+        <Button
+          onClick={openCreationModal}
+          icon={<PlusCircleOutlined />}
+          type={'primary'}
+        >
+          {xs ? 'Adicionar' : 'Adicionar categorias'}
+        </Button>
       </Row>
       <Table<CashFlow.CategorySummary>
         rowKey={'id'}
