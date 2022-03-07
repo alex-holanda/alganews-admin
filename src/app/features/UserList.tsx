@@ -158,8 +158,17 @@ export default function UserListFeature() {
                   </Descriptions.Item>
                   <Descriptions.Item label={'Ações'}>
                     <Space>
-                      <Button size={'small'} icon={<EyeOutlined />} />
-                      <Button size={'small'} icon={<EditOutlined />} />
+                      <Tooltip title={'Visualizar usuário'} placement={'left'}>
+                        <Link to={`/usuarios/${user.id}`}>
+                          <Button size={'small'} icon={<EyeOutlined />} />
+                        </Link>
+                      </Tooltip>
+
+                      <Tooltip title={'Editar usuário'} placement={'right'}>
+                        <Link to={`/usuarios/edicao/${user.id}`}>
+                          <Button size={'small'} icon={<EditOutlined />} />
+                        </Link>
+                      </Tooltip>
                     </Space>
                   </Descriptions.Item>
                 </Descriptions>
