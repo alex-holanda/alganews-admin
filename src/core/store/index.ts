@@ -28,6 +28,7 @@ const observeActions: Middleware = () => (next) => (action) => {
       'payment/getAllPayments/rejected',
       'cash-flow/revenues/getRevenues/rejected',
       'cash-flow/expenses/getExpenses/rejected',
+      'auth/fetchUser/rejected',
     ];
 
     const shouldNotify = !ignoredActions.includes(action.type);
@@ -56,7 +57,7 @@ export const store = configureStore({
     metric: metricReducer,
     payment: paymentReducer,
     cashFlow: cashFlowReducer,
-    ui: uiReducer
+    ui: uiReducer,
   },
   middleware: function (getDefaultMiddlewares) {
     return getDefaultMiddlewares().concat(observeActions);

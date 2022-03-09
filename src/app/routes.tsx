@@ -76,11 +76,14 @@ export default function Routes() {
       if (isInAuthorizationRoute) {
         if (!code) {
           notification.error({ message: 'Código não informado' });
+
+          AuthService.imperativelySendToLoginScreen();
           return;
         }
 
         if (!codeVerifier) {
           // necessário fazer logout
+          AuthService.imperativelySendToLogout();
           return;
         }
 
