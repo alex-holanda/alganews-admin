@@ -25,7 +25,7 @@ export default function DefaltLayoutHeader() {
           placement={'bottomRight'}
           overlay={
             <Menu style={{ width: 220 }}>
-              {/* <Menu.Item> */}
+              <Menu.Item key={'card'}>
                 <Card bordered={false}>
                   <Card.Meta
                     title={user?.name}
@@ -48,11 +48,12 @@ export default function DefaltLayoutHeader() {
                     }
                   />
                 </Card>
-              {/* </Menu.Item> */}
-              <Menu.Item icon={<UserOutlined />}>
+              </Menu.Item>
+              <Menu.Item key={'perfil'} icon={<UserOutlined />}>
                 <Link to={`/usuarios/${user?.id}`}>Meu perfil</Link>
               </Menu.Item>
               <Menu.Item
+                key={'logout'}
                 icon={<LogoutOutlined />}
                 danger
                 onClick={() =>
