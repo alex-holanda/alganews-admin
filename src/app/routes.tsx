@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import React, { Suspense, useEffect, useMemo } from 'react';
 import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 
 import { message, notification } from 'antd';
@@ -8,21 +8,29 @@ import jwtDecode from 'jwt-decode';
 import CustomError from 'alex-holanda-sdk/dist/CustomError';
 import AuthService from 'auth/Authorization.service';
 
-import CashFlowExpensesView from './views/CashFlowExpenses.view';
-import CashFlowRevenuesView from './views/CashFlowRevenues.view';
-import HomeView from './views/Home.view';
-import PaymentCreateView from './views/PaymentCreate.view';
-import { PaymentDetailsView } from './views/PaymentDetails.view';
-import PaymentListView from './views/PaymentList.view';
-import UserCreateView from './views/UserCreate.view';
-import UserDetailsView from './views/UserDetails.view';
-import UserEditView from './views/UserEdit.view';
-import UserListView from './views/UserList.view';
-
 import { Authentication } from 'auth/auth';
 
 import { useAuth } from 'core/hooks/useAuth';
 import { GlobalLoading } from './components/GlobalLoading';
+
+const CashFlowExpensesView = React.lazy(
+  () => import('./views/CashFlowExpenses.view')
+);
+const CashFlowRevenuesView = React.lazy(
+  () => import('./views/CashFlowRevenues.view')
+);
+const HomeView = React.lazy(() => import('./views/Home.view'));
+const PaymentCreateView = React.lazy(
+  () => import('./views/PaymentCreate.view')
+);
+const PaymentDetailsView = React.lazy(
+  () => import('./views/PaymentDetails.view')
+);
+const PaymentListView = React.lazy(() => import('./views/PaymentList.view'));
+const UserCreateView = React.lazy(() => import('./views/UserCreate.view'));
+const UserDetailsView = React.lazy(() => import('./views/UserDetails.view'));
+const UserEditView = React.lazy(() => import('./views/UserEdit.view'));
+const UserListView = React.lazy(() => import('./views/UserList.view'));
 
 const APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -125,29 +133,31 @@ export default function Routes() {
   }
 
   return (
-    <Switch>
-      <Route path={'/'} component={HomeView} exact />
-      <Route path={'/usuarios'} component={UserListView} exact />
-      <Route path={'/usuarios/cadastro'} component={UserCreateView} exact />
-      <Route path={'/usuarios/:id'} component={UserDetailsView} exact />
-      <Route path={'/usuarios/edicao/:id'} component={UserEditView} exact />
-      <Route path={'/pagamentos'} component={PaymentListView} exact />
-      <Route
-        path={'/pagamentos/cadastro'}
-        component={PaymentCreateView}
-        exact
-      />
-      <Route path={'/pagamentos/:id'} component={PaymentDetailsView} exact />
-      <Route
-        path={'/fluxo-de-caixa/despesas'}
-        component={CashFlowExpensesView}
-        exact
-      />
-      <Route
-        path={'/fluxo-de-caixa/receitas'}
-        component={CashFlowRevenuesView}
-        exact
-      />
-    </Switch>
+    <Suspense fallback={<GlobalLoading />}>
+      <Switch>
+        <Route path={'/'} component={HomeView} exact />
+        <Route path={'/usuarios'} component={UserListView} exact />
+        <Route path={'/usuarios/cadastro'} component={UserCreateView} exact />
+        <Route path={'/usuarios/:id'} component={UserDetailsView} exact />
+        <Route path={'/usuarios/edicao/:id'} component={UserEditView} exact />
+        <Route path={'/pagamentos'} component={PaymentListView} exact />
+        <Route
+          path={'/pagamentos/cadastro'}
+          component={PaymentCreateView}
+          exact
+        />
+        <Route path={'/pagamentos/:id'} component={PaymentDetailsView} exact />
+        <Route
+          path={'/fluxo-de-caixa/despesas'}
+          component={CashFlowExpensesView}
+          exact
+        />
+        <Route
+          path={'/fluxo-de-caixa/receitas'}
+          component={CashFlowRevenuesView}
+          exact
+        />
+      </Switch>
+    </Suspense>
   );
 }

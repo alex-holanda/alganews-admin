@@ -16,7 +16,7 @@ import { transformStringToDate } from '../../core/util/transformStringToDate';
 import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 import { useBreadcrumb } from 'core/hooks/useBreadcrumb';
 
-export function PaymentDetailsView() {
+export default function PaymentDetailsView() {
   usePageTitle('Detalhes do pagamento');
 
   useBreadcrumb('Pagamento/Detalhes');
