@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User, UserService } from 'alex-holanda-sdk';
 
+import AuthService from 'auth/Authorization.service';
+
 interface AuthState {
   user: User.Detailed | null;
   fetching: boolean;
@@ -16,6 +18,13 @@ export const fetchUser = createAsyncThunk(
   async (userId: number, { dispatch, rejectWithValue }) => {
     try {
       const user = await UserService.getDetailedUser(userId);
+
+      if (user.role === 'EDITOR') {
+        window.alert('Você não é autorizado a utilizar esse sistema');
+        AuthService.imperativelySendToLogout();
+
+        return;
+      }
 
       await dispatch(storeUser(user));
     } catch (error) {
